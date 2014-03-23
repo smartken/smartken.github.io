@@ -23,21 +23,22 @@
 <script src="dist/main.min.js"></script>
 <script>
 
-
+var owner=url("?owner")||"smartken";
 var repo=url("?repo")||"";
 if(repo.length==0){
-    alert("请设置repo参数");
+    alert("未设置repo参数");
 }
-
+var desc=owner+"/"+repo+ " ,A blog engine written by GitHub Issues  \n[Fork me on GitHub](https://github.com/zhaoda/spring)";
+window.title=desc;
 $.extend(spring.config, {
   // my blog title
   title: repo,
   // my blog description
-  desc: "A blog engine written by GitHub Issues  \n[Fork me on GitHub](https://github.com/zhaoda/spring)",
+  desc: desc,
   // my github username
-  owner: 'smartken',
+  owner: owner,
   // creator's username
-  creator: 'smartken',
+  creator:owner,
   // the repository name on github for writting issues
   repo: repo,
   // custom page
