@@ -20,9 +20,16 @@
 <link rel="stylesheet" href="dist/main.min.css" />
 <script src="dist/main.min.js"></script>
 <script>
+
+var hash=window.location.hash;
+if(hash.length==0){
+    alert("请输入hash");
+}
+repo=hash.substring(1);
+
 $.extend(spring.config, {
   // my blog title
-  title: 'Spring',
+  title: repo,
   // my blog description
   desc: "A blog engine written by GitHub Issues  \n[Fork me on GitHub](https://github.com/zhaoda/spring)",
   // my github username
@@ -30,7 +37,7 @@ $.extend(spring.config, {
   // creator's username
   creator: 'smartken',
   // the repository name on github for writting issues
-  repo: 'kull-mvn',
+  repo: repo,
   // custom page
   pages: [
     {name: 'About Spring', number: 1},
