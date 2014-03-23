@@ -18,14 +18,16 @@
 <link rel="apple-touch-startup-image" href="img/apple-touch-startup-image-640x920.png" media="(-webkit-min-device-pixel-ratio: 2)">
 <link rel="apple-touch-startup-image" href="img/apple-touch-startup-image-640x1096.png" media="(device-height: 568px)">
 <link rel="stylesheet" href="dist/main.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="dist/url.min.js">
 <script src="dist/main.min.js"></script>
 <script>
 
-var hash=window.location.hash;
-if(hash.length==0){
-    alert("请输入hash");
+
+var repo=url("?repo")||"";
+if(repo.length==0){
+    alert("请设置repo参数");
 }
-repo=hash.substring(1);
 
 $.extend(spring.config, {
   // my blog title
