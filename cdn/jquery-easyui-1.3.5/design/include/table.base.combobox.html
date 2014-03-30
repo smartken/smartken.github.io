@@ -1,0 +1,111 @@
+<table>
+    <tbody>
+    <tr>
+        <th><span class="easyui-tooltip" title="string	The underlying data value name to bind to this ComboBox.	value">valueField</span></th>
+        <td><input name="valueField" /></td>
+        <th><span class="easyui-tooltip" title="string	The underlying data field name to bind to this ComboBox.	text">textField</span></th>
+        <td><input name="textField" /></td>
+        <th><span class="easyui-tooltip" title="string	 Defines how to load list data when text changed. Set to 'remote' if the combobox loads from server. When set to 'remote' mode, what the user types will be sent as the http request parameter named 'q' to server to retrieve the new data.	local
+  local">mode</span></th>
+        <td><input name="mode" class="easyui-combobox" data-options="data:[{value:'',text:''},{value:'local',text:'local'},{value:'remote',text:'remote'}],editable:false" /></td>
+        <th><span class="easyui-tooltip" title="string	A URL to load list data from remote.	null">url</span></th>
+        <td><input name="url" class="easyui-validatebox" data-options="required:false,validType:'url'" style="width: 380px" /></td>
+    </tr>
+<!--
+
+
+
+
+ -->
+   <tr>
+       <th><span class="easyui-tooltip" title="string	The http method to retrieve data.	post">method</span></th>
+       <td><input name="method" class="easyui-combobox" data-options="data:[{value:'',text:''},{value:'post',text:'post'},{value:'get',text:'get'}],editable:false" /></td>
+   </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(param,success,error)	 Defines how to load data from remote server. Return false can abort this action. This function takes following parameters:
+param: the parameter object to pass to remote server.
+success(data): the callback function that will be called when retrieve data successfully.
+error(): the callback function that will be called when failed to retrieve data.
+">loader</span></th>
+        <td colspan="3"><textarea rows="3" name="loader" class="obj" ></textarea> </td>
+
+        <th><span class="easyui-tooltip" title="data	array	 The list data to be loaded.like: [{value:'',text:''},{value:'post',text:'post'},...]">data</span></th>
+        <td colspan="3"><textarea rows="3" name="data" class="obj" ></textarea> </td>
+
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function	Defines how to filter the local data when 'mode' is set to 'local'. The function takes two parameters:
+q: the user typed text.
+row: the list row data.
+Return true to allow the row to be displayed.
+Code example:
+
+$('#cc').combobox({
+	filter: function(q, row){
+		var opts = $(this).combobox('options');
+		return row[opts.textField].indexOf(q) == 0;
+	}
+});">filter</span></th>
+        <td colspan="3"><textarea rows="3" name="filter" class="obj" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function	 Defineds how to render the row. The function takes one parameter: row.
+Code example:
+
+$('#cc').combobox({
+	formatter: function(row){
+		var opts = $(this).combobox('options');
+		return row[opts.textField];
+	}
+});">formatter</span></th>
+        <td colspan="3"><textarea rows="3" name="formatter" class="obj" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(param){}	 Fires before a request is made to load data, return false to cancel this load action.
+Code example:
+
+// change the http request parameters before load data from server
+$('#cc').combobox({
+	onBeforeLoad: function(param){
+		param.id = 2;
+		param.language = 'js';
+	}
+});">onBeforeLoad</span></th>
+        <td colspan="7"><textarea rows="2" name="onBeforeLoad" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires when remote data is loaded successfully.">onLoadSuccess</span></th>
+        <td colspan="3"><textarea rows="3" name="onLoadSuccess" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires when remote data load error.">onLoadError</span></th>
+        <td colspan="3"><textarea rows="3" name="onLoadError" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(record){}	Fires when user select a list item.">onSelect</span></th>
+        <td colspan="3"><textarea rows="3" name="onSelect" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(record){}	Fires when user unselect a list item.">onUnselect</span></th>
+        <td colspan="3"><textarea rows="3" name="onUnselect" ></textarea></td>
+    </tr>
+
+    </tbody>
+
+</table>
+
+<!--
+ onBeforeLoad	param	 Fires before a request is made to load data, return false to cancel this load action.
+Code example:
+
+// change the http request parameters before load data from server
+$('#cc').combobox({
+	onBeforeLoad: function(param){
+		param.id = 2;
+		param.language = 'js';
+	}
+});
+onLoadSuccess	none	Fires when remote data is loaded successfully.
+onLoadError	none	Fires when remote data load error.
+onSelect	record	Fires when user select a list item.
+onUnselect	record	Fires when user unselect a list item.
+-->

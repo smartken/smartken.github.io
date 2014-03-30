@@ -1,0 +1,62 @@
+<table >
+        <tbody>
+          <tr>
+           <th><span class="easyui-tooltip" title="number 	The default value.">value</span></th>
+           <td><input name="value" class="easyui-numberbox" /></td>
+           <th><span class="easyui-tooltip" title="number	 The minimum allowed value.	null">min</span></th>
+           <td><input name="min" class="easyui-numberbox " /></td>
+           <th><span class="easyui-tooltip" title="number 	The maximum allowed value.	null">max</span></th>
+           <td><input name="max" class="easyui-numberbox " /></td>
+           <th><span class="easyui-tooltip" title="number	 The maximum precision to display after the decimal separator.	0">precision</span></th>
+           <td><input name="precision" class="easyui-numberspinner "
+           data-options="increment:1,min:0,precision:0" />
+           </td>
+          </tr>
+           <tr>
+               <th><span class="easyui-tooltip" title="boolean	Defines if to disable the field.	false">disabled</span></th>
+               <td>
+                   <input name="disabled" value="" type="checkbox" onclick="this.value=this.checked;" >
+               </td>
+
+          </tr>
+          <tr>
+            <th><span class="easyui-tooltip" title="string	The decimal character separates the integer and decimal parts of a number.	">decimalSeparator</span></th>
+            <td>
+            <input name="decimalSeparator" />
+            </td>
+             <th><span class="easyui-tooltip" title="string	The character that separates integer groups to show thousands and millions.	">groupSeparator</span></th>
+            <td>
+            <input name="groupSeparator" />
+            </td>
+            <th><span class="easyui-tooltip" title="string	The prefix string.">prefix</span></th>
+            <td>
+            <input name="prefix" />
+            </td>
+            <th><span class="easyui-tooltip" title="string	The suffix string.">suffix</span></th>
+            <td>
+            <input name="suffix" />
+            </td>
+          </tr>
+
+          <tr>
+              <th><span class="easyui-tooltip" title="function(newValue, oldValue){ }	Fires when the field value is changed.">onChange</span></th>
+              <td colspan="7"><textarea rows="3" name="onChange" class="obj" ></textarea></td>
+          </tr>
+        </tbody>
+       </table>
+        
+  <!-- 
+   disabled	boolean	Defines if to disable the field.	false
+value	number	The default value.	
+min	number	The minimum allowed value.	null
+max	number	The maximum allowed value.	null
+precision	number	The maximum precision to display after the decimal separator.	0
+decimalSeparator	string	The decimal character separates the integer and decimal parts of a number.	.
+groupSeparator	string	The character that separates integer groups to show thousands and millions.	
+prefix	string	The prefix string.	
+suffix	string	The suffix string.	
+formatter	function(value)	 A function to format the numberbox value. Return string value that will display on box.	
+parser	function(s)	 A function to parse a string. Return numberbox value.
+
+onChange	newValue,oldValue	Fires when the field value is changed
+  -->

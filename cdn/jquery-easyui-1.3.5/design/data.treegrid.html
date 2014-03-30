@@ -1,0 +1,90 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+
+    <link rel="stylesheet" type="text/css" href="design.common.css">
+    <link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../themes/icon.css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="datagrid-groupview.js"></script>
+    <script type="text/javascript" src="design.common.js"></script>
+    <script type="text/javascript">
+
+        var _method="treegrid";
+        _tag="table";
+
+
+    </script>
+
+</head>
+<body class="easyui-layout">
+<!--
+     <div data-options="region:'north',tools:[{iconCls:'icon-add',handler:gen_onclick}]" title="配置" style="height: 300px;" >
+                   idField	string	Defines the key field to identify a tree node. required.	null
+treeField	string	Defines the tree node field. required.	null
+animate	boolean	Defines if to show animation effect when node expand or collapse.	false
+loader	function(param,success,error)	 Defines how to load data from remote server. Return false can abort this action. This function takes following parameters:
+param: the parameter object to pass to remote server.
+success(data): the callback function that will be called when retrieve data successfully.
+error(): the callback function that will be called when failed to retrieve data.	json loader
+loadFilter	function(data,parentId)	 Return the filtered data to display.
+  </div>
+-->
+<div data-options="region:'center'" >
+    <div class="easyui-panel" data-options="href:'include/form.toolbar.html'"></div>
+    <form id="form-ui">
+        <div class="easyui-tabs">
+            <div title="treegrid" >
+                <table>
+                    <tr>
+                        <th><span class="easyui-tooltip" title="string	Defines the key field to identify a tree node. required.	null">idField</span></th>
+                        <td><input name="idField" /></td>
+                        <th><span class="easyui-tooltip" title="string	Defines the tree node field. required.	null">treeField</span></th>
+                        <td><input name="treeField" /></td>
+                        <th><span class="easyui-tooltip" title="boolean	Defines if to show animation effect when node expand or collapse.	false">animate</span></th>
+                        <td ><input name="animate" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+                        <th><span class="easyui-tooltip" title=""></span></th>
+                        <td style="width: 40%"></td>
+                    </tr>
+                    <tr>
+                        <th><span class="easyui-tooltip" title="function(param,success,error)	 Defines how to load data from remote server. Return false can abort this action. This function takes the following parameters:
+param: the parameter object to pass to remote server.
+success(data): the callback function that will be called when retrieve data successfully.
+error(): the callback function that will be called when failed to retrieve data.	json loader">loader</span></th>
+                        <td  colspan="3"><textarea cols="3" name="loader" class="obj"></textarea></td>
+                        <th><span class="easyui-tooltip" title="function(data,parent)	 Return the filtered data to display. The returned data is in standard tree format. This function takes the following parameters:
+data: the original data to be loaded.
+parent: DOM object, indicate the parent node.">loadFilter</span></th>
+                        <td colspan="3"><textarea cols="3" name="loadFilter" class="obj"></textarea></td>
+
+                    </tr>
+                </table>
+                <fieldset>
+                    <legend>datagrid</legend>
+                    <div class="easyui-panel"  data-options="href:'include/table.base.datagrid.html'"></div>
+                </fieldset>
+
+            </div>
+
+            <div title="panel" data-options="href:'include/table.base.panel.html'"></div>
+        </div>
+        <!--
+        <fieldset>
+            <legend>datagrid</legend>
+            <div class="easyui-panel" data-options="href:'include/table.base.datagrid.html'"></div>
+        </fieldset>
+        <fieldset>
+            <legend>panel</legend>
+            <div class="easyui-panel" data-options="href:'include/table.base.panel.html'"></div>
+        </fieldset>
+-->
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" type="text/css" href="design.common.css">
+<link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="../themes/icon.css">
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="../jquery.easyui.min.js"></script>
+<script type="text/javascript" src="datagrid-groupview.js"></script>
+<script type="text/javascript" src="design.common.js"></script>
+<script type="text/javascript">
+     
+     var _method="datagrid";
+     _tag="table";
+     
+
+</script>
+
+</head>
+<body class="easyui-layout">
+   <!-- 
+        <div data-options="region:'north',tools:[{iconCls:'icon-add',handler:gen_onclick}]" title="配置" style="height: 300px;" >
+       
+     </div>
+   -->
+    <div data-options="region:'center'" >
+           <div class="easyui-panel" data-options="href:'include/form.toolbar.html'"></div>
+
+     <form id="form-ui">
+         <div class="easyui-tabs" >
+             <div title="datagrid" data-options="href:'include/table.base.datagrid.html'"></div>
+             <div title="panel" data-options="href:'include/table.base.panel.html'"></div>
+         </div>
+         <!--
+         <fieldset>
+             <legend>datagrid</legend>
+             <div class="easyui-panel" data-options="href:'include/table.base.datagrid.html'"></div>
+         </fieldset>
+         <fieldset>
+             <legend>panel</legend>
+             <div class="easyui-panel" data-options="href:'include/table.base.panel.html'"></div>
+         </fieldset>
+-->
+     
+     </form>
+    
+    </div>
+
+</body>
+</html>

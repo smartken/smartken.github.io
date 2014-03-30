@@ -1,0 +1,66 @@
+<table>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="number	The width of calendar component.	180">width</span></th>
+        <td><input  name="width" class="easyui-numberbox" style=""
+                    data-options=" min:1,precision:0" /></td>
+        <th><span class="easyui-tooltip" title="number	The height of calendar component.	180">height</span></th>
+        <td><input  name="height" class="easyui-numberbox" style=""
+                    data-options=" min:1,precision:0" /></td>
+        <th><span class="easyui-tooltip" title="boolean	When true to set the calendar size fit it's parent container.	false">fit</span></th>
+        <td><input name="fit" type="checkbox"  value="" onclick="this.value=this.checked" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show the border.	true">border</span></th>
+        <td><input name="border" type="checkbox"  value="" onclick="this.value=this.checked" /></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="number	Defines the first day of week. Sunday is 0, Monday is 1, ...	0">firstDay</span></th>
+        <td><input  name="firstDay" class="easyui-numberspinner" style=""
+                    data-options=" min:0,max:6,precision:0" /></td>
+        <th><span class="easyui-tooltip" title="number	The month of calendar.	current month, start with 1">month</span></th>
+        <td><input  name="month" class="easyui-numberspinner" style=""
+                    data-options=" min:1,max:12,precision:0" /></td>
+        <th><span class="easyui-tooltip" title="number	 The year of calendar. The example below shows how to create a calendar using the specified year and month.">year</span></th>
+        <td><input  name="year" class="easyui-numberspinner" style=""
+                    data-options=" min:1900,precision:0" /></td>
+        <th><span class="easyui-tooltip" title="Date	The current date.	current date">current</span></th>
+        <td><input name="current" class="obj" /></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="array	The list of week to be showed.	['S','M','T','W','T','F','S']">weeks</span></th>
+        <td colspan="3"><input name="weeks" class="obj" style=" width: 320px" /></td>
+        <th><span class="easyui-tooltip" title="array	The list of month to be showed.	['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']">months</span></th>
+        <td colspan="3"><input name="months" class="obj" style=" width: 320px" /></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(date){}	Fires when user select a date.">onSelect</span></th>
+        <td colspan="7"><textarea rows="2" name="onSelect" class="obj" ></textarea></td>
+
+    </tr>
+</table>
+
+<!--
+
+height	number	The height of calendar component.	180
+fit	boolean	When true to set the calendar size fit it's parent container.	false
+border	boolean	Defines if to show the border.	true
+firstDay	number	Defines the first day of week. Sunday is 0, Monday is 1, ...	0
+weeks	array	The list of week to be showed.	['S','M','T','W','T','F','S']
+months	array	The list of month to be showed.	['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+year	number	 The year of calendar. The example below shows how to create a calendar using the specified year and month.
+<div class="easyui-calendar" data-options="year:2012,month:6" />
+current year(four digits)
+month	number	The month of calendar.	current month, start with 1
+current	Date	The current date.	current date
+
+onSelect	date	 Fires when user select a date.
+Code example:
+
+$('#cc').calendar({
+	onSelect: function(date){
+		alert(date.getFullYear()+":"+(date.getMonth()+1)+":"+date.getDate());
+	}
+});
+-->

@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+
+    <link rel="stylesheet" type="text/css" href="design.common.css">
+    <link rel="stylesheet" type="text/css" href="../themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../themes/icon.css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="design.common.js"></script>
+    <script type="text/javascript">
+
+        var _method="layout";
+        _tag="div";
+
+
+    </script>
+
+</head>
+<body class="easyui-layout">
+
+
+<div data-options="region:'center'" >
+    <div class="easyui-panel" data-options="href:'include/form.toolbar.html'"></div>
+
+    <div class="easyui-tabs">
+        <div title="layout">
+
+            <table style="width: 95%" border="0">
+                <tr>
+                    <td colspan="3">
+                        <fieldset id="fieldset-north">
+                            <legend><input type="checkbox" id="north" checked/>north</legend>
+                            <div class="easyui-panel" data-options="href:'include/table.base.layout.html'"></div>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td width="30%">
+                        <fieldset id="fieldset-west">
+                            <legend><input type="checkbox" id="west" checked/>west</legend>
+                            <div class="easyui-panel" data-options="href:'include/table.base.layout.html'"></div>
+                        </fieldset>
+                    </td>
+                    <td >
+                        <fieldset id="fieldset-center">
+                            <legend><input type="hidden" id="center" value="true" checked  />center</legend>
+                            <div class="easyui-panel" data-options="href:'include/table.base.layout.html'"></div>
+                        </fieldset>
+                    </td>
+                    <td width="30%">
+                        <fieldset id="fieldset-east">
+                            <legend><input type="checkbox" id="east" checked/>east</legend>
+                            <div class="easyui-panel" data-options="href:'include/table.base.layout.html'"></div>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <fieldset id="fieldset-south">
+                            <legend><input type="checkbox" id="south" checked/>south</legend>
+                            <div class="easyui-panel" data-options="href:'include/table.base.layout.html'"></div>
+                        </fieldset>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div title="panel" >
+            <form id="form-ui">
+
+                <div class="easyui-panel" data-options="href:'include/table.base.panel.html'"> </div>
+            </form>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+</body>
+</html>

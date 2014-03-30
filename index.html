@@ -19,16 +19,23 @@
 <link rel="apple-touch-startup-image" href="img/apple-touch-startup-image-640x1096.png" media="(device-height: 568px)">
 <link rel="stylesheet" href="dist/main.min.css" />
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="dist/url.min.js"></script>
+<script src="cdn/url.min.js"></script>
 <script src="dist/main.min.js"></script>
-
 <script>
 
 var owner=url("?owner")||"smartken";
 var repo=url("?repo")||"asskicker";
-
+if(repo.length==0){
+    alert("未设置repo参数");
+}
 var desc=owner+"/"+repo+ " ,A blog engine written by GitHub Issues  \n[Fork me on GitHub](https://github.com/zhaoda/spring)";
 document.title=desc;
+
+var frame_repos=document.getElementById("frame_repos");
+var url_repos="http://github.com/"+owner+"?tab=repositories";
+//alert(url_repos);
+//frame_repos.src=url_repos;
+
 $.extend(spring.config, {
   // my blog title
   title: repo,
@@ -47,19 +54,12 @@ $.extend(spring.config, {
   ]
 });
 
-$(document).ready(function(){
-   
-    var site_style=$("<link rel='stylesheet' />");
-    var site_style_href="http://rawgithub.com/"+owner+"/"+repo+"/master/spring.css";
-    site_style.attr("href",site_style_href);
-
-    //var site_script=$("<src type='text/javascript' >< /script>");
-    //var site_script_src="http://rawgithub.com/"+owner+"/"+repo+"/master/spring.js";
-    //site_script.attr("src",site_script_src);
-  
-    $("body").append(site_style);  //.append(site_script);    
-    
-});
+  var site_style=$("<link rel='stylesheet' />");
+    var site_raw_root="http://rawgithub.com/"+owner+"/"+repo+"/master";
+    var site_style_href=site_raw_root+"/spring.css";
+	var site_script_src=site_raw_root+"/spring.js";
+    document.write("<link rel='stylesheet'  href='"+site_style_href+"'  />");
+    document.write("<script  type='text/javascript' src='"+site_script_src+"'/><"+"/script>");
 
 </script>
 </head>
@@ -69,5 +69,7 @@ $(document).ready(function(){
 location.href = 'https://github.com/' + spring.config.owner + '/' + spring.config.repo + '/issues?page=1&state=open'
 </script>
 <![endif]-->
+
 </body>
+
 </html>
