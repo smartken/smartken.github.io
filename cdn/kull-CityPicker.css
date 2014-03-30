@@ -1,0 +1,95 @@
+
+/*CityPicker */
+.CityPicker_dlg {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    background-color: #ffffff;
+    border: 1px #7F9DB9 solid;
+    line-height: 20px;
+    width: 220px;
+    overflow: hidden;
+    padding: 4px;
+}
+  
+.CityPicker_input {
+}
+  
+/*提示框*/
+.CityPicker_hint {
+    border-bottom: 1px dashed #AAAAAA;
+    line-height: 20px;
+    height:20px;
+    padding: 0 0 0 5px;
+    color: #666666;
+}
+  
+/*城市列表*/
+.CityPicker_uldiv {
+    margin-top: 5px;
+}
+  
+.CityPicker_ul {
+    color: #0055AA;
+    list-style-type: none;
+    list-style-position: outside;
+    list-style-image: none;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+  
+.CityPicker_ul li {
+    padding: 0px 5px 0px;
+    width: 210px;
+    height: 20px;
+    position: relative;
+}
+  
+.CityPicker_pinyin {
+    position:absolute;
+    top:0px;
+    line-height:20px;
+    right:5px;
+}
+  
+.CityPicker_li_over {
+    background-color: #E7F1FD;
+    border-top: 1px solid #7F9DB9;
+    border-bottom: 1px solid #7F9DB9;
+    overflow: hidden;
+}
+  
+.CityPicker_li_out {
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+    background-color: #FFFFFF;
+    overflow: hidden;
+}
+  
+.CityPicker_li_on {
+    background-color: #C8E3FC;
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+    overflow: hidden;
+}
+  
+/*页码*/
+.CityPicker_pagediv {
+    text-align: center;
+    line-height: 25px;
+    height: 25px;
+}
+  
+.CityPicker_pageon {
+    padding: 0px 3px;
+    text-decoration: none;
+    color: black;
+}
+  
+.CityPicker_pageout {
+    padding: 0px 3px;
+}
+  
+.CityPicker_pageleft,.CityPicker_pageright {
+    padding: 0px 3px;
+} 

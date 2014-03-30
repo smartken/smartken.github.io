@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+
+<link rel="stylesheet" href="../cdn/kull-CityPicker.css" />
+
+<script type="text/javascript" src="../cdn/kull-CityPicker.js"></script>
+
+<script type="text/javascript">
+
+   var cityPicker0;
+
+    //必须在页面加载完后执行
+     function onLoad(){
+
+       cityPicker0=new CityPicker({
+          inputName:"cp",
+          layid: "inputCityPicker0"
+       });
+       cityPicker0.begin();
+
+     }
+
+</script>
+
+</head>
+
+<body onload="onLoad()">
+        <fieldset>
+		    <legend>CityPicker</legend>
+			<div id="inputCityPicker0" ></div>
+
+		</fieldset>
+</body>
+
+</html>
+
