@@ -47,13 +47,18 @@ $.extend(spring.config, {
     {name: 'About Spring', number: 1},
     {name: 'Quick Start', number: 2}
   ]
-})
-var site_style=$("<link rel='stylesheet' />");
-var site_style_href="http://rawgithub.com/"+owner+"/"+repo+"/master/spring.css";
-site_style.attr("href",style_style_href);
+});
 
+$(document).read(function(){
+   
+    var site_style=$("<link rel='stylesheet' />");
+    var site_style_href="http://rawgithub.com/"+owner+"/"+repo+"/master/spring.css";
+    site_style.attr("href",style_style_href);
 
-$(body).append(site_style);
+    $(body).append(site_style);    
+    
+});
+
 </script>
 </head>
 <body>
