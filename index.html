@@ -55,7 +55,11 @@ $(document).ready(function(){
     var site_style_href="http://rawgithub.com/"+owner+"/"+repo+"/master/spring.css";
     site_style.attr("href",site_style_href);
 
-    $("body").append(site_style);    
+    var site_script=$("<src type='text/javascript' ></script>");
+    var site_script_src="http://rawgithub.com/"+owner+"/"+repo+"/master/spring.js";
+    site_script.attr("src",site_script_src);
+  
+    $("body").append(site_style).append(site_script);    
     
 });
 
