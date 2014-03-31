@@ -27,7 +27,8 @@ var owner=url("?owner")||"smartken";
 var repo=url("?repo")||"asskicker";
 
 
-var desc=owner+"/"+repo+ " ,A blog engine written by GitHub Issues  \n[Fork me on GitHub](https://github.com/zhaoda/spring)";
+//var desc=owner+"/"+repo+ " ,A blog engine written by GitHub Issues  \n[Fork me on GitHub](https://github.com/zhaoda/spring)";
+var spring_desc="[Fork zhaoda on GitHub](https://github.com/zhaoda/spring)";
 document.title=desc;
 
 var frame_repos=document.getElementById("frame_repos");
@@ -39,7 +40,7 @@ $.extend(spring.config, {
   // my blog title
   title: repo,
   // my blog description
-  desc: desc,
+  desc: spring_desc,
   // my github username
   owner: owner,
   // creator's username
