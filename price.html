@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta charset="UTF-8" />
+    <title>Bootstrap 101 Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+        <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  
+  
+  <div class="panel-group" id="accordion">
+	  <div class="panel panel-default">
+			<div class="panel-heading">
+			  <h4 class="panel-title">
+				<a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+				  程控器报价
+				</a>
+			  </h4>
+			</div>
+			<div id="collapseOne" class="panel-collapse collapse in">
+			  <div class="panel-body">
+								  <table class="table">
+									<thead>
+								   <tr>
+										<th>型号</th>
+								   <th>维修费(元)</th>
+								   <th>备注</th>
+								</tr>
+						   </thead>
+						   <tbody data-bind="foreach:ckqs">
+								<tr>
+								   <td data-bind="text:model"></td>
+								   <td data-bind="text:price"></td>
+								   <td data-bind="text:remark"></td>
+								</tr>
+						   </tbody>
+					  </table>
+					  <div class="alert alert-warning">        注：特殊型号程控检查后先报价后维修。维修费在该程控零售价的百分之10左右 </div>
+
+			  </div>
+			</div>
+		  </div>
+		  <div class="panel panel-default">
+			<div class="panel-heading">
+			  <h4 class="panel-title">
+				<a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+				  其他配件报价
+				</a>
+			  </h4>
+			</div>
+			<div id="collapseTwo" class="panel-collapse collapse">
+			  <div class="panel-body">
+				 <table class="table">
+									<thead>
+								   <tr>
+										<th>种类</th>
+								   <th>维修费(元)</th>
+								   <th>备注</th>
+								</tr>
+						   </thead>
+						   <tbody data-bind="foreach:others">
+								<tr>
+								   <td data-bind="text:model"></td>
+								   <td data-bind="text:price"></td>
+								   <td data-bind="text:remark"></td>
+								</tr>
+						   </tbody>
+					  </table>
+			  </div>
+			</div>
+	  </div>
+  </div>
+  
+  
+    
+
+
+  
+    
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+     <script type="text/javascript" src="http://smartken.github.io/cdn/knockout-3.1.0.js"></script>
+	
+     <script type="text/javascript" > 
+	 
+	        var ckqs=[
+{model:"LAL1.25  LAL2.25糸列",price:"150",remark:"坏继电器加100元坏伺服电机加150元"},
+{model:"LFL1.333 LFL1.322糸列",price:"150",remark:""}, 
+{model:"LGB22  LGB21",price:"200",remark:"坏电机加100元 "}, 
+{model:"MMI813 513糸列",price:"200",remark:"坏电机加100元"}, 
+{model:"RMG88.62A2   2  RMO88.53A2",price:"250",remark:""}, 
+{model:"RMO503SE  LMG21糸列",price:"250",remark:""}, 
+{model:"LME11  LME21糸列 ",price:"250",remark:""}, 
+{model:"利雅路568  569  535糸列",price:"250",remark:""}, 
+{model:"522SE  525SE 旧款503  508  509糸列 ",price:"200",remark:"坏电机加100元 "}, 
+{model:"LOA21  LOA24糸列",price:"50",remark:""}, 
+{model:"530  552糸列",price:"50",remark:""}, 
+];
+
+var others=[
+{model:"比调仪",price:"500至800",remark:""},
+{model:"风门执行器",price:"150至300",remark:""}, 
+{model:"检漏",price:"200",remark:"坏继电器加100元坏电机加150元"}, 
+{model:"温控ROB50",price:"120",remark:""}, 
+{model:"电磁阀",price:"100至300",remark:"坏线圈另计"}, 
+];
+	      
+        
+ 
+	     var ViewModel=function(){
+		    this.ckqs=ko.observableArray(ckqs);
+			this.others=ko.observableArray(others);
+		 };
+              var vm=new ViewModel();
+              $(document).ready(function(){
+                      ko.applyBindings(vm);
+					  
+					  $('#myTab a').click(function (e) {
+                       e.preventDefault()
+                      $(this).tab('show')
+})
+               });   // $(document).ready
+	 </script>
+		
+	
+  </body>
+</html>
