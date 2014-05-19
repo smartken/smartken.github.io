@@ -16,23 +16,18 @@
   </head>
   <body>
   
-  
-  <div class="panel-group" id="accordion">
-	  <div class="panel panel-default">
-			<div class="panel-heading">
-			  <h4 class="panel-title">
-				<a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-				  程控器报价
-				</a>
-			  </h4>
-			</div>
-			<div id="collapseOne" class="panel-collapse collapse in">
-			  <div class="panel-body">
-								  <table class="table">
+  <ul id="myTab" class="nav nav-tabs">
+        <li class="active"><a href="#ckqs" data-toggle="tab">程控器</a></li>
+        <li><a href="#others" data-toggle="tab">其他配件</a></li>
+		<li><a href="#kd" data-toggle="tab">快递方式</a></li>
+   </ul>
+  <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="ckqs">
+		      <table class="table">
 									<thead>
 								   <tr>
 										<th>型号</th>
-								   <th>维修费(元)</th>
+								   <th>(元)</th>
 								   <th>备注</th>
 								</tr>
 						   </thead>
@@ -45,25 +40,13 @@
 						   </tbody>
 					  </table>
 					  <div class="alert alert-warning">        注：特殊型号程控检查后先报价后维修。维修费在该程控零售价的百分之10左右 </div>
-
-			  </div>
-			</div>
-		  </div>
-		  <div class="panel panel-default">
-			<div class="panel-heading">
-			  <h4 class="panel-title">
-				<a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-				  其他配件报价
-				</a>
-			  </h4>
-			</div>
-			<div id="collapseTwo" class="panel-collapse collapse">
-			  <div class="panel-body">
-				 <table class="table">
+		</div>
+		<div class="tab-pane fade" id="others">
+		     <table class="table">
 									<thead>
 								   <tr>
 										<th>种类</th>
-								   <th>维修费(元)</th>
+								   <th>(元)</th>
 								   <th>备注</th>
 								</tr>
 						   </thead>
@@ -75,10 +58,38 @@
 								</tr>
 						   </tbody>
 					  </table>
-			  </div>
-			</div>
-	  </div>
+		</div>
+		<div class="tab-pane fade" id="kd">
+		     <table class="table">
+						   <tbody >
+								
+								<tr>
+								   <td >收件人</td>
+								   <td >林毅仁</td>
+								   
+								</tr>
+								<tr>
+								   <td >手机/电话</td>
+								   <td >1372557811/34096896</td>
+								   
+								</tr>
+								<tr>
+								   <td >地址</td>
+								   <td >广州市海珠区革新路禾田一巷12号</td>
+								   
+								</tr>
+								<tr>
+								   <td colspan="2">
+								    <img src="http://api.map.baidu.com/staticimage?center=113.260246,23.102873&width=300&height=200&zoom=16&markers=113.260246,23.102873" />
+								   </td>
+								</tr>
+						   </tbody>
+					  </table>
+		</div>
   </div>
+  
+  
+  
   
   
     
@@ -91,9 +102,9 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
      <script type="text/javascript" src="http://smartken.github.io/cdn/knockout-3.1.0.js"></script>
-	
+
      <script type="text/javascript" > 
-	 
+
 	        var ckqs=[
 {model:"LAL1.25  LAL2.25糸列",price:"150",remark:"坏继电器加100元坏伺服电机加150元"},
 {model:"LFL1.333 LFL1.322糸列",price:"150",remark:""}, 
@@ -115,7 +126,7 @@ var others=[
 {model:"温控ROB50",price:"120",remark:""}, 
 {model:"电磁阀",price:"100至300",remark:"坏线圈另计"}, 
 ];
-	      
+
         
  
 	     var ViewModel=function(){
@@ -125,14 +136,14 @@ var others=[
               var vm=new ViewModel();
               $(document).ready(function(){
                       ko.applyBindings(vm);
-					  
+
 					  $('#myTab a').click(function (e) {
                        e.preventDefault()
                       $(this).tab('show')
 })
                });   // $(document).ready
 	 </script>
-		
-	
+
+
   </body>
 </html>
