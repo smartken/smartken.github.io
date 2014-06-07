@@ -54,14 +54,17 @@ $.extend(spring.config, {
     {name: 'Quick Start', number: 2}
   ]
 });
-
+  var isWx=url("#")=="rd";
+  if(isWx){
+  	
+  }else{
   var site_style=$("<link rel='stylesheet' />");
     var site_raw_root="http://rawgithub.com/"+owner+"/"+repo+"/master";
     var site_style_href=site_raw_root+"/spring.css";
 	var site_script_src=site_raw_root+"/spring.js";
     document.write("<link rel='stylesheet'  href='"+site_style_href+"'  />");
     document.write("<script  type='text/javascript' src='"+site_script_src+"' ><"+"/script>");
-
+  }
 </script>
 
 
