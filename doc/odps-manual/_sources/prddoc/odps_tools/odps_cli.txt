@@ -1,0 +1,17 @@
+.. odps documentation master file, created by
+   sphinx-quickstart on Mon Oct 29 16:56:37 2012.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. _odps_console:
+
+ODPS客户端参考手册
+=======================================
+
+
+.. toctree::
+   :maxdepth: 2
+
+   odps_cli_summary
+   odps_cli_conf
+

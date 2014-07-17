@@ -1,0 +1,147 @@
+.. _odps_sec_datasharing:
+
+跨项目空间的资源分享
+=======================
+
+背景简介
+----------
+假设你是项目空间的Owner或管理员(admin角色)，如果有人需要申请访问你的项目空间资源，但是这个申请人并不属于你的项目团队。那么你可以使用本节介绍的跨项目空间的资源分享功能。
+
+如果申请人属于你的项目团队，那么建议你使用项目空间的用户与授权管理功能：:ref:`odps_sec_authorization_dac`
+
+基于Package的跨项目空间的资源分享
+-------------------------------------
+Package是一种跨项目空间共享数据及资源的机制，主要用于解决跨项目空间的用户授权问题。
+
+如果不使用Package，对于下面的场景我们无法有效的解决：Alifinance项目空间的成员若要访问Alipay项目空间的数据，则需要Alipay项目空间管理员执行繁琐的授权操作：首先需要将Alifiance项目空间中的用户添加到Alipay项目空间中，再分别对这些新加入的用户进行普通授权。实际上，Alipay项目空间管理员并不期望对Alifiance项目空间中的每个用户都进行授权管理，而更期望有一种机制能使得Alifiance项目空间管理员能对许可的对象进行自主授权控制。
+
+使用Package之后，Alipay项目空间管理员可以对Alifinance需要使用的对象进行打包授权(也就是创建一个Package)，然后许可Alifinance项目空间可以安装这个Package。在Alifinance项目空间管理员安装Package之后，就可以自行管理Package是否需要进一步授权给自己Project下的用户。
+
+Package使用方法
+----------------
+Package的使用涉及到两个主体：Package创建者和Package使用者。Package创建者项目空间是资源提供方，它将需要分享的资源及其访问权限进行打包，然后许可Package使用方来安装使用。Package使用者项目空间是资源使用方，它在安装资源提供方发布的Package之后，便可以直接跨项目空间访问资源。
+
+下面分别介绍Package创建者和Package使用者所涉及的操作。
+
+Package创建者
+~~~~~~~~~~~~~~~~~~
+
+创建Package
+
+.. code-block:: sql
+
+ create package <pkgname>
+
+删除Package
+
+.. code-block:: sql
+
+ delete package <pkgname>
+
+将需要分享的资源添加到Package
+
+.. code-block:: sql
+
+ add project_object to package package_name [with privileges privileges]
+ 
+ remove project_object from package package_name
+ 
+ project_object ::= table table_name | 
+                    instance inst_name | 
+                    function func_name |
+                    resource res_name 
+
+ privileges ::= action_item1, action_item2, ...
+
+.. note::
+
+ * 目前支持的对象类型不包括Project类型，也就是不允许通过Package在其他Project中创对象。
+ * 添加到Package中的不仅仅是对象本身，还包括相应的操作权限。当没有通过[with privileges privileges]来指定操作权限时，默认为只读权限，即Read/Describe/Select。"对象及其权限"被看作一个整体，添加后不可被更新。若有需要，只能删除和重新添加。
+
+许可其他项目空间使用Package
+
+.. code-block:: sql
+
+ allow project <prjname> to install package <pkgname> [using label <number>]
+
+若没有开启LabelSecurity策略，则忽略[USING LABEL <number>]。关于LabelSecurity介绍，请参考：:ref:`odps_sec_authorization_mac`
+
+撤销其他项目空间使用Package的许可
+
+.. code-block:: sql
+
+ disallow project <prjname> to install package <pkgname>
+
+查看已创建和已安装的Package列表
+
+.. code-block:: sql
+
+ show packages
+
+查看Package详细信息
+
+.. code-block:: sql
+
+ describe package <pkgname>
+
+Package使用者
+~~~~~~~~~~~~~~~~~~
+安装Package
+
+.. code-block:: sql
+
+ install package <pkgname>
+
+.. note:: 对于安装Package来说，要求pkgName的格式为：<projectName>.<packageName>；
+
+卸载Package
+
+.. code-block:: sql
+
+ uninstall package <pkgname>；
+
+.. note:: 对于卸载Package来说，要求pkgName的格式为：<projectName>.<packageName>；
+
+查看Package
+
+.. code-block:: sql
+
+ show packages 
+   --查看已创建和已安装的package列表
+ describe package <pkgname> 
+   --查看package详细信息
+
+被安装的Package是一种独立的ODPS对象类型。若要访问Package里的资源(即其他项目空间分享给你的资源)，你必须拥有对该Package的Read权限。如果请求者没有Read权限，则需要向ProjectOwner或Admin申请。ProjectOwner或Admin可以通过ACL授权或Policy授权机制来完成。
+
+比如，如下的ACL授权允许云账号用户odps_test@aliyun.com访问Package里的资源：
+
+.. code-block:: sql
+
+ use prj2
+ security
+ install package prj1.testpkg
+ grant read on package prj1.testpackage to user aliyun$odps_test@aliyun.com
+
+如下的Policy授权允许项目空间prj2中的任何用户都可以访问Package里的资源：
+
+.. code-block:: sql
+
+ use prj2
+ security
+ install package prj1.testpkg
+ put policy /tmp/policy.txt
+
+/tmp/policy.txt内容如下：
+
+.. code-block:: java 
+
+ {
+ "Version": "1", 
+ "Statement":
+  [{
+     "Effect":"Allow",
+     "Principal":"*",
+     "Action":"odps:Read",
+     "Resource":"acs:odps:*:projects/prj2/packages/prj1.testpkg"
+ }]
+ }

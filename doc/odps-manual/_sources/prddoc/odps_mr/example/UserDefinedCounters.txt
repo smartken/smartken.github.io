@@ -1,0 +1,122 @@
+用户自定义代码示例
+----------------------------------------------------------------------------------------
+Counter是能够帮助用户计算MapReduce运行过程中的统计信息，例如输入、输出数据量等。用户可以根据不同的需求定制Counter。ODPS MapRecuce的Counter只能是整形。
+
+代码示例中定义了三个Counter：map_outputs，reduce_outputs和global_counts。用户可以在Map/Reduce的setup，map/reduce及cleanup接口中获取任意自定义Counter，并进行操作。
+
+代码示例，仅供参考：
+
+.. code-block:: java
+ :linenos:
+
+  package com.aliyun.odps.mapred.open.example;
+  
+  import java.io.IOException;
+  import java.util.Iterator;
+  
+  import com.aliyun.odps.counter.Counter;
+  import com.aliyun.odps.counter.Counters;
+  import com.aliyun.odps.data.Record;
+  import com.aliyun.odps.mapred.JobClient;
+  import com.aliyun.odps.mapred.MapperBase;
+  import com.aliyun.odps.mapred.ReducerBase;
+  import com.aliyun.odps.mapred.RunningJob;
+  import com.aliyun.odps.mapred.TaskContext;
+  import com.aliyun.odps.mapred.conf.JobConf;
+  import com.aliyun.odps.mapred.example.utils.TableInputFormat;
+  import com.aliyun.odps.mapred.example.utils.TableOutputFormat;
+  import com.aliyun.odps.mapred.utils.SchemaUtils;
+  
+  /**
+   * User Defined Counters
+   *
+   * To run: jar -resources odps-mapred-example-0.12.0.jar 
+   * com.aliyun.odps.mapred.open.example.UserDefinedCounters mr_src mr_testcounters_out;
+   * 
+   **/
+  public class UserDefinedCounters {
+  
+    enum MyCounter {
+      TOTAL_TASKS, MAP_TASKS, REDUCE_TASKS
+    }
+  
+    public static class TokenizerMapper extends MapperBase {
+      private Record word;
+      private Record one;
+  
+      @Override
+      public void setup(TaskContext context) throws IOException {
+        super.setup(context);
+        Counter map_tasks = context.getCounter(MyCounter.MAP_TASKS);
+        Counter total_tasks = context.getCounter(MyCounter.TOTAL_TASKS);
+        map_tasks.increment(1);
+        total_tasks.increment(1);
+  
+        word = context.createMapOutputKeyRecord();
+        one = context.createMapOutputValueRecord();
+        one.set(new Object[] { 1L });
+      }
+  
+      @Override
+      public void map(long recordNum, Record record, TaskContext context)
+          throws IOException {
+        for (int i = 0; i < record.getColumnCount(); i++) {
+          word.set(new Object[] { record.get(i).toString() });
+          context.write(word, one);
+        }
+      }
+    }
+  
+    public static class SumReducer extends ReducerBase {
+      private Record result = null;
+  
+      @Override
+      public void setup(TaskContext context) throws IOException {
+        result = context.createOutputRecord();
+        Counter reduce_tasks = context.getCounter(MyCounter.REDUCE_TASKS);
+        Counter total_tasks = context.getCounter(MyCounter.TOTAL_TASKS);
+        reduce_tasks.increment(1);
+        total_tasks.increment(1);
+      }
+  
+      @Override
+      public void reduce(Record key, Iterator<Record> values, TaskContext context)
+          throws IOException {
+        long count = 0;
+        while (values.hasNext()) {
+          Record val = values.next();
+          count += (Long) val.get(0);
+        }
+        result.set(0, key.get(0));
+        result.set(1, count);
+        context.write(result);
+      }
+    }
+  
+    public static void main(String[] args) throws Exception {
+      if (args.length != 2) {
+        System.err
+            .println("Usage: TestUserDefinedCounters <in_table> <out_table>");
+        System.exit(2);
+      }
+  
+      JobConf job = new JobConf();
+      job.setMapperClass(TokenizerMapper.class);
+      job.setReducerClass(SumReducer.class);
+  
+      job.setMapOutputKeySchema(SchemaUtils.fromString("word:string"));
+      job.setMapOutputValueSchema(SchemaUtils.fromString("count:bigint"));
+  
+      TableInputFormat.addInput(args[0], job);
+      TableOutputFormat.addOutput(args[1], job);
+  
+      RunningJob rJob = JobClient.runJob(job);
+
+      Counters counters = rJob.getCounters();
+      long m = counters.findCounter(MyCounter.MAP_TASKS).getValue();
+      long r = counters.findCounter(MyCounter.REDUCE_TASKS).getValue();
+      long total = counters.findCounter(MyCounter.TOTAL_TASKS).getValue();
+  
+      System.exit(0);
+    }
+  }

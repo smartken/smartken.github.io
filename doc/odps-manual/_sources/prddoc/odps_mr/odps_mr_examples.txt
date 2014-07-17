@@ -1,0 +1,24 @@
+.. _odps_openmr_example:
+
+示例程序
+-----------------------
+
+本章节将介绍更多ODPS MapReduce的示例，点击可以查看Java源代码。
+
+.. toctree::
+ :maxdepth: 1
+
+  WordCount示例 <example/WordCount>
+  MapOnly示例 <example/MapOnly>
+  多路输入输出示例 <example/MultipleInOut>
+  多任务示例 <example/MultiJobs>
+  多列排序示例 <example/SecondarySort>
+  使用资源示例 <example/Resource>
+  Counter示例 <example/UserDefinedCounters>
+  Grep示例 <example/Grep>
+  Join示例 <example/Join>
+  SleepJob示例 <example/SleepJob>
+  Unique示例 <example/Unique>
+  Sort示例 <example/Sort>
+
+

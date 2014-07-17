@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ODPS安全相关语句汇总 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="ODPS 安全参考手册" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_accesspolicy.html" title="访问策略语言"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="odps_sec_configuration.html" title="项目空间的安全配置"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps">
+<h1>ODPS安全相关语句汇总<a class="headerlink" href="#odps" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>项目空间的安全配置<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="55%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">语句</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>鉴权配置</td>
+<td><ul class="first last simple">
+<li>show SecurityConfiguration</li>
+<li>set security.CheckPermissionUsingACL=true/false</li>
+<li>set security.CheckPermissionUsingPolicy=true/false</li>
+<li>set security.ObjectCreatorHasAccessPermission=true/false</li>
+<li>set security.ObjectCreatorHasGrantPermission=true/false</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>查看项目空间的安全配置</li>
+<li>激活/冻结ACL授权机制</li>
+<li>激活/冻结Policy授权机制</li>
+<li>允许/禁止对象创建者默认拥有访问权限</li>
+<li>允许/禁止对象创建者默认拥有授权权限</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>数据保护
+配置</td>
+<td><ul class="first last">
+<li><p class="first">set security.ProjectProtection=false</p>
+</li>
+<li><dl class="first docutils">
+<dt>set security.ProjectProtection=</dt>
+<dd><p class="first last">true [with exception &lt;policy&gt;]</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">list TrustedProjects</p>
+</li>
+<li><p class="first">add TrustedProject &lt;projectName&gt;</p>
+</li>
+<li><p class="first">remove TrustedProject &lt;projectName&gt;</p>
+</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>关闭数据保护机制</li>
+<li>开启数据保护机制</li>
+<li>查看可信项目空间列表</li>
+<li>添加可信项目空间</li>
+<li>移除可信项目空间</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id2">
+<h2>项目空间的权限管理【基础篇：自主访问控制】<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="61%" />
+<col width="30%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">语句</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>用户管理</td>
+<td><ul class="first last simple">
+<li>list users</li>
+<li>add user &lt;username&gt;</li>
+<li>remove user &lt;username&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>查看所有已添加进来的用户</li>
+<li>添加一个用户</li>
+<li>移除一个用户</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>角色管理</td>
+<td><ul class="first last simple">
+<li>list roles</li>
+<li>create role &lt;rolename&gt;</li>
+<li>drop role &lt;rolename&gt;</li>
+<li>grant &lt;rolelist&gt; to &lt;username&gt;</li>
+<li>revoke &lt;rolelist&gt; from &lt;username&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>查看所有已创建的角色</li>
+<li>创建一个角色</li>
+<li>删除建一个角色</li>
+<li>对用户指派一个或多个角色</li>
+<li>撤销对用户的角色指派</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>ACL授权</td>
+<td><ul class="first last simple">
+<li>grant &lt;privList&gt; on &lt;objType&gt; &lt;objName&gt; to user &lt;username&gt;</li>
+<li>grant &lt;privList&gt; on &lt;objType&gt; &lt;objName&gt; to role &lt;rolename&gt;</li>
+<li>revoke &lt;privList&gt; on &lt;objType&gt; &lt;objName&gt; from user &lt;username&gt;</li>
+<li>revoke &lt;privList&gt; on &lt;objType&gt; &lt;objName&gt; from role &lt;rolename&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>对用户授权</li>
+<li>对角色授权</li>
+<li>撤销对用户的授权</li>
+<li>撤销对角色的授权</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>Policy
+授权</td>
+<td><ul class="first last simple">
+<li>get policy</li>
+<li>put policy &lt;policyFile&gt;</li>
+<li>get policy on role &lt;roleName&gt;</li>
+<li>put policy &lt;policyFile&gt; on role &lt;roleName&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>查看项目空间级别的Policy设置</li>
+<li>设置项目空间级别的Policy</li>
+<li>查看某个角色的Policy设置</li>
+<li>设置某个角色的Policy</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>权限审查</td>
+<td><ul class="first last simple">
+<li>whoami</li>
+<li>show grants [for &lt;username&gt;] [on type &lt;objectType&gt;]</li>
+<li>show acl for &lt;objectName&gt; [on type &lt;objectType&gt;]</li>
+<li>describe role &lt;roleName&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>查看当前用户信息</li>
+<li>查看用户权限和角色</li>
+<li>查看具体对象的授权信息</li>
+<li>查看角色的授权信息和角色指派</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id3">
+<h2>项目空间的权限管理【高级篇：基于标签的安全控制】<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="76%" />
+<col width="16%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">语句</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>开关设置</td>
+<td><ul class="first last simple">
+<li>set security.LabelSecurity=true/false</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>开启/关闭</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>标签管理</td>
+<td><ul class="first last simple">
+<li>set label &lt;number&gt; TO USER &lt;username&gt;</li>
+<li>set label &lt;number&gt; TO TABLE tablename[(column_list)]</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>设置用户标签</li>
+<li>设置数据敏感标签</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>授权管理</td>
+<td><ul class="first last simple">
+<li>grant label &lt;number&gt; on table &lt;tablename&gt;[(column_list)] to user &lt;username&gt; [with exp &lt;days&gt;]</li>
+<li>revoke label on table &lt;tablename&gt; from user &lt;username&gt;</li>
+<li>clear expired grants</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>允许Label提权</li>
+<li>撤销Label提前</li>
+<li>清理过期授权信息</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>权限审查</td>
+<td><ul class="first last simple">
+<li>show label [&lt;level&gt;] grants [for user &lt;username&gt;]</li>
+<li>show label [&lt;level&gt;] grants on table &lt;tablename&gt;</li>
+<li>show label [&lt;level&gt;] grants on table &lt;tablename&gt; for user &lt;username&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>查看用户Label权限</li>
+<li>查看表的授权用户</li>
+<li>查看列级授权</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="package">
+<h2>基于Package的资源分享<a class="headerlink" href="#package" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="63%" />
+<col width="29%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">语句</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>分享资源</td>
+<td><ul class="first last simple">
+<li>create package &lt;pkgName&gt;</li>
+<li>delete package &lt;pkgName&gt;</li>
+<li>add &lt;objType&gt; &lt;objName&gt; to package &lt;pkgName&gt; [with privileges privs]</li>
+<li>remove &lt;objType&gt; &lt;objName&gt; from package &lt;pkgName&gt;</li>
+<li>allow prOject &lt;prjName&gt; to install package &lt;pkgName&gt; [using label &lt;num&gt;]</li>
+<li>disallow project &lt;prjName&gt; to install package &lt;pkgName&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>创建一个Package</li>
+<li>删除一个Package</li>
+<li>向Package中添加需要分享的资源</li>
+<li>从Package中删除已分享的资源</li>
+<li>许可某个项目空间使用你的Package</li>
+<li>禁止某个项目空间使用你的Package</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>使用资源</td>
+<td><ul class="first last simple">
+<li>install package &lt;pkgName&gt;</li>
+<li>uninstall package &lt;pkgName&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>安装Package</li>
+<li>卸载Package</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>查看
+Package</td>
+<td><ul class="first last simple">
+<li>show packages</li>
+<li>describe package &lt;pkgName&gt;</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>列出所有创建和安装的Packages</li>
+<li>查看package的详细信息</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ODPS安全相关语句汇总</a><ul>
+<li><a class="reference internal" href="#id1">项目空间的安全配置</a></li>
+<li><a class="reference internal" href="#id2">项目空间的权限管理【基础篇：自主访问控制】</a></li>
+<li><a class="reference internal" href="#id3">项目空间的权限管理【高级篇：基于标签的安全控制】</a></li>
+<li><a class="reference internal" href="#package">基于Package的资源分享</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_accesspolicy.html" title="访问策略语言"
+             >next</a></li>
+        <li class="right" >
+          <a href="odps_sec_configuration.html" title="项目空间的安全配置"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

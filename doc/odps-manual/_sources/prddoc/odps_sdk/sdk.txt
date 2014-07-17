@@ -1,0 +1,324 @@
+.. _odps_sdk:
+
+ODPS SDK介绍
+====================
+在本小节，我们仅会对较为常用的ODPS核心接口做简短介绍，更多详细信息请参阅SDK Java Doc。
+
+.. _odps_sdk_aliyunaccount:
+
+AliyunAccount
+-------------------
+阿里云认证账号。输入参数为accessId及accessKey，是阿里云用户的身份标识和认证密钥。此类用来初始化 :ref:`odps_sdk_odps` 。
+
+.. _odps_sdk_odps:
+
+Odps
+-----------------
+ODPS SDK的入口，用户通过此类来获取项目空间下的所有对象集合，包括: :ref:`odps_sdk_projects` ，:ref:`odps_sdk_tables` ，:ref:`odps_sdk_resources` ，:ref:`odps_sdk_functions` ，:ref:`odps_sdk_instances` 。用户可以通过传入 :ref:`odps_sdk_aliyunaccount` 实例来构造ODPS对象。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ odps.setDefaultProject("my_project");
+ 
+ for (Table t : odps.tables()) {
+     ....
+ }
+
+.. _odps_sdk_projects:
+
+Projects
+-----------
+ODPS中所有项目空间的集合。集合中的元素为 :ref:`odps_sdk_project` 。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ Project p = odps.projects().get("my_exists");
+ 
+
+.. _odps_sdk_project:
+
+Project
+----------
+对项目空间信息的描述，可以通过 :ref:`odps_sdk_projects` 获取相应的项目空间。
+
+.. _odps_sdk_sqltask:
+
+SQLTask
+---------
+用于运行、处理SQL任务的接口。可以通过run接口直接运行SQL。run接口返回 :ref:`odps_sdk_instance` 实例，通过Instance获取SQL的运行状态及运行结果。程序示例如下，仅供参考：
+
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+
+ Instance instance = SQLTask.run(odps, "my_project", "select ...");
+ id = instance.getId();
+
+ Set<String> taskNames = instance.getTaskNames();
+ for (String name : taskNames) {
+     TaskSummary summary = instance.getTaskSummary(name);
+     String s = summary.getSummaryText(); 
+ }
+
+ Map<String, String> results = instance.getTaskResults();
+ Map<String, TaskStatus> taskStatus = instance.getTaskStatus();
+
+ for (Entry<String, TaskStatus> status : taskStatus.entrySet()) {
+     String result = results.get(status.getKey());
+ }
+
+.. note:: 如果用户想创建表，需要通过SQLTask接口，而不是 :ref:`odps_sdk_table` 接口。用户需要将 :ref:`odps_sql_create_table` 的语句传入SQLTask。
+
+.. _odps_sdk_instances:
+
+Instances
+--------------
+ODPS中所有实例(Instance)的集合。集合中的元素为 :ref:`odps_sdk_instance` 。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ odps.setDefaultProject("my_project");
+ 
+ for (Instance i : odps.instances()) {
+     ....
+ }
+
+.. _odps_sdk_instance:
+
+Instance
+---------
+对实例信息的描述，可以通过 :ref:`odps_sdk_instances` 获取相应的实例。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ Instance ins = odps.instances().get("instance id");
+
+.. _odps_sdk_tables:
+
+Tables
+--------
+ODPS中所有表的集合。集合中的元素为 :ref:`odps_sdk_table` 。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ odps.setDefaultProject("my_project");
+ 
+ for (Table t : odps.tables()) {
+     ....
+ }
+
+.. _odps_sdk_table:
+
+Table
+--------
+对表信息的描述，可以通过 :ref:`odps_sdk_tables` 获取相应的表。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ Table t = odps.tables().get("table name");
+
+.. _odps_sdk_resources:
+
+Resources
+-------------
+ODPS中所有资源的集合。集合中的元素为 :ref:`odps_sdk_resource` 。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ odps.setDefaultProject("my_project");
+ 
+ for (Resource r : odps.resources()) {
+     ....
+ }
+
+.. _odps_sdk_resource:
+
+Resource
+--------------
+对资源信息的描述，可以通过 :ref:`odps_sdk_resources` 获取相应的资源。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ Resource r = odps.resources().get("resource name");
+
+一个创建文件资源的示例：
+
+.. code-block:: java
+
+  String projectName = "my_porject";
+
+  String source = "my_local_file.txt";
+  File file = new File(source);
+  InputStream is = new FileInputStream(file);
+
+  FileResource resource = new FileResource();
+  String name = file.getName(); 
+  resource.setName(name);
+
+  odps.resources().create(projectName, resource, is);
+ 
+
+一个创建表资源的示例：
+
+.. code-block:: java
+
+  TableResource resource = new TableResource(tableName, tablePrj, partitionSpec);
+  //resource.setName(INVALID_USER_TABLE);
+  resource.setName("table_resource_name");
+  odps.resources().update(projectName, resource);
+
+
+.. _odps_sdk_functions:
+
+Functions
+-------------
+ODPS中所有函数的集合。集合中的元素为 :ref:`odps_sdk_function` 。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+ odps.setDefaultProject("my_project");
+ 
+ for (Function f : odps.functions()) {
+     ....
+ }
+
+
+.. _odps_sdk_function:
+
+Function
+------------
+对函数信息的描述，可以通过 :ref:`odps_sdk_functions` 获取相应的函数。程序示例如下：
+
+.. code-block:: java
+
+ Account account = new AliyunAccount("my_access_id", "my_access_key");
+ 
+ Odps odps = new Odps(account);
+ /*
+  * odps服务内网地址：http://odps-ext.aliyun-inc.com/api
+  * odps服务公网地址：http://service.odps.aliyun.com/api
+  * 仅当用户处于阿里云内网环境时，才能使用odps服务内网地址
+ */
+ String odpsUrl = "<your odps endpoint>";
+ odps.setEndpoint(odpsUrl);
+
+ Function f = odps.functions().get("function name");
+
+一个创建函数的示例：
+
+.. code-block:: java
+
+ String resources = "xxx:xxx";
+ String classType = "com.aliyun.odps.mapred.open.example.WordCount";
+
+ ArrayList<String> resourceList = new ArrayList<String>();
+ for (String r : resources.split(":")) {
+   resourceList.add(r);
+ }
+
+ Function func = new Function();
+ func.setName(name);
+ func.setClassType(classType);
+ func.setResources(resourceList);
+
+ odps.functions().create(projectName, func);
+

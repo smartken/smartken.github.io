@@ -1,0 +1,585 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ODPS SQL概要 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="ODPS SQL" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sql_op.html" title="运算符"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="index.html" title="ODPS SQL"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">ODPS SQL</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps-sql">
+<h1>ODPS SQL概要<a class="headerlink" href="#odps-sql" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>简要说明<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>ODPS SQL适用于海量数据(TB级别)，实时性要求不高的场合，它的每个作业的准备，提交等阶段要花费较长时间，因此要求每秒处理几千至数万笔事务的业务是不能用ODPS SQL完成的。</p>
+<p>ODPS SQL采用的是类似于SQL的语法，可以看作是标准SQL的子集，但不能因此简单的把ODPS SQL等价成一个数据库，它在很多方面并不具备数据库的特征，如事务、主键约束、索引等。目前在ODPS中允许的最大SQL长度是2M。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">如果想快速了解ODPS SQL支持的基本功能，可参考 <a class="reference external" href="resources/ODPS-SQL.pdf">ODPS-SQL.pdf</a></p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>保留字<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>ODPS将SQL语句的关键字作为保留字。在对表、列或是分区命名时请不要使用，否则会报错。保留字不区分大小写。下面只给出常用的保留字列表，完整的保留字列表请参阅 <a class="reference internal" href="odps_sql_appendix.html#odps-keyword"><em>ODPS SQL保留字</em></a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="14%" />
+<col width="14%" />
+<col width="15%" />
+<col width="15%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>%</td>
+<td>&amp;</td>
+<td>&amp;&amp;</td>
+<td>(</td>
+<td>)</td>
+<td>*</td>
+<td>+</td>
+</tr>
+<tr class="row-even"><td>-</td>
+<td>.</td>
+<td>/</td>
+<td>;</td>
+<td>&lt;</td>
+<td>&lt;=</td>
+<td>&lt;&gt;</td>
+</tr>
+<tr class="row-odd"><td>=</td>
+<td>&gt;</td>
+<td>&gt;=</td>
+<td>?</td>
+<td>ADD</td>
+<td>ALL</td>
+<td>ALTER</td>
+</tr>
+<tr class="row-even"><td>AND</td>
+<td>AS</td>
+<td>ASC</td>
+<td>BETWEEN</td>
+<td>BIGINT</td>
+<td>BOOLEAN</td>
+<td>BY</td>
+</tr>
+<tr class="row-odd"><td>CASE</td>
+<td>CAST</td>
+<td>COLUMN</td>
+<td>COMMENT</td>
+<td>CREATE</td>
+<td>DESC</td>
+<td>DISTINCT</td>
+</tr>
+<tr class="row-even"><td>DISTRIBUTE</td>
+<td>DOUBLE</td>
+<td>DROP</td>
+<td>ELSE</td>
+<td>FALSE</td>
+<td>FROM</td>
+<td>FULL</td>
+</tr>
+<tr class="row-odd"><td>GROUP</td>
+<td>IF</td>
+<td>IN</td>
+<td>INSERT</td>
+<td>INTO</td>
+<td>IS</td>
+<td>JOIN</td>
+</tr>
+<tr class="row-even"><td>LEFT</td>
+<td>LIFECYCLE</td>
+<td>LIKE</td>
+<td>LIMIT</td>
+<td>MAPJOIN</td>
+<td>NOT</td>
+<td>NULL</td>
+</tr>
+<tr class="row-odd"><td>ON</td>
+<td>OR</td>
+<td>ORDER</td>
+<td>OUTER</td>
+<td>OVERWRITE</td>
+<td>PARTITION</td>
+<td>RENAME</td>
+</tr>
+<tr class="row-even"><td>REPLACE</td>
+<td>RIGHT</td>
+<td>RLIKE</td>
+<td>SELECT</td>
+<td>SORT</td>
+<td>STRING</td>
+<td>TABLE</td>
+</tr>
+<tr class="row-odd"><td>THEN</td>
+<td>TOUCH</td>
+<td>TRUE</td>
+<td>UNION</td>
+<td>VIEW</td>
+<td>WHEN</td>
+<td>WHERE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="odps-sql-part-table">
+<span id="id3"></span><h2>分区表<a class="headerlink" href="#odps-sql-part-table" title="Permalink to this headline">¶</a></h2>
+<p>ODPS在创建表时，允许用户指定表的某些列为分区列，详情请参考 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-create-table"><em>创建表(CREATE TABLE)</em></a> 。指定分区表会对用户带来诸多便利，例如：提高SQL运行效率，减少计费等。在如下场景下使用分区表将会带来较大的收益：在select语句的where条件过滤中使用分区列作为过滤条件；与此同时，部分对分区操作的SQL的运行效率则较低，给您带来较高的计费，例如：使用 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-dynamic-partition"><em>输出到动态分区(DYNAMIC PARTITION)</em></a></p>
+<p>对于部分ODPS操作命令，处理分区表和非分区表时的语法有差别，详细情况请参考 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-ddl"><em>DDL语句</em></a> 及 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-dml"><em>DML语句</em></a> 部分的说明。</p>
+</div>
+<div class="section" id="id4">
+<h2>类型转换<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>ODPS SQL允许数据类型之间的转换，类型转换方式包括：显式类型转换及隐式类型转换。</p>
+<div class="section" id="id5">
+<h3>显式类型转换<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>显式类型转换是用cast将一种数据类型的值转换为另一种类型的值的行为，在ODPS SQL中支持的显式类型转换如下：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+<col width="19%" />
+<col width="17%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>From To</td>
+<td>Bigint</td>
+<td>Double</td>
+<td>String</td>
+<td>Datetime</td>
+<td>Boolean</td>
+</tr>
+<tr class="row-even"><td>Bigint</td>
+<td>&#8211;</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr class="row-odd"><td>Double</td>
+<td>Y</td>
+<td>&#8211;</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr class="row-even"><td>String</td>
+<td>Y</td>
+<td>Y</td>
+<td>&#8211;</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr class="row-odd"><td>Datetime</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>&#8211;</td>
+<td>N</td>
+</tr>
+<tr class="row-even"><td>Boolean</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+<p>其中，&#8217;Y&#8217;表示可以转换，&#8217;N&#8217;表示不可以转换，&#8217;&#8211;&#8217;表示不需要转换。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>将double类型转为bigint类型时，小数部分会被截断，例如：cast(1.6 as bigint) = 1；</li>
+<li>满足double格式的string类型转换为bigint时，会先将string转换为double，再将double转换为bigint，因此，小数部分会被截断，例如cast(&#8220;1.6&#8221; as bigint) = 1；</li>
+<li>满足bigint格式的string类型可以被转换为double类型，小数点后保留一位，例如：cast(&#8220;1&#8221; as double) = 1.0；</li>
+<li>不支持的显式类型转换会导致异常；</li>
+<li>如果在执行时转换失败，报错退出；</li>
+<li>日期类型转换时采用默认格式yyyy-mm-dd hh:mi:ss，详细说明信息请参考 <a class="reference internal" href="#odps-sql-string-2-datetime"><em>String类型与Datetime类型之间的转换</em></a> ；</li>
+<li>部分类型之间不可以通过显式的类型转换，但可以通过SQL内建函数进行转换，例如：从boolean类型转换到string类型，可使用函数to_char，详细介绍请参考 <a class="reference internal" href="odps_sql_func.html#odps-sql-function-datetime-to-char"><em>TO_CHAR</em></a> ，而to_date函数同样支持从string类型到datetime类型的转换，详细介绍请参考 <a class="reference internal" href="odps_sql_func.html#odps-sql-function-datetime-to-date"><em>TO_DATE</em></a> ；</li>
+<li>关于cast的介绍请参阅 <a class="reference internal" href="odps_sql_func.html#odps-sql-function-cast"><em>CAST</em></a> ；</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>隐式类型转换<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>隐式类型转换是指在运行时，由ODPS依据上下文使用环境及类型转换规则自动进行的类型转换。ODPS支持的隐式类型转换规则与显式转换相同：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+<col width="19%" />
+<col width="17%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>From  To</td>
+<td>Bigint</td>
+<td>Double</td>
+<td>String</td>
+<td>Datetime</td>
+<td>Boolean</td>
+</tr>
+<tr class="row-even"><td>Bigint</td>
+<td>&#8211;</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr class="row-odd"><td>Double</td>
+<td>Y</td>
+<td>&#8211;</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr class="row-even"><td>String</td>
+<td>Y</td>
+<td>Y</td>
+<td>&#8211;</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr class="row-odd"><td>Datetime</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>&#8211;</td>
+<td>N</td>
+</tr>
+<tr class="row-even"><td>Boolean</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+<p>其中，&#8217;Y&#8217;表示可以转换，&#8217;N&#8217;表示不可以转换，&#8217;&#8211;&#8217;表示不需要转换。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>不支持的隐式类型转换会导致异常；</li>
+<li>如果在执行时转换失败，也会导致异常；</li>
+<li>由于隐式类型转换是ODPS依据上下文使用环境自动进行的类型转换，因此，我们推荐在类型不匹配时显式的用cast进行转换;</li>
+<li>隐式类型转换规则是有发生作用域的。在某些作用域中，只有一部分规则可以生效。详细信息请参考 <a class="reference internal" href="#odps-sql-cast-domain"><em>隐式类型转换的作用域</em></a> ；</li>
+</ul>
+</div>
+</div>
+<div class="section" id="odps-sql-cast-domain">
+<span id="id7"></span><h3>隐式类型转换的作用域<a class="headerlink" href="#odps-sql-cast-domain" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="is-null-is-not-null">
+<h4>关系运算符(=, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;=, IS NULL, IS NOT NULL)<a class="headerlink" href="#is-null-is-not-null" title="Permalink to this headline">¶</a></h4>
+<p>关系运算符包括=, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;=, IS NULL, IS NOT NULL, LIKE, RLIKE和IN。由于LIKE, RLIKE和IN的隐式类型转换规则不同于其他关系运算符，将单独拿出章节对这三种关系运算符做出说明。本小节的说明不包含这三种特殊的关系运算符。当不同类型的数据共同参与关系运算时，按照下述原则进行隐式类型转换。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="15%" />
+<col width="15%" />
+<col width="18%" />
+<col width="18%" />
+<col width="16%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>From  To</td>
+<td>Bigint</td>
+<td>Double</td>
+<td>String</td>
+<td>Datetime</td>
+<td>Boolean</td>
+</tr>
+<tr class="row-even"><td>Bigint</td>
+<td>&#8211;</td>
+<td>Double</td>
+<td>Double</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr class="row-odd"><td>Double</td>
+<td>Double</td>
+<td>&#8211;</td>
+<td>Double</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr class="row-even"><td>String</td>
+<td>Double</td>
+<td>Double</td>
+<td>&#8211;</td>
+<td>Datetime</td>
+<td>N</td>
+</tr>
+<tr class="row-odd"><td>Datetime</td>
+<td>N</td>
+<td>N</td>
+<td>Datetime</td>
+<td>&#8211;</td>
+<td>N</td>
+</tr>
+<tr class="row-even"><td>Boolean</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>如果待比较的两个类型间不能进行隐式类型转换，则该关系运算不能完成，报错退出；</li>
+<li>关系运算符介绍，请参阅 <a class="reference internal" href="odps_sql_op.html#odps-sql-rel-op"><em>关系操作符</em></a> ；</li>
+</ul>
+</div>
+</div>
+<div class="section" id="like-rlike-in">
+<h4>特殊的关系运算符(LIKE, RLIKE, IN)<a class="headerlink" href="#like-rlike-in" title="Permalink to this headline">¶</a></h4>
+<p>LIKE及RLIKE的使用方式形如：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">source</span> <span class="k">like</span> <span class="n">pattern</span><span class="p">;</span>
+<span class="k">source</span> <span class="n">rlike</span> <span class="n">pattern</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>此二者在隐式类型转换中的注意事项：</p>
+<ol class="arabic simple">
+<li>LIKE和RLIKE的source和pattern参数均仅接受string类型；</li>
+<li>其他类型不允许参与运算，也不能进行到string类型的隐式类型转换；</li>
+</ol>
+<p>IN的使用方式形如：</p>
+<div class="highlight-sql"><pre>key in (value1, value2, …)</pre>
+</div>
+<p>In的隐式转换规则：</p>
+<ol class="arabic simple">
+<li>In右侧的value值列表中的数据类型必须一致；</li>
+<li>当key与values之间比较时，若bigint, double, string之间比较，统一转double，若datetime和string之间比较，统一转datetime。除此之外不允许其它类型之间的转换。</li>
+</ol>
+</div>
+<div class="section" id="id8">
+<h4>算术运算符<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
+<p>算术运算符包括：+, -, * , /, %, +, -，其隐式转换规则：</p>
+<ol class="arabic simple">
+<li>只有string、bigint和double才能参与算术运算。String在参与运算前会进行隐式类型转换到double。Bigint和double共同参与计算时，会将bigint隐式转换为double。</li>
+<li>日期型和布尔型不允许参与算数运算。</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">算术运算符的相关章节 <a class="reference internal" href="odps_sql_op.html#odps-sql-arith-op"><em>算术操作符</em></a></p>
+</div>
+</div>
+<div class="section" id="id9">
+<h4>位运算符<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
+<p>位运算符包括：&amp;和|, 其隐式转换规则：</p>
+<ol class="arabic simple">
+<li>只有bigint才能参与位运算。</li>
+<li>其他类型不允许参与位运算，也不允许其他类型的隐式类型转换。</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">位运算符的相关章节 <a class="reference internal" href="odps_sql_op.html#odps-sql-bit-op"><em>位运算操作符</em></a></p>
+</div>
+</div>
+<div class="section" id="id10">
+<h4>逻辑运算符<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h4>
+<p>逻辑运算符包括：and, or和not，其隐式转换规则:</p>
+<ol class="arabic simple">
+<li>只有boolean才能参与逻辑运算。</li>
+<li>其他类型不允许参与逻辑运算，也不允许其他类型的隐式类型转换。</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">逻辑运算符的相关章节 <a class="reference internal" href="odps_sql_op.html#odps-sql-logic-op"><em>逻辑操作符</em></a></p>
+</div>
+</div>
+<div class="section" id="id11">
+<h4>ODPS SQL内建函数<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<p>ODPS SQL提供了大量的系统函数，方便用户对任意行的一列或多列进行计算，输出任意种的数据类型。其隐式转换规则:</p>
+<ol class="arabic simple">
+<li>在调用函数时，如果输入参数的数据类型与函数定义的参数数据类型不一致，把输入参数的数据类型转换为函数定义的数据类型。</li>
+<li>每个ODPS SQL内建函数的参数对于允许的隐式类型转换的要求不同，详见 <a class="reference internal" href="odps_sql_func.html#odps-sql-function"><em>SQL内建函数</em></a> 部分的说明。</li>
+</ol>
+</div>
+<div class="section" id="case-when">
+<h4>CASE WHEN<a class="headerlink" href="#case-when" title="Permalink to this headline">¶</a></h4>
+<p>Case when的隐式转换规则:</p>
+<ol class="arabic simple">
+<li>如果返回类型只有bigint,double，统一转double；</li>
+<li>如果返回类型中有string类型，统一转string，如果不能转则报错(如boolean类型)；</li>
+<li>除此之外不允许其它类型之间的转换；</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Case when的详细介绍请参阅 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-case-when"><em>CASE WHEN表达式</em></a></p>
+</div>
+</div>
+<div class="section" id="id12">
+<h4>分区列<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<p>ODPS SQL支持分区表，对于分区表的定义，请参考 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-ddl"><em>DDL语句</em></a> 及 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-dml"><em>DML语句</em></a> 部分的说明 。目前，ODPS分区仅支持string类型，不支持其他任意类型的隐式类型转换。</p>
+</div>
+<div class="section" id="union-all">
+<h4>UNION ALL<a class="headerlink" href="#union-all" title="Permalink to this headline">¶</a></h4>
+<p>参与 <a class="reference internal" href="odps_sql_grmr.html#odps-sql-union-all"><em>UNION ALL</em></a> 运算的所有列的数据类型、列个数、列名称必须完全一致，否则抛异常。</p>
+</div>
+</div>
+<div class="section" id="stringdatetime">
+<span id="odps-sql-string-2-datetime"></span><h3>String类型与Datetime类型之间的转换<a class="headerlink" href="#stringdatetime" title="Permalink to this headline">¶</a></h3>
+<p>ODPS支持string类型和datetime类型之间的相互转换。转换时使用的格式为yyyy-mm-dd hh:mi:ss，其中：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="45%" />
+<col width="41%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>单位</td>
+<td>字符串(忽略大小写)</td>
+<td>有效值域</td>
+</tr>
+<tr class="row-even"><td>年</td>
+<td>yyyy</td>
+<td>0001 ~ 9999</td>
+</tr>
+<tr class="row-odd"><td>月</td>
+<td>mm</td>
+<td>01 ~ 12</td>
+</tr>
+<tr class="row-even"><td>日</td>
+<td>dd</td>
+<td>01 ~ 28,29,30,31</td>
+</tr>
+<tr class="row-odd"><td>时</td>
+<td>hh</td>
+<td>00 ~ 23</td>
+</tr>
+<tr class="row-even"><td>分</td>
+<td>mi</td>
+<td>00 ~ 59</td>
+</tr>
+<tr class="row-odd"><td>秒</td>
+<td>ss</td>
+<td>00 ~ 59</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">各个单位的值域中，如果首位为0，不可省略，例如：&#8221;2014-1-9 12:12:12&#8221;就是非法的datetime格式，无法从这个string类型数据转换为datetime类型，必须写为&#8221;2014-01-09 12:12:12&#8221;。</p>
+</div>
+<p>只有符合上述格式描述的string类型才能够转换为datetime类型，例如：cast(&#8220;2013-12-31 02:34:34&#8221; as datetime)将会把string类型&#8221;2013-12-31 02:34:34&#8221;转换为datetime类型。同理，datetime转换为string时，默认转换为yyyy-mm-dd hh:mi:ss的格式。类似于下面的转换尝试，将会失败导致异常，例如：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">cast</span><span class="p">(</span><span class="ss">&quot;2013/12/31 02/34/34&quot;</span> <span class="k">as</span> <span class="n">datetime</span><span class="p">)</span>
+<span class="k">cast</span><span class="p">(</span><span class="ss">&quot;20131231023434&quot;</span> <span class="k">as</span> <span class="n">datetime</span><span class="p">)</span>
+<span class="k">cast</span><span class="p">(</span><span class="ss">&quot;2013-12-31 2:34:34&quot;</span> <span class="k">as</span> <span class="n">datetime</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>值得注意的是，&#8221;dd&#8221;部分的阈值上限取决于月份实际拥有的天数，如果超出对应月份实际拥有的天数，将会导致异常退出，例如：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">cast</span><span class="p">(</span><span class="ss">&quot;2013-02-29 12:12:12&quot;</span> <span class="k">as</span> <span class="n">datetime</span><span class="p">)</span>      <span class="c1">-- 异常返回，2013年2月没有29日</span>
+<span class="k">cast</span><span class="p">(</span><span class="ss">&quot;2013-11-31 12:12:12&quot;</span> <span class="k">as</span> <span class="n">datetime</span><span class="p">)</span>      <span class="c1">-- 异常返回，2013年11月没有31日</span>
+</pre></div>
+</div>
+<p>ODPS提供了to_date函数，用以将不满足日期格式的string类型数据转换为datetime类型。详细信息请参阅 <a class="reference internal" href="odps_sql_func.html#odps-sql-function-datetime-to-date"><em>TO_DATE</em></a> 。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ODPS SQL概要</a><ul>
+<li><a class="reference internal" href="#id1">简要说明</a></li>
+<li><a class="reference internal" href="#id2">保留字</a></li>
+<li><a class="reference internal" href="#odps-sql-part-table">分区表</a></li>
+<li><a class="reference internal" href="#id4">类型转换</a><ul>
+<li><a class="reference internal" href="#id5">显式类型转换</a></li>
+<li><a class="reference internal" href="#id6">隐式类型转换</a></li>
+<li><a class="reference internal" href="#odps-sql-cast-domain">隐式类型转换的作用域</a><ul>
+<li><a class="reference internal" href="#is-null-is-not-null">关系运算符(=, &lt;&gt;, &lt;, &lt;=, &gt;, &gt;=, IS NULL, IS NOT NULL)</a></li>
+<li><a class="reference internal" href="#like-rlike-in">特殊的关系运算符(LIKE, RLIKE, IN)</a></li>
+<li><a class="reference internal" href="#id8">算术运算符</a></li>
+<li><a class="reference internal" href="#id9">位运算符</a></li>
+<li><a class="reference internal" href="#id10">逻辑运算符</a></li>
+<li><a class="reference internal" href="#id11">ODPS SQL内建函数</a></li>
+<li><a class="reference internal" href="#case-when">CASE WHEN</a></li>
+<li><a class="reference internal" href="#id12">分区列</a></li>
+<li><a class="reference internal" href="#union-all">UNION ALL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stringdatetime">String类型与Datetime类型之间的转换</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sql_op.html" title="运算符"
+             >next</a></li>
+        <li class="right" >
+          <a href="index.html" title="ODPS SQL"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >ODPS SQL</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

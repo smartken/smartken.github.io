@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ODPS 安全参考手册 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_preface.html" title="前言"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../java_sand_box/odps_sandbox.html" title="Java沙箱"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps">
+<span id="odps-security"></span><h1>ODPS 安全参考手册<a class="headerlink" href="#odps" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_preface.html">前言</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_preface.html#id2">目标读者</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_quickstart.html">快速入门</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_quickstart.html#id2">简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_quickstart.html#id3">典型场景</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_authentication.html">ODPS 用户认证</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authentication.html#id1">简介</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_authorization_dac.html">项目空间的用户与授权管理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_dac.html#id2">简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_dac.html#id3">项目空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_dac.html#id4">项目空间的用户管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_dac.html#odps-security-role">项目空间的角色管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_dac.html#id6">对用户或角色进行授权</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_dac.html#id7">查看权限</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_authorization_mac.html">项目空间的用户与授权管理【高级篇：基于标签的安全控制】</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_mac.html#id2">简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_mac.html#id4">LabelSecurity操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_authorization_mac.html#id11">LabelSecurity应用场景</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_datasharing.html">跨项目空间的资源分享</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_datasharing.html#id2">背景简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_datasharing.html#package">基于Package的跨项目空间的资源分享</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_datasharing.html#id3">Package使用方法</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_dataprotection.html">项目空间的数据保护</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_dataprotection.html#id2">背景与动机</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_dataprotection.html#projectprotection">数据保护机制(ProjectProtection)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_dataprotection.html#id3">开启数据保护机制后的数据流出方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_dataprotection.html#id4">资源分享与数据保护</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_configuration.html">项目空间的安全配置</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_configuration.html#id2">简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_configuration.html#id3">鉴权模型配置</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_cmdlist.html">ODPS安全相关语句汇总</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_cmdlist.html#id1">项目空间的安全配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_cmdlist.html#id2">项目空间的权限管理【基础篇：自主访问控制】</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_cmdlist.html#id3">项目空间的权限管理【高级篇：基于标签的安全控制】</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_cmdlist.html#package">基于Package的资源分享</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="odps_sec_accesspolicy.html">访问策略语言</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_accesspolicy.html#id2">基本术语</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_accesspolicy.html#id3">访问策略语言结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odps_sec_accesspolicy.html#id7">访问策略语言规范</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_preface.html" title="前言"
+             >next</a></li>
+        <li class="right" >
+          <a href="../java_sand_box/odps_sandbox.html" title="Java沙箱"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

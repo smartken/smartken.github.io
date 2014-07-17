@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>应用限制 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="MapReduce" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../odps_tunnel/index.html" title="ODPS TUNNEL"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="example/Sort.html" title="源代码"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">MapReduce</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps-mr-restriction">
+<span id="id1"></span><h1>应用限制<a class="headerlink" href="#odps-mr-restriction" title="Permalink to this headline">¶</a></h1>
+<p>目前，ODPS的使用限制包括：</p>
+<ul class="simple">
+<li>ODPS表string列内容长度不允许超过2M。</li>
+<li>单个任务引用的资源数量不超过512个，分区表按照一个单位计算。</li>
+<li>单个任务引用的资源总计字节数大小不超过64M。</li>
+<li>单个任务的输入路数不能超过128，单个任务的输出路数不能超过128路。</li>
+<li>单个任务中自定义Counter的数量不能超过64，Counter的Group Name和Counter Name中不能带有#，两者长度和不能超过100。</li>
+<li>单个Map或Reduce Worker占用memory默认为2048，范围[256M, 12G]。</li>
+<li>单个Map或Reduce Worker重复读一个资源次数限制&lt;=64次。</li>
+<li>本地运行模式下，Map Worker个数不能超过100；Reduce Worker个数不能超过100；默认一路输入下载记录数100。</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../odps_tunnel/index.html" title="ODPS TUNNEL"
+             >next</a></li>
+        <li class="right" >
+          <a href="example/Sort.html" title="源代码"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >MapReduce</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

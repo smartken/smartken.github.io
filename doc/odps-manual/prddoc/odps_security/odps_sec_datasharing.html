@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>跨项目空间的资源分享 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="ODPS 安全参考手册" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_dataprotection.html" title="项目空间的数据保护"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="odps_sec_authorization_mac.html" title="项目空间的用户与授权管理【高级篇：基于标签的安全控制】"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps-sec-datasharing">
+<span id="id1"></span><h1>跨项目空间的资源分享<a class="headerlink" href="#odps-sec-datasharing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>背景简介<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>假设你是项目空间的Owner或管理员(admin角色)，如果有人需要申请访问你的项目空间资源，但是这个申请人并不属于你的项目团队。那么你可以使用本节介绍的跨项目空间的资源分享功能。</p>
+<p>如果申请人属于你的项目团队，那么建议你使用项目空间的用户与授权管理功能：<a class="reference internal" href="odps_sec_authorization_dac.html#odps-sec-authorization-dac"><em>项目空间的用户与授权管理</em></a></p>
+</div>
+<div class="section" id="package">
+<h2>基于Package的跨项目空间的资源分享<a class="headerlink" href="#package" title="Permalink to this headline">¶</a></h2>
+<p>Package是一种跨项目空间共享数据及资源的机制，主要用于解决跨项目空间的用户授权问题。</p>
+<p>如果不使用Package，对于下面的场景我们无法有效的解决：Alifinance项目空间的成员若要访问Alipay项目空间的数据，则需要Alipay项目空间管理员执行繁琐的授权操作：首先需要将Alifiance项目空间中的用户添加到Alipay项目空间中，再分别对这些新加入的用户进行普通授权。实际上，Alipay项目空间管理员并不期望对Alifiance项目空间中的每个用户都进行授权管理，而更期望有一种机制能使得Alifiance项目空间管理员能对许可的对象进行自主授权控制。</p>
+<p>使用Package之后，Alipay项目空间管理员可以对Alifinance需要使用的对象进行打包授权(也就是创建一个Package)，然后许可Alifinance项目空间可以安装这个Package。在Alifinance项目空间管理员安装Package之后，就可以自行管理Package是否需要进一步授权给自己Project下的用户。</p>
+</div>
+<div class="section" id="id3">
+<h2>Package使用方法<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Package的使用涉及到两个主体：Package创建者和Package使用者。Package创建者项目空间是资源提供方，它将需要分享的资源及其访问权限进行打包，然后许可Package使用方来安装使用。Package使用者项目空间是资源使用方，它在安装资源提供方发布的Package之后，便可以直接跨项目空间访问资源。</p>
+<p>下面分别介绍Package创建者和Package使用者所涉及的操作。</p>
+<div class="section" id="id4">
+<h3>Package创建者<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>创建Package</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">create</span> <span class="n">package</span> <span class="o">&lt;</span><span class="n">pkgname</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>删除Package</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">delete</span> <span class="n">package</span> <span class="o">&lt;</span><span class="n">pkgname</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>将需要分享的资源添加到Package</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">add</span> <span class="n">project_object</span> <span class="k">to</span> <span class="n">package</span> <span class="n">package_name</span> <span class="p">[</span><span class="k">with</span> <span class="k">privileges</span> <span class="k">privileges</span><span class="p">]</span>
+
+<span class="n">remove</span> <span class="n">project_object</span> <span class="k">from</span> <span class="n">package</span> <span class="n">package_name</span>
+
+<span class="n">project_object</span> <span class="p">::</span><span class="o">=</span> <span class="k">table</span> <span class="k">table_name</span> <span class="o">|</span>
+                   <span class="n">instance</span> <span class="n">inst_name</span> <span class="o">|</span>
+                   <span class="k">function</span> <span class="n">func_name</span> <span class="o">|</span>
+                   <span class="n">resource</span> <span class="n">res_name</span>
+
+<span class="k">privileges</span> <span class="p">::</span><span class="o">=</span> <span class="n">action_item1</span><span class="p">,</span> <span class="n">action_item2</span><span class="p">,</span> <span class="p">...</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>目前支持的对象类型不包括Project类型，也就是不允许通过Package在其他Project中创对象。</li>
+<li>添加到Package中的不仅仅是对象本身，还包括相应的操作权限。当没有通过[with privileges privileges]来指定操作权限时，默认为只读权限，即Read/Describe/Select。&#8221;对象及其权限&#8221;被看作一个整体，添加后不可被更新。若有需要，只能删除和重新添加。</li>
+</ul>
+</div>
+<p>许可其他项目空间使用Package</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">allow</span> <span class="n">project</span> <span class="o">&lt;</span><span class="n">prjname</span><span class="o">&gt;</span> <span class="k">to</span> <span class="n">install</span> <span class="n">package</span> <span class="o">&lt;</span><span class="n">pkgname</span><span class="o">&gt;</span> <span class="p">[</span><span class="k">using</span> <span class="n">label</span> <span class="o">&lt;</span><span class="nb">number</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>若没有开启LabelSecurity策略，则忽略[USING LABEL &lt;number&gt;]。关于LabelSecurity介绍，请参考：<a class="reference internal" href="odps_sec_authorization_mac.html#odps-sec-authorization-mac"><em>项目空间的用户与授权管理【高级篇：基于标签的安全控制】</em></a></p>
+<p>撤销其他项目空间使用Package的许可</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">disallow</span> <span class="n">project</span> <span class="o">&lt;</span><span class="n">prjname</span><span class="o">&gt;</span> <span class="k">to</span> <span class="n">install</span> <span class="n">package</span> <span class="o">&lt;</span><span class="n">pkgname</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>查看已创建和已安装的Package列表</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">show</span> <span class="n">packages</span>
+</pre></div>
+</div>
+<p>查看Package详细信息</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">describe</span> <span class="n">package</span> <span class="o">&lt;</span><span class="n">pkgname</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h3>Package使用者<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>安装Package</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">install</span> <span class="n">package</span> <span class="o">&lt;</span><span class="n">pkgname</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">对于安装Package来说，要求pkgName的格式为：&lt;projectName&gt;.&lt;packageName&gt;；</p>
+</div>
+<p>卸载Package</p>
+<div class="highlight-sql"><pre>uninstall package &lt;pkgname&gt;；</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">对于卸载Package来说，要求pkgName的格式为：&lt;projectName&gt;.&lt;packageName&gt;；</p>
+</div>
+<p>查看Package</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">show</span> <span class="n">packages</span>
+  <span class="c1">--查看已创建和已安装的package列表</span>
+<span class="k">describe</span> <span class="n">package</span> <span class="o">&lt;</span><span class="n">pkgname</span><span class="o">&gt;</span>
+  <span class="c1">--查看package详细信息</span>
+</pre></div>
+</div>
+<p>被安装的Package是一种独立的ODPS对象类型。若要访问Package里的资源(即其他项目空间分享给你的资源)，你必须拥有对该Package的Read权限。如果请求者没有Read权限，则需要向ProjectOwner或Admin申请。ProjectOwner或Admin可以通过ACL授权或Policy授权机制来完成。</p>
+<p>比如，如下的ACL授权允许云账号用户odps_test&#64;aliyun.com访问Package里的资源：</p>
+<div class="highlight-sql"><pre>use prj2
+security
+install package prj1.testpkg
+grant read on package prj1.testpackage to user aliyun$odps_test@aliyun.com</pre>
+</div>
+<p>如下的Policy授权允许项目空间prj2中的任何用户都可以访问Package里的资源：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">use</span> <span class="n">prj2</span>
+<span class="k">security</span>
+<span class="n">install</span> <span class="n">package</span> <span class="n">prj1</span><span class="p">.</span><span class="n">testpkg</span>
+<span class="n">put</span> <span class="n">policy</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">policy</span><span class="p">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>/tmp/policy.txt内容如下：</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="o">{</span>
+<span class="s">&quot;Version&quot;</span><span class="o">:</span> <span class="s">&quot;1&quot;</span><span class="o">,</span>
+<span class="s">&quot;Statement&quot;</span><span class="o">:</span>
+ <span class="o">[{</span>
+    <span class="s">&quot;Effect&quot;</span><span class="o">:</span><span class="s">&quot;Allow&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Principal&quot;</span><span class="o">:</span><span class="s">&quot;*&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Action&quot;</span><span class="o">:</span><span class="s">&quot;odps:Read&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Resource&quot;</span><span class="o">:</span><span class="s">&quot;acs:odps:*:projects/prj2/packages/prj1.testpkg&quot;</span>
+<span class="o">}]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">跨项目空间的资源分享</a><ul>
+<li><a class="reference internal" href="#id2">背景简介</a></li>
+<li><a class="reference internal" href="#package">基于Package的跨项目空间的资源分享</a></li>
+<li><a class="reference internal" href="#id3">Package使用方法</a><ul>
+<li><a class="reference internal" href="#id4">Package创建者</a></li>
+<li><a class="reference internal" href="#id5">Package使用者</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_dataprotection.html" title="项目空间的数据保护"
+             >next</a></li>
+        <li class="right" >
+          <a href="odps_sec_authorization_mac.html" title="项目空间的用户与授权管理【高级篇：基于标签的安全控制】"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

@@ -1,0 +1,2252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>SQL内建函数 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="ODPS SQL" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sql_udf.html" title="自定义函数(UDF)"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="odps_sql_grmr.html" title="DDL语句"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">ODPS SQL</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="sql">
+<span id="odps-sql-function"></span><h1>SQL内建函数<a class="headerlink" href="#sql" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>数学运算函数<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="abs">
+<span id="odps-sql-function-abs"></span><h3>ABS<a class="headerlink" href="#abs" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="k">abs</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+<span class="nb">bigint</span> <span class="k">abs</span><span class="p">(</span><span class="nb">bigint</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回绝对值。</p>
+<p>参数说明：</p>
+<blockquote>
+<div><ul class="simple">
+<li>number：Double或bigint类型，输入为bigint时返回bigint，输入为double时返回double类型。若输入为string类型会隐式转换到double类型后参与运算，其它类型抛异常。</li>
+</ul>
+</div></blockquote>
+<p>返回值：Double或者bigint类型，取决于输入参数的类型。若输入为null，返回null。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当输入bigint类型的值超过bigint的最大表示范围时，会返回double类型，这种情况下可能会损失精度。</p>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">abs</span><span class="p">(</span><span class="k">null</span><span class="p">)</span> <span class="o">=</span>  <span class="k">null</span>
+<span class="k">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">2</span>
+<span class="k">abs</span><span class="p">(</span><span class="ss">&quot;-2&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>
+<span class="k">abs</span><span class="p">(</span><span class="mi">122320837456298376592387456923748</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">2232083745629837</span><span class="n">e32</span>
+</pre></div>
+</div>
+<p>下面是一个完整的abs函数在SQL中使用的例子，其他内建函数(除 <a class="reference internal" href="#odps-sql-window"><em>窗口函数</em></a> 、<a class="reference internal" href="#odps-sql-aggr"><em>聚合函数</em></a> 外)的使用方式与其类似，不再一一举例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="k">abs</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbl1</span><span class="p">;</span>
+  <span class="c1">-- 取tbl1表内id字段的绝对值</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="acos">
+<h3>ACOS<a class="headerlink" href="#acos" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">acos</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算number的反余弦函数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，-1≤number≤1。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型，值域在0 ~ π 之间。若number为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">acos</span><span class="p">(</span><span class="ss">&quot;0.87&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5155940062460905</span>
+<span class="n">acos</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">5707963267948966</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="asin">
+<h3>ASIN<a class="headerlink" href="#asin" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">asin</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：反正弦函数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，-1≤number≤1。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型，值域在-π/2 ~π/2之间。若number为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">asin</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">5707963267948966</span>
+<span class="n">asin</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">5707963267948966</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="atan">
+<h3>ATAN<a class="headerlink" href="#atan" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">atan</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：反正切函数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型，值域在-π/2 ~π/2之间。若number为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">atan</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7853981633974483</span>
+<span class="n">atan</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">7853981633974483</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ceil">
+<h3>CEIL<a class="headerlink" href="#ceil" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">ceil</span><span class="p">(</span><span class="n">double</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回不小于输入值value的最小整数</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>value：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。任一输入为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">ceil</span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">ceil</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="conv">
+<h3>CONV<a class="headerlink" href="#conv" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">conv</span><span class="p">(</span><span class="n">string</span> <span class="k">input</span><span class="p">,</span> <span class="nb">bigint</span> <span class="n">from_base</span><span class="p">,</span> <span class="nb">bigint</span> <span class="n">to_base</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：进制转换函数</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>input：以string表示的要转换的整数值，接受bigint，double的隐式转换。</li>
+<li>from_base，to_base：以十进制表示的进制的值，可接受的的值为2，8，10，16。接受string及double的隐式转换。</li>
+<li>from_base，to_base：以十进制表示的进制的值，可接受的的值为2，8，10，16。接受string及double的隐式转换。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。任一输入为NULL，返回NULL。转换过程以64位精度工作，溢出时报异常。输入如果是负值，即以&#8217;-&#8216;开头，报异常。如果输入的是小数，则会转为整数值后进行进制转换，小数部分会被舍弃。</p>
+<p>示例</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">conv</span><span class="p">(</span><span class="s1">&#39;1100&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;12&#39;</span>
+<span class="n">conv</span><span class="p">(</span><span class="s1">&#39;1100&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;c&#39;</span>
+<span class="n">conv</span><span class="p">(</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;171&#39;</span>
+<span class="n">conv</span><span class="p">(</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;ab&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cos">
+<h3>COS<a class="headerlink" href="#cos" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">cos</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：余弦函数，输入为弧度值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">cos</span><span class="p">(</span><span class="mi">3</span><span class="p">.</span><span class="mi">1415926</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="mi">2</span><span class="p">.</span><span class="mi">6794896585028633</span><span class="n">e</span><span class="o">-</span><span class="mi">8</span>
+<span class="n">cos</span><span class="p">(</span><span class="mi">3</span><span class="p">.</span><span class="mi">1415926</span><span class="p">)</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">9999999999999986</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cosh">
+<h3>COSH<a class="headerlink" href="#cosh" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">cosh</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：双曲余弦函数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="cot">
+<h3>COT<a class="headerlink" href="#cot" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">cot</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：余切函数，输入为弧度值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="exp">
+<h3>EXP<a class="headerlink" href="#exp" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">exp</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：指数函数。返回number的指数值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="floor">
+<h3>FLOOR<a class="headerlink" href="#floor" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">floor</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：向下取整，返回比number小的整数值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，若输入为string类型或bigint型会隐式转换到double类型后参与运算，其他类型抛异常</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：返回Bigint类型。若number为NULL，返回NULL。</p>
+<p>示例</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">floor</span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="p">)</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">floor</span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="mi">9</span><span class="p">)</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">floor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">floor</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">2</span><span class="p">)</span><span class="o">=-</span><span class="mi">2</span>
+<span class="n">floor</span><span class="p">(</span><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span><span class="o">=-</span><span class="mi">1</span>
+<span class="n">floor</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">floor</span><span class="p">(</span><span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="o">=</span><span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ln">
+<h3>LN<a class="headerlink" href="#ln" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">ln</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回number的自然对数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。若number为NULL返回NULL, 若number为负数或零，则抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+</div>
+<div class="section" id="log">
+<h3>LOG<a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">log</span><span class="p">(</span><span class="n">double</span> <span class="n">base</span><span class="p">,</span> <span class="n">double</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回以base为底的x的对数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>base：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+<li>x：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型的对数值，若base和x中存在NULL，则返回NULL；若base和x中某一个值为负数或0，会引发异常；若base为1(会引发一个除零行为)也会引发异常。</p>
+</div>
+<div class="section" id="pow">
+<h3>POW<a class="headerlink" href="#pow" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">pow</span><span class="p">(</span><span class="n">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">double</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回x的y次方，即x^y。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>X：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+<li>Y：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若x或y为NULL，则返回NULL</p>
+</div>
+<div class="section" id="rand">
+<h3>RAND<a class="headerlink" href="#rand" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">rand</span><span class="p">(</span><span class="nb">bigint</span> <span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：以seed为种子返回double类型的随机数，返回值区间是的0～1。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>seed：Bigint类型，随机数种子，决定随机数序列的起始值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+</div>
+<div class="section" id="round">
+<h3>ROUND<a class="headerlink" href="#round" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">round</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">,</span> <span class="p">[</span><span class="nb">bigint</span> <span class="n">decimal_places</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：四舍五入到指定小数点位置。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+<li>decimal_place：Bigint类型常量，四舍五入计算到小数点后的位置，其他类型参数会引发异常. 如果省略表示四舍五入到个位数。默认值为0。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：返回Double类型。若number或decimal_places为NULL，返回NULL。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">decimal_places可以是负数。负数会从小数点向左开始计数，并且不保留小数部分；如果decimal_places超过了整数部分长度，返回0.</p>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">round</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">315</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span>
+<span class="n">round</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">315</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span>
+<span class="n">round</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">315</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span><span class="p">.</span><span class="mi">3</span>
+<span class="n">round</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">315</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span><span class="p">.</span><span class="mi">32</span>
+<span class="n">round</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">315</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span><span class="p">.</span><span class="mi">315</span>
+<span class="n">round</span><span class="p">(</span><span class="o">-</span><span class="mi">125</span><span class="p">.</span><span class="mi">315</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">125</span><span class="p">.</span><span class="mi">32</span>
+<span class="n">round</span><span class="p">(</span><span class="mi">123</span><span class="p">.</span><span class="mi">345</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">round</span><span class="p">(</span><span class="k">null</span><span class="p">)</span> <span class="o">=</span> <span class="k">null</span>
+<span class="n">round</span><span class="p">(</span><span class="mi">123</span><span class="p">.</span><span class="mi">345</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">123</span><span class="p">.</span><span class="mi">345</span>
+<span class="n">round</span><span class="p">(</span><span class="mi">123</span><span class="p">.</span><span class="mi">345</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sin">
+<h3>SIN<a class="headerlink" href="#sin" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">sin</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：正弦函数，输入为弧度值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="sinh">
+<h3>SINH<a class="headerlink" href="#sinh" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">sinh</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：双曲正弦函数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="sqrt">
+<h3>SQRT<a class="headerlink" href="#sqrt" title="Permalink to this headline">¶</a></h3>
+<p>函数定义：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算平方根。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，必须大于0。小于0时引发异常。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：返回double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="tan">
+<h3>TAN<a class="headerlink" href="#tan" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">tan</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：正切函数，输入为弧度值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="tanh">
+<h3>TANH<a class="headerlink" href="#tanh" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">tanh</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：双曲正切函数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。若number为NULL，返回NULL。</p>
+</div>
+<div class="section" id="trunc">
+<h3>TRUNC<a class="headerlink" href="#trunc" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">trunc</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">decimal_places</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：将输入值number截取到指定小数点位置。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型，若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。</li>
+<li>decimal_places：Bigint类型常量，要截取到的小数点位置，其他类型参数会隐式转为bigint，省略此参数时默认到截取到个位数。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：返回值类型为Double。若number或decimal_places为NULL，返回NULL。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>截取掉的部分补0。</li>
+<li>decimal_places可以是负数，负数会从小数点向左开始截取，并且不保留小数部分；如果decimal_places超过了整数部分长度，返回0。</li>
+</ul>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span><span class="mi">125</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span><span class="p">.</span><span class="mi">8</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span><span class="p">.</span><span class="mi">81</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">125</span><span class="p">.</span><span class="mi">815</span>
+<span class="n">trunc</span><span class="p">(</span><span class="o">-</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">125</span><span class="p">.</span><span class="mi">81</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">120</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">100</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">125</span><span class="p">.</span><span class="mi">815</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">123</span><span class="p">.</span><span class="mi">345</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">123</span><span class="p">.</span><span class="mi">345</span>
+<span class="n">trunc</span><span class="p">(</span><span class="mi">123</span><span class="p">.</span><span class="mi">345</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>字符串处理函数<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="char-matchcount">
+<h3>CHAR_MATCHCOUNT<a class="headerlink" href="#char-matchcount" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">char_matchcount</span><span class="p">(</span><span class="n">string</span> <span class="n">str1</span><span class="p">,</span> <span class="n">string</span> <span class="n">str2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：用于计算str1中的每个字符在str2中出现的次数总和。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>str1，str2：String类型，必须为有效的UTF-8字符串，如果对比中发现有无效字符则函数返回负值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。任一输入为NULL返回NULL。</p>
+</div>
+<div class="section" id="chr">
+<h3>CHR<a class="headerlink" href="#chr" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">chr</span><span class="p">(</span><span class="nb">bigint</span> <span class="n">ascii</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将给定ASCII码ascii转换成字符。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>ascii：Bigint类型ASCII值，若输入为string类型或double类型会隐式转换到bigint类型后参与运算，其它类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。参数范围是0~255，超过此范围会引发异常。输入值为NULL返回NULL。</p>
+</div>
+<div class="section" id="concat">
+<h3>CONCAT<a class="headerlink" href="#concat" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">concat</span><span class="p">(</span><span class="n">string</span> <span class="n">a</span><span class="p">,</span> <span class="n">string</span> <span class="n">b</span><span class="p">...)</span>
+</pre></div>
+</div>
+<p>用途：返回值是将参数中的所有字符串连接在一起的结果。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>a，b等为String类型，若输入为bigint，double或datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。如果没有参数或者某个参数为NULL，结果均返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;abc&#39;</span>
+<span class="n">concat</span><span class="p">()</span> <span class="o">=</span> <span class="k">NULL</span>
+<span class="n">concat</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="k">NULL</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="instr">
+<h3>INSTR<a class="headerlink" href="#instr" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">instr</span><span class="p">(</span><span class="n">string</span> <span class="n">str1</span><span class="p">,</span> <span class="n">string</span> <span class="n">str2</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">start_position</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">nth_appearance</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>用途：计算一个子串str2在字符串str1中的位置。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>str1：String类型，搜索的字符串，若输入为bigint，double或datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+<li>str2：String类型，要搜索的子串，若输入为bigint，double或datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+<li>start_position：Bigint类型，其它类型会抛异常，表示从str1的第几个字符开始搜索，默认起始位置是第一个字符位置1。开始位置如果小于等于0会引发异常。</li>
+<li>nth_appearance：Bigint类型，大于0，表示子串在字符串中的第nth_appearance次匹配的位置，如果nth_appearance为其它类型或小于等于0会抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>如果在str1中未找到str2，返回0。</li>
+<li>任一输入参数为NULL返回NULL</li>
+<li>如果str2为空串时总是能匹配成功，因此instr(&#8216;abc&#8217;, &#8216;&#8217;) 会返回1</li>
+</ul>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">instr</span><span class="p">(</span><span class="s1">&#39;Tech on the net&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">instr</span><span class="p">(</span><span class="s1">&#39;Tech on the net&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">instr</span><span class="p">(</span><span class="s1">&#39;Tech on the net&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">instr</span><span class="p">(</span><span class="s1">&#39;Tech on the net&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="is-encoding">
+<h3>IS_ENCODING<a class="headerlink" href="#is-encoding" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">boolean</span> <span class="n">is_encoding</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">,</span> <span class="n">string</span> <span class="n">from_encoding</span><span class="p">,</span> <span class="n">string</span> <span class="n">to_encoding</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：判断输入字符串str是否可以从指定的一个字符集from_encoding转为另一个字符集to_encoding。可用于判断输入是否为&#8217;乱码&#8217;，通常的用法是将from_encoding设为&#8217;utf-8&#8217;，to_encoding设为&#8217;gbk&#8217;。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>str：String类型，输入为NULL返回NULL。空字符串则可以被认为属于任何字符集。</li>
+<li>from_encoding，to_encoding：String类型，源及目标字符集。输入为NULL返回NULL。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Boolean类型，如果str能够成功转换，则返回true，否则返回false</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">is_encoding</span><span class="p">(</span><span class="s1">&#39;测试&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;gbk&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="k">true</span>
+<span class="n">is_encoding</span><span class="p">(</span><span class="s1">&#39;測試&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;gbk&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="k">true</span>
+     <span class="c1">-- gbk字库中有这两个繁体字</span>
+<span class="n">is_encoding</span><span class="p">(</span><span class="s1">&#39;測試&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;gb2312&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="k">false</span>
+     <span class="c1">-- gb2312库中不包括这两个字</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="length">
+<h3>LENGTH<a class="headerlink" href="#length" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="k">length</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回字符串str的长度。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>str：String类型，若输入为bigint，double或datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。若str是NULL返回NULL。如果str非UTF-8编码格式，返回-1。</p>
+<p>示例</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">length</span><span class="p">(</span><span class="s1">&#39;hi! 中国&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">6</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lengthb">
+<h3>LENGTHB<a class="headerlink" href="#lengthb" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">lengthb</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回字符串str的以字节为单位的长度。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>str：String类型，若输入为bigint，double或者datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。若str是NULL返回NULL。</p>
+<p>示例</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">lengthb</span><span class="p">(</span><span class="s1">&#39;hi! 中国&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="md5">
+<h3>MD5<a class="headerlink" href="#md5" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">md5</span><span class="p">(</span><span class="n">string</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算输入字符串value的md5值</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>value：String类型，如果输入类型是bigint，double或者datetime会隐式转换成string类型参与运算，其它类型报异常。输入为NULL，返回NULL。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。</p>
+</div>
+<div class="section" id="regexp-extract">
+<h3>REGEXP_EXTRACT<a class="headerlink" href="#regexp-extract" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">regexp_extract</span><span class="p">(</span><span class="n">string</span> <span class="k">source</span><span class="p">,</span> <span class="n">string</span> <span class="n">pattern</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">occurrence</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：将字符串source按照pattern正则表达式的规则拆分，返回第occurrence个group的字符。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>source：String类型，待搜索的字符串。</li>
+<li>pattern：String类型常量，pattern为空串时抛异常，pattern中如果没有指定group，抛异常。</li>
+<li>occurrence：Bigint类型常量，必须&gt;=0，其它类型或小于0时抛异常，不指定时默认为1，表示返回第一个group。若occurrence = 0，返回满足整个pattern的子串。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型，任一输入为NULL返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">regexp_extract</span><span class="p">(</span><span class="s1">&#39;foothebar&#39;</span><span class="p">,</span> <span class="s1">&#39;foo(.*?)(bar)&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">the</span>
+<span class="n">regexp_extract</span><span class="p">(</span><span class="s1">&#39;foothebar&#39;</span><span class="p">,</span> <span class="s1">&#39;foo(.*?)(bar)&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="n">bar</span>
+<span class="n">regexp_extract</span><span class="p">(</span><span class="s1">&#39;foothebar&#39;</span><span class="p">,</span> <span class="s1">&#39;foo(.*?)(bar)&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">foothebar</span>
+
+<span class="n">regexp_extract</span><span class="p">(</span><span class="s1">&#39;foothebar&#39;</span><span class="p">,</span> <span class="s1">&#39;foothebar&#39;</span><span class="p">)</span>
+   <span class="c1">-- 异常返回，pattern中没有指定group</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="regexp-instr">
+<h3>REGEXP_INSTR<a class="headerlink" href="#regexp-instr" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">regexp_instr</span><span class="p">(</span><span class="n">string</span> <span class="k">source</span><span class="p">,</span> <span class="n">string</span> <span class="n">pattern</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">start_position</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">nth_occurrence</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">return_option</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>用途：返回字符串source从start_position开始，和pattern第n次(nth_occurrence)匹配的子串的起始/结束位置。任一输入参数为NULL时返回NULL。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>source：String类型，待搜索的字符串。</li>
+<li>pattern：String类型常量，pattern为空串时抛异常。</li>
+<li>start_position：Bigint类型常量，搜索的开始位置。不指定时默认值为1，其它类型或小于等于0的值会抛异常。</li>
+<li>nth_occurrence：Bigint类型常量，不指定时默认值为1，表示搜索第一次出现的位置。小于等于0或者其它类型抛异常。</li>
+<li>return_option：Bigint类型常量，值为0或1，其它类型或不允许的值会抛异常。0表示返回匹配的开始位置，1表示返回匹配的结束位置。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。视return_option指定的类型返回匹配的子串在source中的开始或结束位置。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">regexp_instr</span><span class="p">(</span><span class="ss">&quot;i love www.taobao.com&quot;</span><span class="p">,</span> <span class="ss">&quot;o[[:alpha:]]{1}&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="regexp-replace">
+<h3>REGEXP_REPLACE<a class="headerlink" href="#regexp-replace" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">regexp_replace</span><span class="p">(</span><span class="n">string</span> <span class="k">source</span><span class="p">,</span> <span class="n">string</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">string</span> <span class="n">replace_string</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">occurrence</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：将source字符串中第occurrence次匹配pattern的子串替换成指定字符串replace_string后返回。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>source：String类型，要替换的字符串。</li>
+<li>pattern：String类型常量，要匹配的模式，pattern为空串时抛异常。</li>
+<li>replace_string：String类型，将匹配的pattern替换成的字符串。</li>
+<li>occurrence：Bigint类型常量，必须大于等于0，表示将第几次匹配替换成replace_string，为0时表示替换掉所有的匹配子串。其它类型或小于0抛异常。可缺省，默认值为0。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型，当引用不存在的组时，不进行替换。当输入source，pattern，occurrence参数为NULL时返回NULL，若replace_string为NULL且pattern有匹配，返回NULL，replace_string为NULL但pattern不匹配，则返回原串
+。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当引用不存在的组时，行为未定义。</p>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">regexp_replace</span><span class="p">(</span><span class="ss">&quot;123.456.7890&quot;</span><span class="p">,</span> <span class="ss">&quot;([[:digit:]]{3})\\.([[:digit:]]{3})\\.([[:digit:]]{4})&quot;</span><span class="p">,</span> <span class="ss">&quot;(\\1)\\2-\\3&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;(123)456-7890&quot;</span>
+<span class="n">regexp_replace</span><span class="p">(</span><span class="ss">&quot;abcd&quot;</span><span class="p">,</span> <span class="ss">&quot;(.)&quot;</span><span class="p">,</span> <span class="ss">&quot;\\1 &quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;a b c d &quot;</span>
+<span class="n">regexp_replace</span><span class="p">(</span><span class="ss">&quot;abcd&quot;</span><span class="p">,</span> <span class="ss">&quot;(.)&quot;</span><span class="p">,</span> <span class="ss">&quot;\\1 &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;a bcd&quot;</span>
+<span class="n">regexp_replace</span><span class="p">(</span><span class="ss">&quot;abcd&quot;</span><span class="p">,</span> <span class="ss">&quot;(.)&quot;</span><span class="p">,</span> <span class="ss">&quot;\\2&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;abcd&quot;</span>
+    <span class="c1">-- 因为pattern中只定义了一个组，引用的第二个组不存在，请避免这样使用，引用不存在的组的结果未定义。</span>
+<span class="n">regexp_replace</span><span class="p">(</span><span class="ss">&quot;abcd&quot;</span><span class="p">,</span> <span class="ss">&quot;(.*)(.)$&quot;</span><span class="p">,</span> <span class="ss">&quot;\\2&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;d&quot;</span>
+<span class="n">regexp_replace</span><span class="p">(</span><span class="ss">&quot;abcd&quot;</span><span class="p">,</span> <span class="ss">&quot;a&quot;</span><span class="p">,</span> <span class="ss">&quot;\\1&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;bcd&quot;</span>
+    <span class="c1">-- 因为在pattern中没有组的定义，所以\1引用了不存在的组，请避免这样使用，引用不存在的组的结果未定义。</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="regexp-substr">
+<h3>REGEXP_SUBSTR<a class="headerlink" href="#regexp-substr" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">regexp_substr</span><span class="p">(</span><span class="n">string</span> <span class="k">source</span><span class="p">,</span> <span class="n">string</span> <span class="n">pattern</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">start_position</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">nth_occurrence</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>用途：从start_position位置开始，source中第nth_occurrence次匹配指定模式pattern的子串。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>source：String类型，搜索的字符串。</li>
+<li>pattern：String类型常量，要匹配的模型，pattern为空串时抛异常。</li>
+<li>start_position：Bigint常量，必须大于0。其它类型或小于等于0时抛异常，不指定时默认为1，表示从source的第一个字符开始匹配。不指定时默认为1，表示从source的第一个字符开始匹配。</li>
+<li>nth_occurrence：Bigint常量，必须大于0，其它类型或小于等于0时抛异常。不指定时默认为1，表示返回第一次匹配的子串。不指定时默认为1，表示返回第一次匹配的子串。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。任一输入参数为NULL返回NULL。没有匹配时返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">regexp_substr</span> <span class="p">(</span><span class="ss">&quot;I love aliyun very much&quot;</span><span class="p">,</span> <span class="ss">&quot;a[[:alpha:]]{5}&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;aliyun&quot;</span>
+<span class="n">regexp_substr</span><span class="p">(</span><span class="s1">&#39;I have 2 apples and 100 bucks!&#39;</span><span class="p">,</span> <span class="s1">&#39;[[:blank:]][[:alnum:]]*&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot; have&quot;</span>
+<span class="n">regexp_substr</span><span class="p">(</span><span class="s1">&#39;I have 2 apples and 100 bucks!&#39;</span><span class="p">,</span> <span class="s1">&#39;[[:blank:]][[:alnum:]]*&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot; 2&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="regexp-count">
+<h3>REGEXP_COUNT<a class="headerlink" href="#regexp-count" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">regexp_count</span><span class="p">(</span><span class="n">string</span> <span class="k">source</span><span class="p">,</span> <span class="n">string</span> <span class="n">pattern</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">start_position</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：计算source中从start_position开始，匹配指定模式pattern的子串的次数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>source：String类型，搜索的字符串，其它类型报异常。</li>
+<li>pattern：String类型常量，要匹配的模型，pattern为空串时抛异常，其它类型报异常。</li>
+<li>start_position：Bigint类型常量，必须大于0。其它类型或小于等于0时抛异常，不指定时默认为1，表示从source的第一个字符开始匹配。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。没有匹配时返回0。任一输入参数为NULL返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">regexp_count</span><span class="p">(</span><span class="s1">&#39;abababc&#39;</span><span class="p">,</span> <span class="s1">&#39;a.c&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">regexp_count</span><span class="p">(</span><span class="s1">&#39;abcde&#39;</span><span class="p">,</span> <span class="s1">&#39;[[:alpha:]]{2}&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="split-part">
+<h3>SPLIT_PART<a class="headerlink" href="#split-part" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">split_part</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">,</span> <span class="n">string</span> <span class="n">separator</span><span class="p">,</span> <span class="nb">bigint</span> <span class="k">start</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="k">end</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：依照分隔符separator拆分字符串str，返回从第start部分到第end部分的子串(闭区间)。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>Str：String类型，要拆分的字符串。如果是bigint，double或者datetime类型会隐式转换到string类型后参加运算，其它类型报异常。</li>
+<li>Separator：String类型常量，拆分用的分隔符，可以是一个字符，也可以是一个字符串，其它类型会引发异常。</li>
+<li>start：Bigint类型常量，必须大于0。非常量或其它类型抛异常。返回段的开始编号(从1开始)，如果没有指定end，则返回start指定的段。</li>
+<li>end：Bigint类型常量，大于等于start，否则抛异常。返回段的截止编号，非常量或其他类型会引发异常。可省略，缺省时表示最后一部分。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。若任意参数为NULL，返回NULL；若separator为空串，返回原字符串str。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>如果separator不存在于str中，且start指定为1，返回整个str。若输入为空串，输出为空串。</li>
+<li>如果start的值大于切分后实际的分段数，例如：字符串拆分完有6个片段，但start大于6，返回空串&#8217;&#8216;。</li>
+<li>若end大于片段个数，按片段个数处理。</li>
+</ul>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">split_part</span><span class="p">(</span><span class="s1">&#39;a,b,c,d&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span>
+<span class="n">split_part</span><span class="p">(</span><span class="s1">&#39;a,b,c,d&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;a,b&#39;</span>
+<span class="n">split_part</span><span class="p">(</span><span class="s1">&#39;a,b,c,d&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">=</span>  <span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="substr">
+<h3>SUBSTR<a class="headerlink" href="#substr" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">substr</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">,</span> <span class="nb">bigint</span> <span class="n">start_position</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="k">length</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：返回字符串str从start_position开始长度为length的子串。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>str：String类型，若输入为bigint，double或者datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+<li>start_position：Bigint类型，当start_position为负数时表示开始位置是从字符串的结尾往前倒数，最后一个字符是-1，起始位置为1。其它类型抛异常。</li>
+<li>length：Bigint类型，大于0，其它类型或小于等于0抛异常。子串的长度。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。若任一输入为NULL，返回NULL。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当length被省略时，返回到str结尾的子串。</p>
+</div>
+<p>示例</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">substr</span><span class="p">(</span><span class="ss">&quot;abc&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;bc&quot;</span>
+<span class="n">substr</span><span class="p">(</span><span class="ss">&quot;abc&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;b&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tolower">
+<h3>TOLOWER<a class="headerlink" href="#tolower" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">tolower</span><span class="p">(</span><span class="n">string</span> <span class="k">source</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：输出英文字符串source对应的小写字符串。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>source：String类型，若输入为bigint，double或者datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。输入为NULL时返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">tolower</span><span class="p">(</span><span class="ss">&quot;aBcd&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;abcd&quot;</span>
+<span class="n">tolower</span><span class="p">(</span><span class="ss">&quot;哈哈Cd&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;哈哈cd&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="toupper">
+<h3>TOUPPER<a class="headerlink" href="#toupper" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">toupper</span><span class="p">(</span><span class="n">string</span> <span class="k">source</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：输出英文字符source串对应的大写字符串。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>source：String类型，若输入为bigint，double或者datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。输入为NULL时返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">toupper</span><span class="p">(</span><span class="ss">&quot;aBcd&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;ABCD&quot;</span>
+<span class="n">toupper</span><span class="p">(</span><span class="ss">&quot;哈哈Cd&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="ss">&quot;哈哈CD&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="to-char">
+<span id="odps-sql-function-string-to-char"></span><h3>TO_CHAR<a class="headerlink" href="#to-char" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">to_char</span><span class="p">(</span><span class="nb">boolean</span> <span class="n">value</span><span class="p">)</span>
+<span class="n">string</span> <span class="n">to_char</span><span class="p">(</span><span class="nb">bigint</span> <span class="n">value</span><span class="p">)</span>
+<span class="n">string</span> <span class="n">to_char</span><span class="p">(</span><span class="n">double</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将Boolean类型、bigint类型或者double类型转为对应的string类型表示</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>value：可以接受boolean类型、bigint类型或者double类型输入，其它类型抛异常。对datetime类型的格式化输出请参考另一同名函数 <a class="reference internal" href="#odps-sql-function-datetime-to-char"><em>TO_CHAR</em></a> 。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。如果输入为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">to_char</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;123&#39;</span>
+<span class="n">to_char</span><span class="p">(</span><span class="k">true</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;TRUE&#39;</span>
+<span class="n">to_char</span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="mi">23</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;1.23&#39;</span>
+<span class="n">to_char</span><span class="p">(</span><span class="k">null</span><span class="p">)</span> <span class="o">=</span> <span class="k">NULL</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="trim">
+<h3>TRIM<a class="headerlink" href="#trim" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="k">trim</span><span class="p">(</span><span class="n">string</span> <span class="n">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将输入字符串str去除左右空格。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>str：String类型，若输入为bigint，double或者datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。输入为NULL时返回NULL。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>日期函数<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>ODPS SQL提供了针对datetime类型的操作函数。</p>
+<div class="section" id="dateadd">
+<h3>DATEADD<a class="headerlink" href="#dateadd" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datetime</span> <span class="n">dateadd</span><span class="p">(</span><span class="n">datetime</span> <span class="nb">date</span><span class="p">,</span> <span class="nb">bigint</span> <span class="n">delta</span><span class="p">,</span> <span class="n">string</span> <span class="n">datepart</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：按照指定的单位datepart和幅度delta修改date的值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型，日期值。若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。。</li>
+<li>delta：Bigint类型，修改幅度。若输入为string类型或double型会隐式转换到bigint类型后参与运算，其他类型会引发异常。若delta大于0，加；否则减。</li>
+<li>datepart：String类型常量。此字段的取值遵循string与datetime类型转换的约定，即&#8217;yyyy&#8217;表示年，&#8217;mm&#8217;表示月…. 关于类型转换的规则请参考 <a class="reference internal" href="odps_sql_summary.html#odps-sql-string-2-datetime"><em>String类型与Datetime类型之间的转换</em></a> 。此外也支持扩展的日期格式：年-&#8216;year&#8217;，月-&#8216;month&#8217;或&#8217;mon&#8217;，日-&#8216;day&#8217;，小时-&#8216;hour&#8217;。非常量、不支持的格式会或其它类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Datetime类型。若任一输入参数为NULL，返回NULL。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>按照指定的单位增减delta时导致的对更高单位的进位或退位，年、月、时、分、秒分别按照10进制、12进制、24进制、60进制、60进制计算。当delta的单位是月时，计算规则如下：若datetime的月部分在增加delta值之后不造成day溢出，则保持day值不变，否则把day值设置为结果月份的最后一天。</li>
+<li>datepart的取值遵循string与datetime类型转换的约定，即&#8217;yyyy&#8217;表示年，&#8217;mm&#8217;表示月…. datetime相关的内建函数如无特殊说明均遵守此约定。同时如果没有特殊说明，所有datetime相关的内建函数的part部分也同样支持扩展的日期格式：年-&#8216;year&#8217;，月-&#8216;month&#8217;或&#8217;mon&#8217;，日-&#8216;day&#8217;，小时-&#8216;hour&#8217;。</li>
+</ul>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><pre>若trans_date = 2005-02-28 00:00:00：
+dateadd(trans_date, 1, 'dd') = 2005-03-01 00:00:00
+  -- 加一天，结果超出当年2月份的最后一天，实际值为下个月的第一天
+dateadd(trans_date, -1, 'dd') = 2005-02-27 00:00:00
+  -- 减一天
+dateadd(trans_date, 20, 'mm') = 2006-10-28 00:00:00
+  -- 加20个月，月份溢出，年份加1
+
+若trans_date = 2005-02-28 00:00:00, dateadd(transdate, 1, 'mm') = 2005-03-28 00:00:00
+若trans_date = 2005-01-29 00:00:00, dateadd(transdate, 1, 'mm') = 2005-02-28 00:00:00
+  -- 2005年2月没有29日，日期截取至当月最后一天
+若trans_date = 2005-03-30 00:00:00, dateadd(transdate, -1, 'mm') = 2005-02-28 00:00:00</pre>
+</div>
+<p>此处对trans_date的数值表示仅作示例使用，在文档中有关datetime介绍会经常使用到这种简易的表达方式。在ODPS SQL中，datetime类型没有直接的常数表示方式，如下使用方式是错误的：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="n">dateadd</span><span class="p">(</span><span class="mi">2005</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">30</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;mm&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbl1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>如果一定要描述datetime类型常量，请尝试如下方法：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="n">dateadd</span><span class="p">(</span><span class="k">cast</span><span class="p">(</span><span class="ss">&quot;2005-03-30 00:00:00&quot;</span> <span class="k">as</span> <span class="n">datetime</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;mm&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbl1</span><span class="p">;</span>
+    <span class="c1">-- 将String类型常量显式转换为Datetime类型</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="datediff">
+<h3>DATEDIFF<a class="headerlink" href="#datediff" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">datediff</span><span class="p">(</span><span class="n">datetime</span> <span class="n">date1</span><span class="p">,</span> <span class="n">datetime</span> <span class="n">date2</span><span class="p">,</span> <span class="n">string</span> <span class="n">datepart</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算两个时间date1，date2在指定时间单位datepart的差值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>datet1，date2：Datetime类型，被减数和减数，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。</li>
+<li>datepart：String类型常量。支持扩展的日期格式。若datepart不符合指定格式或者其它类型则会发生异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。任一输入参数是NULL，返回NULL。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">计算时会按照datepart切掉低单位部分，然后再计算结果。</p>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><pre>若start = 2005-12-31 23:59:59，end = 2006-01-01 00:00:00:
+datediff(end, start, 'dd') = 1
+datediff(end, start, 'mm') = 1
+datediff(end, start, 'yyyy') = 1
+datediff(end, start, 'hh') = 1
+datediff(end, start, 'mi') = 1
+datediff(end, start, 'ss') = 1
+
+datediff(2013-05-31 13:00:00, 2013-05-31 12:30:00, 'ss') = 1800
+datediff(2013-05-31 13:00:00, 2013-05-31 12:30:00, 'mi') = 30</pre>
+</div>
+</div>
+<div class="section" id="datepart">
+<h3>DATEPART<a class="headerlink" href="#datepart" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">datepart</span><span class="p">(</span><span class="n">datetime</span> <span class="nb">date</span><span class="p">,</span> <span class="n">string</span> <span class="n">datepart</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：提取日期date中指定的时间单位datepart的值</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。</li>
+<li>datepart：String类型常量。支持扩展的日期格式。若datepart不符合指定格式或者其它类型则会发生异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。若任一输入参数为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datepart</span><span class="p">(</span><span class="s1">&#39;2013-06-08 01:10:00&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyy&#39;</span><span class="p">)</span>  <span class="o">=</span>  <span class="mi">2013</span>
+<span class="n">datepart</span><span class="p">(</span><span class="s1">&#39;2013-06-08 01:10:00&#39;</span><span class="p">,</span> <span class="s1">&#39;mm&#39;</span><span class="p">)</span>  <span class="o">=</span>  <span class="mi">6</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="datetrunc">
+<h3>DATETRUNC<a class="headerlink" href="#datetrunc" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datetime</span> <span class="n">datetrunc</span> <span class="p">(</span><span class="n">datetime</span> <span class="nb">date</span><span class="p">,</span> <span class="n">string</span> <span class="n">datepart</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回日期date被截取指定时间单位datepart后的日期值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。</li>
+<li>datepart：String类型常量。支持扩展的日期格式。若datepartt不符合指定格式或者其它类型则会发生异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Datetime类型。任意一个参数为NULL的时候返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datetrunc</span><span class="p">(</span><span class="mi">2011</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">07</span> <span class="mi">16</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">46</span><span class="p">,</span> <span class="s1">&#39;yyyy&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2011</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+<span class="n">datetrunc</span><span class="p">(</span><span class="mi">2011</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">07</span> <span class="mi">16</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">46</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2011</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+<span class="n">datetrunc</span><span class="p">(</span><span class="mi">2011</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">07</span> <span class="mi">16</span><span class="p">:</span><span class="mi">28</span><span class="p">:</span><span class="mi">46</span><span class="p">,</span> <span class="s1">&#39;DD&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2011</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">07</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="from-unixtime">
+<h3>FROM_UNIXTIME<a class="headerlink" href="#from-unixtime" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datetime</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="nb">bigint</span> <span class="n">unixtime</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将数字型的unix时间日期值unixtime转为日期值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>unixtime：Bigint类型，秒数，unix格式的日期时间值，若输入为string，double类型会隐式转换为bigint后参与运算。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Datetime类型的日期值，unixtime为NULL时返回NULL。</p>
+</div>
+<div class="section" id="getdate">
+<h3>GETDATE<a class="headerlink" href="#getdate" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datetime</span> <span class="n">getdate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>用途：获取当前系统时间。使用东八区时间作为ODPS标准时间。</p>
+<p>返回值：返回当前日期和时间，datetime类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">在一个ODPS SQL任务中(以分布式方式执行)，getdate总是返回一个固定的值。返回结果会是ODPS SQL执行期间的任意时间，时间精度精确到秒。</p>
+</div>
+</div>
+<div class="section" id="isdate">
+<h3>ISDATE<a class="headerlink" href="#isdate" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">boolean</span> <span class="n">isdate</span><span class="p">(</span><span class="n">string</span> <span class="nb">date</span><span class="p">,</span> <span class="n">string</span> <span class="n">format</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：判断一个日期字符串能否根据对应的格式串转换为一个日期值，如果转换成功返回TRUE，否则返回FALSE。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：String格式的日期值，若输入为bigint，double或者datetime类型会隐式转换为string类型后参与运算，其它类型报异常。</li>
+<li>format：String类型常量，不支持日期扩展格式。其它类型或不支持的格式会抛异常。如果format中出现多余的格式串，则只取第一个格式串对应的日期数值，其余的会被视为分隔符。如isdate(&#8216;1234-yyyy &#8216;, &#8216;yyyy-yyyy &#8216;)，会返回TRUE。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Boolean类型，如任意参数为NULL，返回NULL。</p>
+</div>
+<div class="section" id="lastday">
+<h3>LASTDAY<a class="headerlink" href="#lastday" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datetime</span> <span class="n">lastday</span><span class="p">(</span><span class="n">datetimei</span> <span class="nb">date</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：取date当月的最后一天，截取到天，时分秒部分为00:00:00。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Datetime类型，如输入为NULL，返回NULL</p>
+</div>
+<div class="section" id="to-date">
+<span id="odps-sql-function-datetime-to-date"></span><h3>TO_DATE<a class="headerlink" href="#to-date" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">datetime</span> <span class="n">to_date</span><span class="p">(</span><span class="n">string</span> <span class="nb">date</span><span class="p">,</span> <span class="n">string</span> <span class="n">format</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将一个字符串date按照format指定的格式转成日期值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：String类型，要转换的字符串格式的日期值，若输入为bigint，double或者datetime类型会隐式转换为String类型后参与运算，为其它类型抛异常，为空串时抛异常。</li>
+<li>format：String类型常量，日期格式。非常量或其他类型会引发异常。format不支持日期扩展格式，其他字符作为无用字符在解析时忽略。format参数至少包含&#8217;yyyy&#8217;，否则引发异常，如果format中出现多余的格式串，则只取第一个格式串对应的日期数值，其余的会被视为分隔符。如to_date(&#8216;1234-2234 &#8216;, &#8216;yyyy-yyyy &#8216;)会返回1234-01-01 00:00:00。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Datetime类型。若任一输入为NULL，返回NULL值。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;阿里巴巴2010-12*03&#39;</span><span class="p">,</span> <span class="s1">&#39;阿里巴巴yyyy-mm*dd&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2010</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">03</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+<span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;20080718&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyymmdd&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2008</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="mi">18</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+
+<span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;2008718&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyymmdd&#39;</span><span class="p">)</span>
+    <span class="c1">-- 格式不符合，引发异常</span>
+<span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;阿里巴巴2010-12*3&#39;</span><span class="p">,</span> <span class="s1">&#39;阿里巴巴yyyy-mm*dd&#39;</span><span class="p">)</span>
+    <span class="c1">-- 格式不符合，引发异常</span>
+<span class="n">to_date</span><span class="p">(</span><span class="s1">&#39;2010-24-01&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyy&#39;</span><span class="p">)</span>
+    <span class="c1">-- 格式不符合，引发异常</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="odps-sql-function-datetime-to-char">
+<span id="id4"></span><h3>TO_CHAR<a class="headerlink" href="#odps-sql-function-datetime-to-char" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">to_char</span><span class="p">(</span><span class="n">datetime</span> <span class="nb">date</span><span class="p">,</span> <span class="n">string</span> <span class="n">format</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将日期类型date按照format指定的格式转成字符串</p>
+<dl class="docutils">
+<dt>参数类型：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型，要转换的日期值，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。</li>
+<li>format：String类型常量。非常量或其他类型会引发异常。format中的日期格式部分会被替换成相应的数据，其它字符直接输出。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。任一输入参数为NULL，返回NULL。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">to_char</span><span class="p">(</span><span class="s1">&#39;阿里巴巴2010-12*03&#39;</span><span class="p">,</span> <span class="s1">&#39;阿里巴巴yyyy-mm*dd&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;2010-12-03 00:00:00&#39;</span>
+<span class="n">to_char</span><span class="p">(</span><span class="s1">&#39;20080718&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyymmdd&#39;</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;2008-07-18 00:00:00&#39;</span>
+<span class="n">to_char</span><span class="p">(</span><span class="s1">&#39;阿里巴巴2010-12*3&#39;</span><span class="p">,</span> <span class="s1">&#39;阿里巴巴yyyy-mm*dd&#39;</span><span class="p">)</span> <span class="c1">-- 引发异常</span>
+<span class="n">to_char</span><span class="p">(</span><span class="s1">&#39;2010-24-01&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyy&#39;</span><span class="p">)</span> <span class="c1">-- 会引发异常</span>
+<span class="n">to_char</span><span class="p">(</span><span class="s1">&#39;2008718&#39;</span><span class="p">,</span> <span class="s1">&#39;yyyymmdd&#39;</span><span class="p">)</span> <span class="c1">-- 会引发异常</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">关于其他类型向string类型转换请参考 <a class="reference internal" href="#odps-sql-function-string-to-char"><em>TO_CHAR</em></a> 。</p>
+</div>
+</div>
+<div class="section" id="unix-timestamp">
+<h3>UNIX_TIMESTAMP<a class="headerlink" href="#unix-timestamp" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="n">datetime</span> <span class="nb">date</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将日期date转化为整型的unix格式的日期时间值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型日期值，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型，表示unix格式日期值，date为NULL时返回NULL。</p>
+</div>
+<div class="section" id="weekday">
+<h3>WEEKDAY<a class="headerlink" href="#weekday" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">weekday</span> <span class="p">(</span><span class="n">datetime</span> <span class="nb">date</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回date日期当前周的第几天。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型，若输入参数为NULL，返回NULL。周一作为一周的第一天，返回值为0。其他日期依次递增，周日返回6。</p>
+</div>
+<div class="section" id="weekofyear">
+<h3>WEEKOFYEAR<a class="headerlink" href="#weekofyear" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="n">weekofyear</span><span class="p">(</span><span class="n">datetime</span> <span class="nb">date</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：返回日期date位于那一年的第几周。周一作为一周的第一天。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>date：Datetime类型日期值，若输入为string类型会隐式转换为datetime类型后参与运算，其它类型抛异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。若输入为NULL，返回NULL</p>
+</div>
+</div>
+<div class="section" id="odps-sql-window">
+<span id="id5"></span><h2>窗口函数<a class="headerlink" href="#odps-sql-window" title="Permalink to this headline">¶</a></h2>
+<p>ODPS SQL中可以使用窗口函数进行灵活的分析处理工作，窗口函数只能出现在select子句中，窗口函数中不要嵌套使用窗口函数和聚合函数，窗口函数不可以和同级别的聚合函数一起使用。目前在一个ODPS SQL语句中，可以使用至多5个窗口函数。</p>
+<p>窗口函数的语法</p>
+<div class="highlight-sql"><pre>window_func() over (partition by col1, [col2…] [order by col1 [asc|desc][, col2[asc|desc]…]] windowing_clause)</pre>
+</div>
+<ul>
+<li><p class="first">partition by部分用来指定开窗的列。分区列的值相同的行被视为在同一个窗口内。现阶段，同一窗口内最多包含1亿行数据，否则运行时报错。</p>
+</li>
+<li><p class="first">order by用来指定数据在一个窗口内如何排序</p>
+</li>
+<li><dl class="first docutils">
+<dt>windowing_clause部分可以用rows指定开窗方式，有两种方式：</dt>
+<dd><ul class="first last simple">
+<li>rows between x preceding|following and y preceding|following表示窗口范围是从前或后x行到前或后y行。</li>
+<li>rows x preceding|following窗口范围是从前或后第x行到当前行。</li>
+<li>x，y必须为大于等于0的整数常量，限定范围0 ~ 10000，值为0时表示当前行。必须指定order by才可以用rows方式指定窗口范围。</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">并非所有的窗口函数都可以用rows指定开窗方式，支持这种用法的窗口函数有avg、count、max、min、stddev和sum。</p>
+</div>
+<div class="section" id="count">
+<h3>COUNT<a class="headerlink" href="#count" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>bigint count([distinct] expr) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]] [windowing_clause])</pre>
+</div>
+<p>用途：计算计数值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：任意类型，当值为NULL时，该行不参与计算。当指定distinct关键字时表示取唯一值的计数值。</li>
+<li>partition by col1[, col2…]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：不指定order by时，返回当前窗口内expr的计数值，指定order by时返回结果以指定的顺序排序，并且值为当前窗口内从开始行到当前行的累计计数值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当指定distinct关键字时不能写order by。</p>
+</div>
+<p>示例：假设存在表test_src，表中存在bigint类型的列user_id，</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="n">user_id</span><span class="p">,</span>
+    <span class="k">count</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="n">over</span> <span class="p">(</span><span class="n">partition</span> <span class="k">by</span> <span class="n">user_id</span><span class="p">)</span> <span class="k">as</span> <span class="k">count</span>
+<span class="k">from</span> <span class="n">test_src</span><span class="p">;</span>
+
+<span class="o">+</span><span class="c1">---------+------------+</span>
+<span class="o">|</span> <span class="n">user_id</span> <span class="o">|</span>  <span class="k">count</span>     <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------+------------+</span>
+<span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span> <span class="mi">3</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span> <span class="mi">3</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span> <span class="mi">3</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="mi">2</span>       <span class="o">|</span> <span class="mi">1</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="mi">3</span>       <span class="o">|</span> <span class="mi">1</span>          <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------+------------+</span>
+
+    <span class="c1">-- 不指定order by时，返回当前窗口内user_id的计数值</span>
+
+<span class="k">select</span> <span class="n">user_id</span><span class="p">,</span>
+    <span class="k">count</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="n">over</span> <span class="p">(</span><span class="n">partition</span> <span class="k">by</span> <span class="n">user_id</span> <span class="k">order</span> <span class="k">by</span> <span class="n">user_id</span><span class="p">)</span> <span class="k">as</span> <span class="k">count</span>
+<span class="k">from</span> <span class="n">test_src</span><span class="p">;</span>
+
+<span class="o">+</span><span class="c1">---------+------------+</span>
+<span class="o">|</span> <span class="n">user_id</span> <span class="o">|</span> <span class="k">count</span>      <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------+------------+</span>
+<span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span> <span class="mi">1</span>          <span class="o">|</span>      <span class="c1">-- 窗口起始</span>
+<span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span> <span class="mi">2</span>          <span class="o">|</span>      <span class="c1">-- 到当前行共计两条记录，返回2</span>
+<span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span> <span class="mi">3</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="mi">2</span>       <span class="o">|</span> <span class="mi">1</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="mi">3</span>       <span class="o">|</span> <span class="mi">1</span>          <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------+------------+</span>
+
+<span class="c1">-- 指定order by时，返回当前窗口内从开始行到当前行的累计计数值。</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="avg">
+<h3>AVG<a class="headerlink" href="#avg" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>avg([distinct] expr) over(partition by col1[, col2…] [order by col1 [asc|desc] [, col2[asc|desc]…]] [windowing_clause])</pre>
+</div>
+<p>用途：计算平均值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>distinct：当指定distinct关键字时表示取唯一值的平均值。</li>
+<li>expr：Double类型，若输入为string，bigint会隐式转换到double类型后参与运算，其它类型抛异常。当值为NULL时，该行不参与计算。Boolean类型不允许参与计算。</li>
+<li>partition by col1[, col2]…：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：不指定order by时返回当前窗口内所有值的平均值，指定order by时返回结果以指定的方式排序，并且返回窗口内从开始行到当前行的累计平均值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">指明distinct关键字时不能写order by。</p>
+</div>
+</div>
+<div class="section" id="max">
+<h3>MAX<a class="headerlink" href="#max" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>max([distinct] expr) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]] [windowing_clause])</pre>
+</div>
+<p>用途：计算最大值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：除Boolean以外的任意类型，当值为NULL时，该行不参与计算。当指定distinct关键字时表示取唯一值的最大值(指定该参数与否对结果没有影响)。</li>
+<li>partition by col1[, col2…]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：不指定order by时，返回当前窗口内的最大值。指定order by时，返回结果以指定的方式排序，并且值为当前窗口内从开始行到当前行的最大值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：同expr类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当指定distinct关键字时不能写order by。</p>
+</div>
+</div>
+<div class="section" id="min">
+<h3>MIN<a class="headerlink" href="#min" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>min([distinct] expr) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]] [windowing_clause])</pre>
+</div>
+<p>用途：计算最小值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：除boolean以外的任意类型，当值为NULL时，该行不参与计算。当指定distinct关键字时表示取唯一值的最小值(指定该参数与否对结果没有影响)。</li>
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：不指定order by时，返回当前窗口内的最小值。指定order by时，返回结果以指定的方式排序，并且值为当前窗口内从开始行到当前行的最小值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：同expr类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当指定distinct关键字时不能写order by。</p>
+</div>
+</div>
+<div class="section" id="median">
+<h3>MEDIAN<a class="headerlink" href="#median" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>double median(double number) over(partition by col1[, col2…])</pre>
+</div>
+<p>用途：计算中位数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。当输入值为null时忽略。</li>
+<li>partition by col1[, col2…]：指定开窗口的列。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+</div>
+<div class="section" id="stddev">
+<h3>STDDEV<a class="headerlink" href="#stddev" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>double stddev([distinct] expr) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]] [windowing_clause])</pre>
+</div>
+<p>用途：总体标准差。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。当输入值为NULL时忽略该行。当指定distinct关键字时表示计算唯一值的总体标准差。</li>
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：不指定order by时，返回当前窗口内的总体标准差。指定order by时，返回结果以指定的方式排序，并且值为当前窗口内从开始行到当前行的总体标准差。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当指定distinct关键字时不能写order by。</p>
+</div>
+</div>
+<div class="section" id="stddev-samp">
+<h3>STDDEV_SAMP<a class="headerlink" href="#stddev-samp" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>double stddev_samp([distinct] expr) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]] [windowing_clause])</pre>
+</div>
+<p>用途：样本标准差。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。当输入值为NULL时忽略该行。当指定distinct关键字时表示计算唯一值的样本标准差。</li>
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：不指定order by时，返回当前窗口内的样本标准差。指定order by时，返回结果以指定的方式排序，并且值为当前窗口内从开始行到当前行的样本标准差。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当指定distinct关键字时不能写order by。</p>
+</div>
+</div>
+<div class="section" id="sum">
+<h3>SUM<a class="headerlink" href="#sum" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>sum([distinct] expr) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]] [windowing_clause])</pre>
+</div>
+<p>用途：计算汇总值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：Double类型，当输入为string，bigint时隐式转换为double参与运算，其它类型报异常。当值为NULL时，该行不参与计算。指定distinct关键字时表示计算唯一值的汇总值。</li>
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：不指定order by时，返回当前窗口内expr的汇总值。指定order by时，返回结果以指定的方式排序，并且返回当前窗口从首行至当前行的累计汇总值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：输入参数是bigint返回bigint，输入参数为double或string时，返回double类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">当指定distinct时不能用order by。</p>
+</div>
+</div>
+<div class="section" id="dense-rank">
+<h3>DENSE_RANK<a class="headerlink" href="#dense-rank" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><pre>bigint dense_rank() over(partition by col1[, col2…] order by col1 [asc|desc][, col2[asc|desc]…])</pre>
+</div>
+<p>用途：计算连续排名。col2相同的行数据获得的排名相同。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：指定排名依据的值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。</p>
+</div>
+<div class="section" id="rank">
+<h3>RANK<a class="headerlink" href="#rank" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><pre>bigint rank() over(partition by col1[, col2…] order by col1 [asc|desc][, col2[asc|desc]…])</pre>
+</div>
+<p>用途：计算排名。col2相同的行数据获得排名顺序下降。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>partition by col2[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：指定排名依据的值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。</p>
+</div>
+<div class="section" id="lag">
+<h3>LAG<a class="headerlink" href="#lag" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>lag(expr，bigint offset, default) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]])</pre>
+</div>
+<p>用途：按偏移量取当前行之前第几行的值，如当前行号为rn，则取行号为rn-offset的值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：任意类型。</li>
+<li>offset：Bigint类型常量，输入为string，double到bigint的隐式转换，offset &gt; 0。</li>
+<li>default：当offset指定的范围越界时的缺省值，常量，默认值为NULL。</li>
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：指定返回结果的排序方式。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：同expr类型。</p>
+</div>
+<div class="section" id="lead">
+<h3>LEAD<a class="headerlink" href="#lead" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>lead(expr, bigint offset, default) over(partition by col1[, col2…] [order by col1 [asc|desc][, col2[asc|desc]…]])</pre>
+</div>
+<p>用途：按偏移量取当前行之后第几行的值，如当前行号为rn则取行号为rn+offset的值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expr：任意类型。</li>
+<li>offset：Bigint类型常量，输入为string，double到bigint的隐式转换，offset &gt; 0。</li>
+<li>default：当offset指一的范围越界时的缺省值，常量。</li>
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：指定返回结果的排序方式。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：同expr类型。</p>
+</div>
+<div class="section" id="percent-rank">
+<h3>PERCENT_RANK<a class="headerlink" href="#percent-rank" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>percent_rank() over(partition by col1[, col2…] order by col1 [asc|desc][, col2[asc|desc]…])</pre>
+</div>
+<p>用途：计算一组数据中某行的相对排名。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：指定排名依据的值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型，值域为[0, 1]，相对排名的计算方式为为：(rank-1)/(number of rows -1)。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">目前限制单个窗口内的行数不超过10,000,000条。</p>
+</div>
+</div>
+<div class="section" id="row-number">
+<h3>ROW_NUMBER<a class="headerlink" href="#row-number" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>row_number() over(partition by col1[, col2…] order by col1 [asc|desc][, col2[asc|desc]…])</pre>
+</div>
+<p>用途：计算行号，从1开始。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>partition by col1[, col2..]：指定开窗口的列。</li>
+<li>order by col1 [asc|desc], col2[asc|desc]：指定结果返回时的排序的值。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。</p>
+</div>
+<div class="section" id="cluster-sample">
+<h3>CLUSTER_SAMPLE<a class="headerlink" href="#cluster-sample" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">boolean</span> <span class="n">cluster_sample</span><span class="p">(</span><span class="nb">bigint</span> <span class="n">x</span><span class="p">[,</span> <span class="nb">bigint</span> <span class="n">y</span><span class="p">])</span> <span class="n">over</span><span class="p">(</span><span class="n">partition</span> <span class="k">by</span> <span class="n">col1</span><span class="p">[,</span> <span class="n">col2</span><span class="p">..])</span>
+</pre></div>
+</div>
+<p>用途：分组抽样。</p>
+<p>参数说明：</p>
+<blockquote>
+<div><ul class="simple">
+<li>x：Bigint类型常量，x&gt;=1。若指定参数y，x表示将一个窗口分为x份；否则，x表示在一个窗口中抽取x行记录(即有x行返回值为true)。x为NULL时，返回值为NULL。</li>
+<li>y：Bigint类型常量，y&gt;=1，y&lt;=x。表示从一个窗口分的x份中抽取y份记录(即y份记录返回值为true)。y为NULL时，返回值为NULL。</li>
+<li>partition by col1[, col2]：指定开窗口的列。</li>
+</ul>
+</div></blockquote>
+<p>返回值：Boolean类型。</p>
+<p>示例，如表test_tbl中有key，value两列，key为分组字段，值有groupa，groupb两组，value为值，如下</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="o">+</span><span class="c1">------------+--------------------+</span>
+<span class="o">|</span> <span class="k">key</span>        <span class="o">|</span> <span class="n">value</span>              <span class="o">|</span>
+<span class="o">+</span><span class="c1">------------+--------------------+</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">34764165478145</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="mi">0</span><span class="p">.</span><span class="mi">740212609046718</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="mi">0</span><span class="p">.</span><span class="mi">167537127858695</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="mi">0</span><span class="p">.</span><span class="mi">630314566185241</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0112401388646925</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="mi">0</span><span class="p">.</span><span class="mi">199165745875297</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">320543343353587</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">273930924365012</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="mi">0</span><span class="p">.</span><span class="mi">386177958942063</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupa</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">09209976687047</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">10847690938643</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">725703978381499</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="mi">1</span><span class="p">.</span><span class="mi">05064697475759</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="mi">0</span><span class="p">.</span><span class="mi">135751224393789</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="mi">2</span><span class="p">.</span><span class="mi">13313102040396</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">11828960785008</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">849235511508911</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="mi">1</span><span class="p">.</span><span class="mi">27913806620453</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">330817716670401</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">300156896191195</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="mi">2</span><span class="p">.</span><span class="mi">4704244205196</span>    <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span>     <span class="o">|</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">28051882084434</span>  <span class="o">|</span>
+<span class="o">+</span><span class="c1">------------+--------------------+</span>
+</pre></div>
+</div>
+<p>想要从每组中抽取约10%的值，可以用以下ODPS SQL完成：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="k">key</span><span class="p">,</span> <span class="n">value</span>
+<span class="k">from</span> <span class="p">(</span>
+  <span class="k">select</span> <span class="k">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">cluster_sample</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="n">over</span><span class="p">(</span><span class="n">partition</span> <span class="k">by</span> <span class="k">key</span><span class="p">)</span> <span class="k">as</span> <span class="n">flag</span>
+  <span class="k">from</span> <span class="n">tbl</span>
+<span class="p">)</span> <span class="n">sub</span>
+<span class="k">where</span> <span class="n">flag</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+
+<span class="o">+</span><span class="c1">--------+--------------------+</span>
+<span class="o">|</span> <span class="k">key</span>    <span class="o">|</span> <span class="n">value</span>              <span class="o">|</span>
+<span class="o">+</span><span class="c1">--------+--------------------+</span>
+<span class="o">|</span> <span class="n">groupa</span> <span class="o">|</span> <span class="o">-</span><span class="mi">1</span><span class="p">.</span><span class="mi">34764165478145</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span> <span class="o">|</span> <span class="o">-</span><span class="mi">0</span><span class="p">.</span><span class="mi">725703978381499</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">groupb</span> <span class="o">|</span> <span class="mi">2</span><span class="p">.</span><span class="mi">4704244205196</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-----------------------+</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="odps-sql-aggr">
+<span id="id6"></span><h2>聚合函数<a class="headerlink" href="#odps-sql-aggr" title="Permalink to this headline">¶</a></h2>
+<p>聚合函数，其输入与输出是多对一的关系，即将多条输入记录聚合成一条输出值。可以与SQL中的group by语句联用。</p>
+<div class="section" id="id7">
+<h3>COUNT<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">bigint</span> <span class="k">count</span><span class="p">([</span><span class="n">distict</span><span class="o">|</span><span class="k">all</span><span class="p">]</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算记录数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>distinct|all：指明在计数时是否去除重复记录，默认是all，即计算全部记录，如果指定distinct，则可以只计算唯一值数量。</li>
+<li>value：可以为任意类型，当value值为NULL时，该行不参与计算，value可以为*，当count(*)时，返回所有行数。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Bigint类型。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="c1">-- 如表tbla有列col1类型为bigint</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="n">COL1</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">1</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">2</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="k">NULL</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbla</span><span class="p">;</span>  <span class="c1">-- 值为3,</span>
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="n">col1</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbla</span><span class="p">;</span>  <span class="c1">-- 值为2</span>
+</pre></div>
+</div>
+<p>聚合函数可以和group by一同使用，例如：假设存在表test_src，存在如下两列：key string类型，value double类型，</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="c1">-- test_src的数据为</span>
+
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="k">key</span> <span class="o">|</span> <span class="n">value</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="n">a</span>   <span class="o">|</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="n">a</span>   <span class="o">|</span> <span class="mi">4</span><span class="p">.</span><span class="mi">0</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="n">b</span>   <span class="o">|</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="n">b</span>   <span class="o">|</span> <span class="mi">3</span><span class="p">.</span><span class="mi">0</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+
+<span class="c1">-- 此时执行如下语句，结果为：</span>
+
+<span class="k">select</span> <span class="k">key</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">as</span> <span class="k">count</span> <span class="k">from</span> <span class="n">test_src</span> <span class="k">group</span> <span class="k">by</span> <span class="k">key</span><span class="p">;</span>
+
+
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="k">key</span> <span class="o">|</span> <span class="k">count</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="n">a</span>   <span class="o">|</span> <span class="mi">2</span>     <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+<span class="o">|</span> <span class="n">b</span>   <span class="o">|</span> <span class="mi">2</span>     <span class="o">|</span>
+<span class="o">+</span><span class="c1">-----+-------+</span>
+
+<span class="c1">-- 聚合函数将对相同key值得value值做聚合计算。下面介绍的其他聚合函数使用方法均与此例相同，不一一举例。</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>AVG<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="k">avg</span><span class="p">(</span><span class="n">double</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算平均值。</p>
+<p>参数说明：</p>
+<blockquote>
+<div><ul class="simple">
+<li>value：Double类型，若输入为string或bigint会隐式转换到double类型后参与运算，其它类型抛异常。当value值为NULL时，该行不参与计算。Boolean类型不允许参与计算。</li>
+</ul>
+<p>返回值：Double类型。</p>
+</div></blockquote>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="c1">-- 如表tbla有一列value，类型为bigint</span>
+
+ <span class="o">+</span><span class="c1">-------+</span>
+ <span class="o">|</span> <span class="n">value</span> <span class="o">|</span>
+ <span class="o">+</span><span class="c1">-------+</span>
+ <span class="o">|</span> <span class="mi">1</span>     <span class="o">|</span>
+ <span class="o">|</span> <span class="mi">2</span>     <span class="o">|</span>
+ <span class="o">|</span> <span class="k">NULL</span>  <span class="o">|</span>
+ <span class="o">+</span><span class="c1">-------+</span>
+
+<span class="c1">-- 则对该列计算avg结果为(1+2)/2=1.5</span>
+
+<span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">as</span> <span class="k">avg</span> <span class="k">from</span> <span class="n">tbla</span><span class="p">;</span>
+
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="k">avg</span>  <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">1</span><span class="p">.</span><span class="mi">5</span>  <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3>MAX<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算最大值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>value：可以为任意类型，当列中的值为NULL时，该行不参与计算。Boolean类型不允许参与运算。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：与value类型相同。</p>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="c1">-- 如表tbla有一列col1，类型为bigint</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="n">col1</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">1</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">2</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="k">NULL</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+
+<span class="k">select</span> <span class="k">max</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbla</span><span class="p">;</span> <span class="c1">-- 返回值为2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>MIN<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">MIN</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算最小值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>value：可以为任意类型，当列中的值为NULL时，该行不参与计算。Boolean类型不允许参与计算。</li>
+</ul>
+</dd>
+</dl>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="c1">-- 如表tbla有一列value，类型为bigint</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">1</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">2</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="k">NULL</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="k">select</span> <span class="k">min</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbla</span><span class="p">;</span> <span class="c1">-- 返回值为1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id11">
+<h3>MEDIAN<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">median</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算中位数。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。当输入值为NULL时忽略。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+</div>
+<div class="section" id="id12">
+<h3>STDDEV<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">stddev</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算总体标准差。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。当输入值为NULL时忽略。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+</div>
+<div class="section" id="id13">
+<h3>STDDEV_SAMP<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">double</span> <span class="n">stddev_samp</span><span class="p">(</span><span class="n">double</span> <span class="nb">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算样本标准差。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>number：Double类型。若输入为string类型或bigint类型会隐式转换到double类型后参与运算，其他类型抛异常。当输入值为NULL时忽略。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Double类型。</p>
+</div>
+<div class="section" id="odps-sql-aggr-sum">
+<span id="id14"></span><h3>SUM<a class="headerlink" href="#odps-sql-aggr-sum" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">sum</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：计算汇总值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><blockquote class="first">
+<div><ul class="simple">
+<li>value：Double或bigint类型，若输入为string会隐式转换到double类型后参与运算，当列中的值为NULL时，该行不参与计算。Boolean类型不允许参与计算。</li>
+</ul>
+</div></blockquote>
+<p class="last">返回值：输入为bigint时返回bigint，输入为double或string时返回double类型。</p>
+</dd>
+</dl>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="c1">-- 如表tbla有一列value，类型为bigint</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="n">value</span><span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">1</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="mi">2</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="o">|</span> <span class="k">NULL</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">------+</span>
+<span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">from</span> <span class="n">tbla</span><span class="p">;</span> <span class="c1">-- 返回值为3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wm-concat">
+<h3>WM_CONCAT<a class="headerlink" href="#wm-concat" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">wm_concat</span><span class="p">(</span><span class="n">string</span> <span class="n">separator</span><span class="p">,</span> <span class="n">string</span> <span class="n">str</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：用指定的spearator做分隔符，链接str中的值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>separator：String类型常量，分隔符。其他类型或非常量将引发异常。</li>
+<li>str：String类型，若输入为bigint，double或者datetime类型会隐式转换为string后参与运算，其它类型报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：String类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">对语句&#8221;select wm_concat(&#8216;,&#8217;, name) from test_src;&#8221;，若test_src为空集合，这ODPS SQL条语句返回NULL值。</p>
+</div>
+</div>
+</div>
+<div class="section" id="id15">
+<h2>其他函数<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cast">
+<span id="odps-sql-function-cast"></span><h3>CAST<a class="headerlink" href="#cast" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">cast</span><span class="p">(</span><span class="n">expr</span> <span class="k">as</span> <span class="o">&lt;</span><span class="k">type</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：将表达式的结果转换成目标类型，如cast(&#8216;1&#8217; as bigint)将字符串&#8216;1&#8217;转为整数类型的1，如果转换不成功或不支持的类型转换会引发异常。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>cast(double as bigint)，将double值转换成bigint。</li>
+<li>cast(string as bigint) 在将字符串转为bigint时，如果字符串中是以整型表达的数字，会直接转为bigint类型。如果字符串中是以浮点数或指数形式表达的数字，则会先转为double类型，再转为bigint类型。</li>
+<li>cast(string as datetime) 或 cast(datetime as string)时，会采用默认的日期格式yyyy-mm-dd hh:mi:ss。</li>
+</ul>
+</div>
+</div>
+<div class="section" id="coalesce">
+<h3>COALESCE<a class="headerlink" href="#coalesce" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">coalesce</span><span class="p">(</span><span class="n">expr1</span><span class="p">,</span> <span class="n">expr2</span><span class="p">,</span> <span class="p">...)</span>
+</pre></div>
+</div>
+<p>用途：返回列表中第一个非NULL的值，如果列表中所有的值都是NULL则返回NULL。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expri是要测试的值。所有这些值类型必须相同或为NULL，否则会引发异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：返回值类型和参数类型相同。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">参数至少要有一个，否则引发异常。</p>
+</div>
+</div>
+<div class="section" id="decode">
+<h3>DECODE<a class="headerlink" href="#decode" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">decode</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="k">search</span><span class="p">,</span> <span class="k">result</span><span class="p">[,</span> <span class="k">search</span><span class="p">,</span> <span class="k">result</span><span class="p">]...[,</span> <span class="k">default</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>用途：实现if-then-else分支选择的功能。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>expression：要比较的表达式。</li>
+<li>search：和expression进行比较的搜索项。</li>
+<li>result：search和expression的值匹配时的返回值。</li>
+<li>default：可选项，如果所有的搜索项都不匹配，则返回此default值，如果未指定，则会返回NULL。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：返回匹配的search；如果没有匹配，返回default；如果没有指定default，返回NULL。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>至少要指定三个参数。</li>
+<li>所有的result类型必须一致，或为NULL。不一致的数据类型会引发异常。所有的search和expression类型必须一致，否则报异常。</li>
+<li>如果decode中的search选项有重复时且匹配时，会返回第一个值。</li>
+</ul>
+</div>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span>
+    <span class="n">decode</span><span class="p">(</span><span class="n">customer_id</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Taobao&#39;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Alipay&#39;</span><span class="p">,</span>
+        <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;Aliyun&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Others&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="k">result</span>
+<span class="k">from</span> <span class="n">sale_detail</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>上面的decode函数实现了下面if-then-else语句中的功能：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">if</span> <span class="n">customer_id</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">then</span>
+  <span class="k">result</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39;Taobao&#39;</span><span class="p">;</span>
+<span class="n">elsif</span> <span class="n">customer_id</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">then</span>
+  <span class="k">result</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39;Alipay&#39;</span><span class="p">;</span>
+<span class="n">elsif</span> <span class="n">customer_id</span> <span class="o">=</span> <span class="mi">3</span> <span class="k">then</span>
+  <span class="k">result</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39;Aliyun&#39;</span><span class="p">;</span>
+<span class="k">else</span>
+  <span class="k">result</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39;Others&#39;</span><span class="p">;</span>
+<span class="k">end</span> <span class="n">if</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="greatest">
+<h3>GREATEST<a class="headerlink" href="#greatest" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>greatest(var1, var2, …)</pre>
+</div>
+<p>用途：返回输入参数中最大的一个。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>var1，var2可以为bigint，double，datetime或者string。若所有值都为NULL则返回NULL。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：</p>
+<blockquote>
+<div><ul class="simple">
+<li>输入参数中的最大值，当不存在隐式转换时返回同输入参数类型。</li>
+<li>NULL为最小值。</li>
+<li>当输入参数类型不同时，double，bigint，string之间的比较转为double；string，datetime的比较转为datetime。不允许其它的隐式转换。</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="ordinal">
+<h3>ORDINAL<a class="headerlink" href="#ordinal" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>ordinal(bigint nth, var1, var2, …)</pre>
+</div>
+<p>用途：将输入变量按从小到大排序后，返回nth指定的位置的值。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>nth：Bigint类型，指定要返回的位置，为NULL时返回NULL。</li>
+<li>var1，var2：类型可以为bigint，double，datetime或者string。</li>
+</ul>
+</dd>
+<dt>返回值：</dt>
+<dd><ul class="first last simple">
+<li>排在第nth位的值，当不存在隐式转换时返回同输入参数类型。</li>
+<li>有类型转换时，double，bigint，string之间的转换返回double。string，datetime之间的转换返回datetime。不允许其它的隐式转换。</li>
+<li>NULL为最小。</li>
+</ul>
+</dd>
+</dl>
+<p>示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">ordinal</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="least">
+<h3>LEAST<a class="headerlink" href="#least" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><pre>least(var1, var2, …)</pre>
+</div>
+<p>用途：返回输入参数中最小的一个。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>var1，var2可以为bigint，double，datetime或者string。若所有值都为NULL则返回NULL。</li>
+</ul>
+</dd>
+<dt>返回值：</dt>
+<dd><ul class="first last simple">
+<li>输入参数中的最小值，当不存在隐式转换时返回同输入参数类型。</li>
+<li>NULL为最小。</li>
+<li>有类型转换时，double，bigint，string之间的转换返回double。string，datetime之间的转换返回datetime。不允许其它的隐式类型转换。</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="uuid">
+<h3>UUID<a class="headerlink" href="#uuid" title="Permalink to this headline">¶</a></h3>
+<p>命令格式：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">string</span> <span class="n">uuid</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>用途：返回一个随机ID，形式示例：&#8221;29347a88-1e57-41ae-bb68-a9edbdd94212&#8221;。</p>
+</div>
+<div class="section" id="sample">
+<h3>SAMPLE<a class="headerlink" href="#sample" title="Permalink to this headline">¶</a></h3>
+<p>函数声明：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="nb">boolean</span> <span class="n">sample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="k">column_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>用途：对所有读入的column_name的值，sample根据x，y的设置做采样，并过滤掉不满足采样条件的行。</p>
+<dl class="docutils">
+<dt>参数说明：</dt>
+<dd><ul class="first last simple">
+<li>x，y：Bigint类型，表示哈希为x份，取第y份。y可省略，省略时取第一份，如果省略参数中的y，则必须同时省略column_name。x，y为整型常量，大于0，其它类型或小于等于0时抛异常，若y&gt;x也抛异常。x，y任一输入为NULL时返回NULL。</li>
+<li>column_name是采样的目标列。column_name可以省略，省略时根据x，y的值随机采样。任意类型，列的值可以为NULL。不做隐式类型转换。如果column_name为常量NULL会报异常。</li>
+</ul>
+</dd>
+</dl>
+<p>返回值：Boolean类型。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">为了避免NULL值带来的数据倾斜，因此对于column_name中为NULL的值，会在x份中进行均匀哈希。如果不加column_name，则数据量比较少时输出不一定均匀，在这种情况下建议加上column_name，以获得比较好的输出结果。</p>
+</div>
+<p>示例：假定存在表tbla，表内有列名为cola的列，</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tbla</span> <span class="k">where</span> <span class="n">sample</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span> <span class="p">,</span> <span class="n">cola</span><span class="p">)</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="c1">-- 表示数值会根据cola hash为4份，取第1份</span>
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tbla</span> <span class="k">where</span> <span class="n">sample</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+    <span class="c1">-- 表示数值会对每行数据做随机哈希分配为4份，取第2份</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">SQL内建函数</a><ul>
+<li><a class="reference internal" href="#id1">数学运算函数</a><ul>
+<li><a class="reference internal" href="#abs">ABS</a></li>
+<li><a class="reference internal" href="#acos">ACOS</a></li>
+<li><a class="reference internal" href="#asin">ASIN</a></li>
+<li><a class="reference internal" href="#atan">ATAN</a></li>
+<li><a class="reference internal" href="#ceil">CEIL</a></li>
+<li><a class="reference internal" href="#conv">CONV</a></li>
+<li><a class="reference internal" href="#cos">COS</a></li>
+<li><a class="reference internal" href="#cosh">COSH</a></li>
+<li><a class="reference internal" href="#cot">COT</a></li>
+<li><a class="reference internal" href="#exp">EXP</a></li>
+<li><a class="reference internal" href="#floor">FLOOR</a></li>
+<li><a class="reference internal" href="#ln">LN</a></li>
+<li><a class="reference internal" href="#log">LOG</a></li>
+<li><a class="reference internal" href="#pow">POW</a></li>
+<li><a class="reference internal" href="#rand">RAND</a></li>
+<li><a class="reference internal" href="#round">ROUND</a></li>
+<li><a class="reference internal" href="#sin">SIN</a></li>
+<li><a class="reference internal" href="#sinh">SINH</a></li>
+<li><a class="reference internal" href="#sqrt">SQRT</a></li>
+<li><a class="reference internal" href="#tan">TAN</a></li>
+<li><a class="reference internal" href="#tanh">TANH</a></li>
+<li><a class="reference internal" href="#trunc">TRUNC</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">字符串处理函数</a><ul>
+<li><a class="reference internal" href="#char-matchcount">CHAR_MATCHCOUNT</a></li>
+<li><a class="reference internal" href="#chr">CHR</a></li>
+<li><a class="reference internal" href="#concat">CONCAT</a></li>
+<li><a class="reference internal" href="#instr">INSTR</a></li>
+<li><a class="reference internal" href="#is-encoding">IS_ENCODING</a></li>
+<li><a class="reference internal" href="#length">LENGTH</a></li>
+<li><a class="reference internal" href="#lengthb">LENGTHB</a></li>
+<li><a class="reference internal" href="#md5">MD5</a></li>
+<li><a class="reference internal" href="#regexp-extract">REGEXP_EXTRACT</a></li>
+<li><a class="reference internal" href="#regexp-instr">REGEXP_INSTR</a></li>
+<li><a class="reference internal" href="#regexp-replace">REGEXP_REPLACE</a></li>
+<li><a class="reference internal" href="#regexp-substr">REGEXP_SUBSTR</a></li>
+<li><a class="reference internal" href="#regexp-count">REGEXP_COUNT</a></li>
+<li><a class="reference internal" href="#split-part">SPLIT_PART</a></li>
+<li><a class="reference internal" href="#substr">SUBSTR</a></li>
+<li><a class="reference internal" href="#tolower">TOLOWER</a></li>
+<li><a class="reference internal" href="#toupper">TOUPPER</a></li>
+<li><a class="reference internal" href="#to-char">TO_CHAR</a></li>
+<li><a class="reference internal" href="#trim">TRIM</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id3">日期函数</a><ul>
+<li><a class="reference internal" href="#dateadd">DATEADD</a></li>
+<li><a class="reference internal" href="#datediff">DATEDIFF</a></li>
+<li><a class="reference internal" href="#datepart">DATEPART</a></li>
+<li><a class="reference internal" href="#datetrunc">DATETRUNC</a></li>
+<li><a class="reference internal" href="#from-unixtime">FROM_UNIXTIME</a></li>
+<li><a class="reference internal" href="#getdate">GETDATE</a></li>
+<li><a class="reference internal" href="#isdate">ISDATE</a></li>
+<li><a class="reference internal" href="#lastday">LASTDAY</a></li>
+<li><a class="reference internal" href="#to-date">TO_DATE</a></li>
+<li><a class="reference internal" href="#odps-sql-function-datetime-to-char">TO_CHAR</a></li>
+<li><a class="reference internal" href="#unix-timestamp">UNIX_TIMESTAMP</a></li>
+<li><a class="reference internal" href="#weekday">WEEKDAY</a></li>
+<li><a class="reference internal" href="#weekofyear">WEEKOFYEAR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#odps-sql-window">窗口函数</a><ul>
+<li><a class="reference internal" href="#count">COUNT</a></li>
+<li><a class="reference internal" href="#avg">AVG</a></li>
+<li><a class="reference internal" href="#max">MAX</a></li>
+<li><a class="reference internal" href="#min">MIN</a></li>
+<li><a class="reference internal" href="#median">MEDIAN</a></li>
+<li><a class="reference internal" href="#stddev">STDDEV</a></li>
+<li><a class="reference internal" href="#stddev-samp">STDDEV_SAMP</a></li>
+<li><a class="reference internal" href="#sum">SUM</a></li>
+<li><a class="reference internal" href="#dense-rank">DENSE_RANK</a></li>
+<li><a class="reference internal" href="#rank">RANK</a></li>
+<li><a class="reference internal" href="#lag">LAG</a></li>
+<li><a class="reference internal" href="#lead">LEAD</a></li>
+<li><a class="reference internal" href="#percent-rank">PERCENT_RANK</a></li>
+<li><a class="reference internal" href="#row-number">ROW_NUMBER</a></li>
+<li><a class="reference internal" href="#cluster-sample">CLUSTER_SAMPLE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#odps-sql-aggr">聚合函数</a><ul>
+<li><a class="reference internal" href="#id7">COUNT</a></li>
+<li><a class="reference internal" href="#id8">AVG</a></li>
+<li><a class="reference internal" href="#id9">MAX</a></li>
+<li><a class="reference internal" href="#id10">MIN</a></li>
+<li><a class="reference internal" href="#id11">MEDIAN</a></li>
+<li><a class="reference internal" href="#id12">STDDEV</a></li>
+<li><a class="reference internal" href="#id13">STDDEV_SAMP</a></li>
+<li><a class="reference internal" href="#odps-sql-aggr-sum">SUM</a></li>
+<li><a class="reference internal" href="#wm-concat">WM_CONCAT</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id15">其他函数</a><ul>
+<li><a class="reference internal" href="#cast">CAST</a></li>
+<li><a class="reference internal" href="#coalesce">COALESCE</a></li>
+<li><a class="reference internal" href="#decode">DECODE</a></li>
+<li><a class="reference internal" href="#greatest">GREATEST</a></li>
+<li><a class="reference internal" href="#ordinal">ORDINAL</a></li>
+<li><a class="reference internal" href="#least">LEAST</a></li>
+<li><a class="reference internal" href="#uuid">UUID</a></li>
+<li><a class="reference internal" href="#sample">SAMPLE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sql_udf.html" title="自定义函数(UDF)"
+             >next</a></li>
+        <li class="right" >
+          <a href="odps_sql_grmr.html" title="DDL语句"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >ODPS SQL</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

@@ -1,0 +1,28 @@
+项目空间的安全配置
+====================
+
+简介
+----------
+ODPS是一个支持多租户的数据处理平台，不同的租户对数据安全需求不尽相同。为了满足不同租户对数据安全的灵活需求，ODPS支持项目空间级别的安全配置，ProjectOwner可以定制适合自己的外部账号支持和鉴权模型。
+
+
+鉴权模型配置
+--------------
+
+ODPS支持了多种正交的授权机制，如ACL授权，Policy授权，隐式授权(如对象创建者自动被赋予访问对象的权限)。但是并非所有用户都需要使用这些安全机制。用户可以根据自己的业务安全需求或使用习惯，合理设置本项目空间的鉴权模型。
+
+.. code-block:: sql
+
+ show SecurityConfiguration 
+   --查看项目空间的安全配置
+ set security.CheckPermissionUsingACL=true/false 
+   --激活/冻结ACL授权机制，默认为true
+ set security.CheckPermissionUsingPolicy=true/false 
+   --激活/冻结Policy授权机制，默认为true
+ set security.ObjectCreatorHasAccessPermission=true/false 
+   --许/禁止对象创建者默认拥有访问权限，默认为true
+ set security.ObjectCreatorHasGrantPermission=true/false 
+   --允许/禁止对象创建者默认拥有授权权限，默认为true
+ set security.LabelSecurity=true/false --开启/关闭LabelSecurity安全策略
+ set security.ProjectProtection=true/false --开启/关闭项目空间的数据保护机制，禁止/允许数据流出项目空间
+

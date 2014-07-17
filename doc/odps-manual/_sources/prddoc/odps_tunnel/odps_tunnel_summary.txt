@@ -1,0 +1,100 @@
+.. _odps_tunnel_sdk:
+
+Tunnel SDK简介
+=================
+这篇教程从用户的角度出发，介绍Tunnel SDK的主要接口，不同版本的SDK在使用上有差别，准确信息以SDK Java Doc为准。
+
++-----------------+-----------------------------------------------------------------------+
+| 主要接口        | 描述                                                                  |
++=================+=======================================================================+
+| Configuration   | ODPS Tunnel 配置项。用于保存与ODPS Tunnel服务通讯过程需要的配置信息。 |
+|                 | * Tunnel服务地址：                                                    |
++-----------------+-----------------------------------------------------------------------+
+| DataTunnel      | 访问ODPS Tunnel服务的入口类。用户可以通过公网或者阿里云内网环境对ODPS |
+|                 | 及其Tunnel进行访问。当用户在阿里云内网环境中，使用Tunnel内网连接下载  |
+|                 | 数据时，ODPS不会将该操作产生的流量计入计费。请注意，当使用Tunnel时ODPS|
+|                 | 及Tunnel的公网及内网地址需要配对使用。                                |
+|                 |                                                                       |
+|                 | * 阿里云内网地址：                                                    |
+|                 |                                                                       |
+|                 |   * odps地址：http://odps-ext.aliyun-inc.com/api                      |       
+|                 |   * Tunnel地址：http://dt-ext.odps.aliyun-inc.com                     |
+|                 |                                                                       |
+|                 | * 公网地址：                                                          |
+|                 |                                                                       |
+|                 |   * odps地址：http://service.odps.aliyun.com/api                      |
+|                 |   * Tunnel地址：http://dt.odps.aliyun.com                             |
++-----------------+-----------------------------------------------------------------------+
+| UploadSession   | 表示一个向ODPS表中上传数据的会话。                                    |
++-----------------+-----------------------------------------------------------------------+
+| DownloadSession | 表示一个向ODPS表中上传数据的会话。                                    |
++-----------------+-----------------------------------------------------------------------+
+
+UploadSession
+---------------
+Upload对象：
+ * 生命周期：从创建Upload实例到结束上传(或取消上传)
+ * 创建Upload实例，可以通过调用构造方法创建，也可以通过DataTunnel创建；
+        * 请求方式：同步
+        * Server端会为该Upload创建一个session， 生成唯一uploadId标识该Upload，客户端可以通过getUploadId获取
+
+ * 上传数据：
+        * 请求方式：异步
+        * 调用openRecordWriter方法，生成RecordWriter实例，其中参数blockId
+                * 用于标识此次上传的数据，也描述了数据在整个表中的位置
+                * 取值范围：[0,20000]
+                * 当数据上传失败，可以根据blockId重新上传
+
+ * 查看上传：
+        * 请求方式：同步
+        * 调用getStatus可以获取当前Upload状态
+        * 调用getBlockList可以获取成功上传的blockid list，可以和上传的blockid list对比，对失败的blockId重新上传
+
+ * 结束上传：
+        * 请求方式：同步
+        * 调用complete(Long[] blocks)方法，参数blocks列表表示已经成功上传的block列表，server端会对该列表进行验证
+        * 该功能是加强对数据正确性的校验，如果提供的block列表与server端存在的block列表不一致抛出异常
+
+ * 取消上传：
+        * 请求方式：同步
+        * 调用abort取消上传(已上传数据无效，不可用)
+
+ * 7种状态说明：
+        * UNKNOWN, server端刚创建一个session时设置的初始值
+        * NORMAL, 创建upload对象成功
+        * CLOSING, 当调用complete方法(结束上传)时，服务端会先把状态置为CLOSING。
+        * CLOSED, 完成结束上传(即把数据移动到结果表所在目录)后
+        * CANCELED, 调用abort取消上传(已上传数据无效，不可用)
+        * EXPIRED, 上传超时
+        * CRITICAL, 服务出错
+
+DownloadSession
+-----------------
+
+Download对象：
+ * 生命周期：从创建Download实例到complete方法结束
+ * 创建Download实例，可以通过调用构造方法创建，也可以通过DataTunnel创建；
+        * 请求方式：同步
+        * Server端会为该Download创建一个session，生成唯一downloadId标识该Download，客户端可以通过getDownloadId获取
+        * 该操作比较开销较大，server端会对数据文件创建索引，当文件数很多时，该时间会比较长；
+        * 同时server端会返回总Record数，可以根据总Record数启动多个并发同时下载
+
+ * 下载数据：
+        * 请求方式：异步
+        * 调用openRecordReader方法，生成RecordReader实例，其中参数
+                * start标识本次下载的record的起始位置，从0开始，取值范围是 >= 0
+                * count标识本次下载的记录数，取值范围是>0
+ * 查看下载：
+        * 请求方式：同步
+        * 调用getStatus可以获取当前Download状态
+
+ * 结束上传：
+        * 请求方式：同步
+        * 调用complete方法完成结束下载
+
+ * 4种状态说明：
+        * UNKNOWN, server端刚创建一个session时设置的初始值
+        * NORMAL, 创建Download对象成功
+        * CLOSED, 下载结束后
+        * EXPIRED, 下载超时
+

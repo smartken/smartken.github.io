@@ -1,0 +1,650 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Map-Reduce SDK简介 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="MapReduce" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_mr_examples.html" title="示例程序"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="odps_mr_cmd.html" title="MapReduce命令介绍"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">MapReduce</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="map-reduce-sdk">
+<span id="odps-mr-sdk"></span><h1>Map-Reduce SDK简介<a class="headerlink" href="#map-reduce-sdk" title="Permalink to this headline">¶</a></h1>
+<p>本章节将对ODPS MapReduce SDK的主要接口做简要介绍，不同版本的SDK在使用上有差别，准确信息以SDK Java Doc为准。下图将会简要介绍ODPS MapReduce的执行流程，各个接口在ODPS MapReduce中的哪个阶段被调用，方便用户理解本章节介绍的SDK接口：</p>
+<a class="reference internal image-reference" href="../../_images/mr_progress.jpg"><img alt="../../_images/mr_progress.jpg" class="align-center" src="../../_images/mr_progress.jpg" style="width: 600.0px; height: 500.0px;" /></a>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>需要特殊说明的是：</p>
+<ul class="last simple">
+<li>map函数是在Map阶段被调用，对于Map阶段的每一条输入数据，该函数被调用一次。但reduce函数是对于所有key值相同的中间结果被调用一次，reduce函数的作用是用来归并所有key值相同的value；</li>
+<li>任务运行时Counter值在Worker内被统计，Worker结束后Counter值汇报给ODPS框架。在任务结束后，ODPS框架汇总所有Worker的Counter值。</li>
+</ul>
+</div>
+<div class="section" id="odps-mr-sdk-core">
+<span id="id1"></span><h2>核心接口<a class="headerlink" href="#odps-mr-sdk-core" title="Permalink to this headline">¶</a></h2>
+<p>在本小节，我们仅会对较为常用的MapReduce核心接口做简短介绍：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>MapperBase</td>
+<td>用户自定义的Map函数需要继承自此类。处理输入表的记录对
+象，加工处理成键值对集合输出到Reduce阶段，或者不经过
+Reduce阶段直接输出结果记录到结果表。不经过Reduce阶段而
+直接输出计算结果的作业，也可称之为Map-Only作业。</td>
+</tr>
+<tr class="row-odd"><td>ReduceBase</td>
+<td>用户自定义的Reduce函数需要继承自此类。对与一个键(Key)
+关联的一组数值集(Values)进行归约计算。</td>
+</tr>
+<tr class="row-even"><td>TaskContext</td>
+<td>是MapperBase及ReduceBase多个成员函数的输入参数之一。
+含有任务运行的上下文信息。</td>
+</tr>
+<tr class="row-odd"><td>JobClient</td>
+<td>用于提交和管理作业，提交方式包括阻塞(同步)方式及非阻塞
+(异步)方式。</td>
+</tr>
+<tr class="row-even"><td>RunningJob</td>
+<td>作业运行时对象，用于跟踪运行中的MapReduce作业实例。</td>
+</tr>
+<tr class="row-odd"><td>JobConf</td>
+<td>描述一个MapReduce任务的配置，通常在主程序(main函数)中
+定义JobConf对象，然后通过JobClient提交作业给ODPS服务。</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="mapperbase">
+<h3>MapperBase<a class="headerlink" href="#mapperbase" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>void cleanup(TaskContext context)</td>
+<td>在Map阶段结束时，map方法之后调用。</td>
+</tr>
+<tr class="row-odd"><td><dl class="first last docutils">
+<dt>void map(long key, Record record,</dt>
+<dd>TaskContext context)</dd>
+</dl>
+</td>
+<td>map方法，处理输入表的记录。</td>
+</tr>
+<tr class="row-even"><td>void setup(TaskContext context)</td>
+<td>在Map阶段开始时，map方法之前调用。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="reducebase">
+<h3>ReduceBase<a class="headerlink" href="#reducebase" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>void cleanup( <a class="reference internal" href="#odps-mr-sdk-taskcontext"><em>TaskContext</em></a> context)</td>
+<td>在Reduce阶段结束时，reduce方法之后调用。</td>
+</tr>
+<tr class="row-odd"><td><dl class="first last docutils">
+<dt>void reduce(Record key,</dt>
+<dd>Iterator&lt;Record&gt; values,
+<a class="reference internal" href="#odps-mr-sdk-taskcontext"><em>TaskContext</em></a> context)</dd>
+</dl>
+</td>
+<td>reduce方法，处理输入表的记录。</td>
+</tr>
+<tr class="row-even"><td>void setup( <a class="reference internal" href="#odps-mr-sdk-taskcontext"><em>TaskContext</em></a> context)</td>
+<td>在Reduce阶段开始时，reduce方法之前调用。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="taskcontext">
+<span id="odps-mr-sdk-taskcontext"></span><h3>TaskContext<a class="headerlink" href="#taskcontext" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="52%" />
+<col width="48%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>TableInfo[] getOutputTableInfo()</td>
+<td>获取输出的表信息</td>
+</tr>
+<tr class="row-odd"><td>Record createOutputRecord()</td>
+<td>创建默认输出表的记录对象</td>
+</tr>
+<tr class="row-even"><td>Record createOutputRecord(String label)</td>
+<td>创建给定label输出表的记录对象</td>
+</tr>
+<tr class="row-odd"><td>Record createMapOutputKeyRecord()</td>
+<td>创建Map输出Key的记录对象</td>
+</tr>
+<tr class="row-even"><td>Record createMapOutputValueRecord()</td>
+<td>创建Map输出Value的记录对象</td>
+</tr>
+<tr class="row-odd"><td>void write(Record record)</td>
+<td>写记录到默认输出，用于Reduce端写出数据，
+可以在Reduce端多次调用。</td>
+</tr>
+<tr class="row-even"><td>void write(Record record, String label)</td>
+<td>写记录到给定标签输出，用于Reduce端写出数据。可以在
+Reduce端多次调用。</td>
+</tr>
+<tr class="row-odd"><td>void write(Record key, Record value)</td>
+<td>Map写记录到中间结果，可以在Map函数中多次调用。
+可以在Map端多次调用。</td>
+</tr>
+<tr class="row-even"><td><dl class="first last docutils">
+<dt>BufferedInputStream readResourceFileAsStream</dt>
+<dd>(String resourceName)</dd>
+</dl>
+</td>
+<td>读取文件类型资源</td>
+</tr>
+<tr class="row-odd"><td>Iterator&lt;Record&gt; readResourceTable(String resourceName)</td>
+<td>读取表类型资源</td>
+</tr>
+<tr class="row-even"><td>Counter getCounter(Enum&lt;?&gt; name)</td>
+<td>获取给定名称的Counter对象</td>
+</tr>
+<tr class="row-odd"><td>Counter getCounter(String group, String name)</td>
+<td>获取给定组名和名称的Counter对象</td>
+</tr>
+<tr class="row-even"><td>void progress()</td>
+<td>向MapReduce框架报告心跳信息。 如果用户方法处理时间
+很长，且中间没有调用框架，可以调用这个方法避免task
+超时，框架默认600秒超时。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="jobconf">
+<span id="odps-mr-sdk-jc"></span><h3>JobConf<a class="headerlink" href="#jobconf" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>void setResources(String resourceNames)</td>
+<td>声明本作业使用的资源。只有声明的资源才能在运行
+Mapper/Reducer时通过TaskContext对象读取。</td>
+</tr>
+<tr class="row-odd"><td>void setMapOutputKeySchema(Column[] schema)</td>
+<td>设置Mapper输出到Reducer的Key属性</td>
+</tr>
+<tr class="row-even"><td>void setMapOutputValueSchema(Column[] schema)</td>
+<td>设置Mapper输出到Reducer的Value属性</td>
+</tr>
+<tr class="row-odd"><td>void setOutputKeySortColumns(String[] cols)</td>
+<td>设置Mapper输出到Reducer的Key排序列</td>
+</tr>
+<tr class="row-even"><td>void setOutputGroupingColumns(String[] cols)</td>
+<td>设置Key分组列</td>
+</tr>
+<tr class="row-odd"><td>void setMapperClass(Class&lt;? extends Mapper&gt; theClass)</td>
+<td>设置作业的Mapper函数</td>
+</tr>
+<tr class="row-even"><td>void setPartitionColumns(String[] cols)</td>
+<td>设置作业指定的分区列. 默认是Mapper输出Key的所有列</td>
+</tr>
+<tr class="row-odd"><td>void setReducerClass(Class&lt;? extends Reducer&gt; theClass)</td>
+<td>设置作业的Reducer</td>
+</tr>
+<tr class="row-even"><td>void setCombinerClass(Class&lt;? extends Reducer&gt; theClass)</td>
+<td>设置作业的combiner。在Map端运行，作用类似于单个Map
+对本地的相同Key值做Reduce</td>
+</tr>
+<tr class="row-odd"><td>void setSplitSize(long size)</td>
+<td>设置输入分片大小，单位 MB，默认640</td>
+</tr>
+<tr class="row-even"><td>void setNumReduceTasks(int n)</td>
+<td>设置Reducer任务数，默认为Mapper任务数的1/4</td>
+</tr>
+<tr class="row-odd"><td>void setMemoryForMapTask(int mem)</td>
+<td>设置Mapper任务中单个Worker的内存大小，单位：MB，
+默认值2048。</td>
+</tr>
+<tr class="row-even"><td>void setMemoryForReduceTask(int mem)</td>
+<td>设置Reducer任务中单个Worker的内存大小，单位：MB，
+默认值 2048。</td>
+</tr>
+<tr class="row-odd"><td>void setOutputSchema(Column[] schema, String label)</td>
+<td>设置指定label的输出属性。多路输出时，每一路输出对
+应一个label。</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">通常情况下，GroupingColumns包含在KeySortColumns中，KeySortColumns要包含在Key中。</p>
+</div>
+</div>
+<div class="section" id="jobclient">
+<h3>JobClient<a class="headerlink" href="#jobclient" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>static <a class="reference internal" href="#odps-mr-sdk-rj"><em>RunningJob</em></a> runJob(JobConf job)</td>
+<td>阻塞(同步)方式提交MapReduce作业后立即返回</td>
+</tr>
+<tr class="row-odd"><td>static <a class="reference internal" href="#odps-mr-sdk-rj"><em>RunningJob</em></a> submitJob(JobConf job)</td>
+<td>非阻塞(异步)方式提交MapReduce作业后立即返回</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="runningjob">
+<span id="odps-mr-sdk-rj"></span><h3>RunningJob<a class="headerlink" href="#runningjob" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>String getInstanceID()</td>
+<td>获取作业运行实例ID，用于查看运行日志和作业管理。</td>
+</tr>
+<tr class="row-odd"><td>boolean isComplete()</td>
+<td>查询作业是否结束。</td>
+</tr>
+<tr class="row-even"><td>boolean isSuccessful()</td>
+<td>查询作业实例是否运行成功。</td>
+</tr>
+<tr class="row-odd"><td>void waitForCompletion()</td>
+<td>等待直至作业实例结束。一般使用于异步方式提交的作业。</td>
+</tr>
+<tr class="row-even"><td>JobStatus getJobStatus()</td>
+<td>查询作业实例运行状态。</td>
+</tr>
+<tr class="row-odd"><td>void killJob()</td>
+<td>结束此作业。</td>
+</tr>
+<tr class="row-even"><td>Counters getCounters()</td>
+<td>获取Conter信息。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="inpututils">
+<h3>InputUtils<a class="headerlink" href="#inpututils" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="65%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>static void addTable(TableInfo table, <a class="reference internal" href="#odps-mr-sdk-jc"><em>JobConf</em></a> conf)</td>
+<td>添加表table到任务输入，可以被调用多次
+，新加入的表以append方式添加到输入队
+列中。</td>
+</tr>
+<tr class="row-odd"><td>static void setTables(TableInfo [] tables, <a class="reference internal" href="#odps-mr-sdk-jc"><em>JobConf</em></a> conf)</td>
+<td>添加多张表到任务输入中。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="outpututils">
+<h3>OutputUtils<a class="headerlink" href="#outpututils" title="Permalink to this headline">¶</a></h3>
+<p>主要函数接口：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="65%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">主要接口</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>static void addTable(TableInfo table, <a class="reference internal" href="#odps-mr-sdk-jc"><em>JobConf</em></a> conf)</td>
+<td>添加表table到任务输出，可以被调用多次
+，新加入的表以append方式添加到输出队
+列中。</td>
+</tr>
+<tr class="row-odd"><td>static void setTables(TableInfo [] tables, <a class="reference internal" href="#odps-mr-sdk-jc"><em>JobConf</em></a> conf)</td>
+<td>添加多张表到任务输出中。</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="sdk">
+<h2>功能及SDK对比<a class="headerlink" href="#sdk" title="Permalink to this headline">¶</a></h2>
+<p>ODPS提供的MapReduce与其他MapReduce框架提供的功能略有不同。本章节主要介绍ODPS Mapreduce与Hadoop MapReduce 0.19版本的区别。</p>
+<div class="section" id="mapper-reducer">
+<h3>Mapper/Reducer<a class="headerlink" href="#mapper-reducer" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Hadoop MapReduce</th>
+<th class="head">ODPS MapReduce</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><dl class="first last docutils">
+<dt>map(InKey key, InputValue value,</dt>
+<dd>OutputCollector&lt;OutKey, OutValue&gt; output,
+Reporter reporter)</dd>
+</dl>
+</td>
+<td><dl class="first last docutils">
+<dt>map(long key, Record record,</dt>
+<dd>TaskContext context)</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td><dl class="first last docutils">
+<dt>reduce(InKey key, Iterator&lt;InValue&gt; values,</dt>
+<dd>OutputCollector&lt;OutKey, OutValue&gt; output,
+Reporter reporter)</dd>
+</dl>
+</td>
+<td><dl class="first last docutils">
+<dt>reduce(Record key,</dt>
+<dd>Iterator&lt;Record&gt; values,
+TaskContext context)</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p>ODPS的Map/Reduce接口没有Reporter参数。Reporter参数在Hadoop中被用来实时更新Worker进度及统计信息等，但上述两种行为不受用户控制。目前，ODPS仅支持的进度汇报仅统计到Stage级别，不会统计Worker级别的进度。ODPS支持用户自定义统计信息，但统计信息的收集工作不是实时进行的，会在任务结束后进行统计信息的汇总。</p>
+<p>ODPS的TaskContext接口中提供了progress功能，但此功能是防止Worker长时间运行未结束，被框架误认为超时而被杀的情况出现。这个接口更类似于向框架发送心跳信息，并不是用来汇报Worker进度。ODPS MapReduce默认Worker超时时间为10分钟(系统默认配置，不受用户控制)，如果超过10分钟，Worker仍然没有向框架发送心跳(调用progress接口)，框架会强制停止该Worker，MapReduce任务失败退出。因此，建议用户在Mapper/Reducer函数中，定期调用progress接口，防止框架认为Worker超时，误杀任务。</p>
+</div>
+<div class="section" id="id2">
+<h3>数据类型<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="69%" />
+<col width="31%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Hadoop MapReduce</th>
+<th class="head">ODPS MapReduce</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>用户可自定义类型，使用Hadoop实现的Writable
+类型系统。</td>
+<td>用户不可自定义类型，
+使用ODPS的类型系统。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id3">
+<h3>任务配置<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="41%" />
+<col width="34%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Hadoop MapReduce</th>
+<th class="head">ODPS MapReduce</th>
+<th class="head">描述</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>mapreduce.job.skiprecords</td>
+<td>不支持</td>
+<td>越过输入开头的记录</td>
+</tr>
+<tr class="row-odd"><td>mapreduce.map.maxattempts
+mapreduce.reduce.maxattempts</td>
+<td>支持此功能，但不接受用户配置</td>
+<td>Map/Reduce的最大重试次数</td>
+</tr>
+<tr class="row-even"><td>mapreduce.job.output.key.class
+mapreduce.job.output.value.class</td>
+<td>odps.mapred.mapoutput.key.schema
+odps.mapred.mapoutput.value.schema</td>
+<td>ODPS不支持自定义输出Key，
+Value类型。</td>
+</tr>
+<tr class="row-odd"><td>mapreduce.job.output.key.comparator.class</td>
+<td>odps.mapred.output.key.sort.columns</td>
+<td>自定义比较器</td>
+</tr>
+<tr class="row-even"><td>mapreduce.job.output.group.comparator.class</td>
+<td>odps.mapred.output.group.columns</td>
+<td>自定义group比较器</td>
+</tr>
+<tr class="row-odd"><td>mapreduce.job.cache.files</td>
+<td>odps.mapred.resources</td>
+<td>指定读取的资源</td>
+</tr>
+<tr class="row-even"><td>mapreduce.task.io.sort.factor
+mapreduce.task.io.sort.mb
+mapreduce.reduce.shuffle.parallelcopies</td>
+<td>不支持</td>
+<td>性能优化参数配置</td>
+</tr>
+<tr class="row-odd"><td>mapreduce.task.id</td>
+<td>SDK中提供接口获取</td>
+<td>获取WorkerID</td>
+</tr>
+<tr class="row-even"><td>mapreduce.job.partitioner.class</td>
+<td>odps.mapred.partition.columns</td>
+<td>自定义Partition</td>
+</tr>
+</tbody>
+</table>
+<p>Hadoop支持用户自定义输出Key、Value类型，自定义比较器及Partitioner。由于ODPS的数据均以表格式存储，即用户无法直接操作分布式文件存储系统，因此，在ODPS MapReduce中，用户仅可以指定输出Key，Value类型，用来排序的列及Partition列。由于ODPS的分布式计算实现不同于Hadoop，因此Hadoop支持的性能优化参数在ODPS中也无法使用。</p>
+</div>
+<div class="section" id="id4">
+<h3>功能对比补充<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="44%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">功能描述</th>
+<th class="head">Hadoop MapReduce</th>
+<th class="head">ODPS MapReduce</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>多路输入</td>
+<td>&nbsp;</td>
+<td>支持多路输入。但输入的表格式必须相同
+。且ODPS无法区分输入Record来自于哪张
+输入表</td>
+</tr>
+<tr class="row-odd"><td>多路输出</td>
+<td>&nbsp;</td>
+<td>支持多路输出。每一路输出使用label区分
+。输出表的格式可以不相同。</td>
+</tr>
+<tr class="row-even"><td>任务进度汇报</td>
+<td>Map通过计算数据的读入量，Reduce通过不同phase
+的进度估计任务总体进度。客户端可实时获取当前
+进度。不受用户控制。</td>
+<td>支持任务进度实时汇报。但实现方式不同
+。</td>
+</tr>
+<tr class="row-odd"><td>统计信息</td>
+<td>允许用户自定义统计信息，并进行实施汇总更新。
+信息实时更新行为不受用户控制。</td>
+<td>不支持运行时更新统计信息。在任务结束
+时，统一进行计算汇总。</td>
+</tr>
+<tr class="row-even"><td>文件压缩</td>
+<td>支持指定是否进行压缩存储。</td>
+<td>不支持。ODPS中用户无法直接操作文件
+存储。</td>
+</tr>
+<tr class="row-odd"><td>推测执行</td>
+<td>&nbsp;</td>
+<td>默认开启，不可设置。</td>
+</tr>
+<tr class="row-even"><td>任务结束通知</td>
+<td>当任务结束时，服务端会通知客户端。</td>
+<td>不支持。因此用户在使用SDK提交任务时，
+只能不断轮询任务状态，直到任务结束。</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Map-Reduce SDK简介</a><ul>
+<li><a class="reference internal" href="#odps-mr-sdk-core">核心接口</a><ul>
+<li><a class="reference internal" href="#mapperbase">MapperBase</a></li>
+<li><a class="reference internal" href="#reducebase">ReduceBase</a></li>
+<li><a class="reference internal" href="#taskcontext">TaskContext</a></li>
+<li><a class="reference internal" href="#jobconf">JobConf</a></li>
+<li><a class="reference internal" href="#jobclient">JobClient</a></li>
+<li><a class="reference internal" href="#runningjob">RunningJob</a></li>
+<li><a class="reference internal" href="#inpututils">InputUtils</a></li>
+<li><a class="reference internal" href="#outpututils">OutputUtils</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sdk">功能及SDK对比</a><ul>
+<li><a class="reference internal" href="#mapper-reducer">Mapper/Reducer</a></li>
+<li><a class="reference internal" href="#id2">数据类型</a></li>
+<li><a class="reference internal" href="#id3">任务配置</a></li>
+<li><a class="reference internal" href="#id4">功能对比补充</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_mr_examples.html" title="示例程序"
+             >next</a></li>
+        <li class="right" >
+          <a href="odps_mr_cmd.html" title="MapReduce命令介绍"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >MapReduce</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

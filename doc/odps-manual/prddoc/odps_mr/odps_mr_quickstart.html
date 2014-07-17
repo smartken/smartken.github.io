@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>快速入门 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="MapReduce" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_mr_cmd.html" title="MapReduce命令介绍"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="odps_mr_summary.html" title="MapReduce简介"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">MapReduce</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps-openmr-quickstart">
+<span id="id1"></span><h1>快速入门<a class="headerlink" href="#odps-openmr-quickstart" title="Permalink to this headline">¶</a></h1>
+<p>本文章节的目的是介绍在安装好ODPS客户端后，如何快速运行MapReduce WordCount示例程序。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>编译、运行MapReduce需要安装JDK1.6版本；</li>
+<li>ODPS客户端的快速部署请参阅 <a class="reference internal" href="../odps_common.html#odps-pre-case-tunnel"><em>快速开始</em></a> 。更多关于ODPS客户端的使用，请参考 <a class="reference internal" href="../odps_tools/odps_cli.html#odps-console"><em>ODPS客户端参考手册</em></a> ；</li>
+</ul>
+</div>
+<div class="section" id="wordcount">
+<span id="odps-openmr-quickstart-wc"></span><h2>运行示例程序：WordCount<a class="headerlink" href="#wordcount" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>创建输入输出表并上传数据，创建表的语句请参阅 <a class="reference internal" href="../odps_sql/odps_sql_grmr.html#odps-sql-create-table"><em>创建表(CREATE TABLE)</em></a> 。kv.txt文件中的数据如下：</li>
+</ol>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">wc_in</span> <span class="p">(</span><span class="k">key</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">value</span> <span class="n">STRING</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">wc_out</span> <span class="p">(</span><span class="k">key</span> <span class="n">STRING</span><span class="p">,</span> <span class="n">cnt</span> <span class="nb">BIGINT</span><span class="p">);</span>
+  <span class="c1">-- 创建输入、输出表</span>
+</pre></div>
+</div>
+<p>使用 <a class="reference internal" href="../odps_tools/odps_dship.html#odps-dship"><em>ODPS数据上传下载工具</em></a> 上传数据：</p>
+<div class="highlight-python"><pre>./dship u kv.txt wc_in
+  -- 上传示例数据</pre>
+</div>
+<p>kv.txt文件中的数据如下：</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mi">238</span><span class="p">,</span><span class="n">val_238</span>
+<span class="mi">186</span><span class="p">,</span><span class="n">val_86</span>
+<span class="mi">186</span><span class="p">,</span><span class="n">val_86</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>编写MapReduce程序</li>
+</ol>
+<p>代码示例请参考 <a class="reference internal" href="example/WordCount.html#odps-openmr-example-wordcount"><em>WordCount代码示例</em></a> ，更多MapReduce SDK的介绍请参考 <a class="reference internal" href="../odps_sdk/sdk.html#odps-sdk"><em>ODPS SDK介绍</em></a> 。将程序编译打包，并命名为&#8221;odps-mapred-examples.jar&#8221;。如果您没有还没有配备MapReduce的编程环境，可以跳过这一步骤，直接进入第4步。</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>ODPS为用户提供了便捷的Eclipse开发插件，方便用户快速开发MapReduce程序，并提供了本地调试MapReduce的功能。详细介绍请参考 <a class="reference internal" href="../odps_tools/odps_eclipse_plugin.html#odps-tool-eclipse-mr"><em>MapReduce开发插件介绍</em></a> 。</li>
+<li>用户在打包时只需要将MapReduce程序自身的代码打包即可，不需要将依赖包(包括ODPS SDK及引用的第三方库)一起打入Jar包。在第3步添加资源时，需要将依赖的包统一以资源形式加入ODPS。并在运行时&#8221;-resources&#8221;参数后指定这些依赖的Jar资源。</li>
+</ul>
+</div>
+<ol class="arabic simple" start="3">
+<li>添加jar资源</li>
+</ol>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">create</span> <span class="n">resource</span> <span class="n">jar</span> <span class="n">odps</span><span class="o">-</span><span class="n">mapred</span><span class="o">-</span><span class="n">examples</span><span class="p">.</span><span class="n">jar</span>
+  <span class="c1">--如果已经存在同名资源，请更换文件名或者使用-f选项</span>
+  <span class="c1">-- create resource jar odps-mapred-examples.jar -f</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li>运行 WordCount</li>
+</ol>
+<p>如果用户没有Java编译环境，可以使用ODPS客户端自带的代码示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">jar</span> <span class="n">com</span><span class="p">.</span><span class="n">aliyun</span><span class="p">.</span><span class="n">odps</span><span class="p">.</span><span class="n">mapred</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">WordCount</span> <span class="n">wc_in</span> <span class="n">wc_out</span>
+</pre></div>
+</div>
+<p>如果用户使用自己编译出的Jar包，则需要运行如下命令：</p>
+<div class="highlight-python"><pre>jar -resources odps-mapred-examples.jar -classpath odps-mapred-examples.jar org.alidata.odps.mr.examples.WordCount wc_in wc_out</pre>
+</div>
+<p>Jar命令是ODPS中专门用于运行MapReduce作业的，相关命令、参数的详细介绍请参考 <a class="reference internal" href="odps_mr_cmd.html#odps-openmr-jar"><em>MapReduce命令介绍</em></a> 。MapReduce作业执行时命令行会打印作业实例ID，结果统计摘要(Summary)。</p>
+<p>输出示例：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">ID</span> <span class="o">=</span> <span class="mi">20140306130431455</span><span class="n">g5jz4i6m2</span>
+<span class="n">Summary</span><span class="p">:</span>
+<span class="n">inputs</span><span class="p">:</span>
+        <span class="n">my_project</span><span class="p">.</span><span class="n">wc_in</span><span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="mi">269</span> <span class="n">bytes</span><span class="p">)</span>
+<span class="n">outputs</span><span class="p">:</span>
+        <span class="n">my_project</span><span class="p">.</span><span class="n">wc_out</span><span class="p">:</span> <span class="mi">2</span> <span class="p">(</span><span class="mi">253</span> <span class="n">bytes</span><span class="p">)</span>
+<span class="n">M1_Stg1</span><span class="p">:</span>
+        <span class="n">worker</span> <span class="k">count</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="k">input</span> <span class="n">records</span><span class="p">:</span>
+                <span class="k">input</span><span class="p">:</span> <span class="mi">1</span>  <span class="p">(</span><span class="k">min</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="k">max</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="k">avg</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">output</span> <span class="n">records</span><span class="p">:</span>
+                <span class="n">R2_1_Stg1</span><span class="p">:</span> <span class="mi">2</span>  <span class="p">(</span><span class="k">min</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="k">max</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="k">avg</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">R2_1_Stg1</span><span class="p">:</span>
+        <span class="n">worker</span> <span class="k">count</span><span class="p">:</span> <span class="mi">1</span>
+        <span class="k">input</span> <span class="n">records</span><span class="p">:</span>
+                <span class="k">input</span><span class="p">:</span> <span class="mi">2</span>  <span class="p">(</span><span class="k">min</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="k">max</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="k">avg</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">output</span> <span class="n">records</span><span class="p">:</span>
+                <span class="n">R2_1_Stg1FS_6415</span><span class="p">:</span> <span class="mi">2</span>  <span class="p">(</span><span class="k">min</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="k">max</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="k">avg</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">OK</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li>获取结果</li>
+</ol>
+<p>查看wc_out表的结果：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">wc_out</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>输出结果：</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">key</th>
+<th class="head">value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>238</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>val_238</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>186</td>
+<td>2</td>
+</tr>
+<tr class="row-odd"><td>val_186</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">快速入门</a><ul>
+<li><a class="reference internal" href="#wordcount">运行示例程序：WordCount</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_mr_cmd.html" title="MapReduce命令介绍"
+             >next</a></li>
+        <li class="right" >
+          <a href="odps_mr_summary.html" title="MapReduce简介"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >MapReduce</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

@@ -1,0 +1,310 @@
+.. _odps_sql_udf:
+
+自定义函数(UDF)
+========================
+
+UDF全称User Defined Function，即用户自定义函数。ODPS提供了很多内建函数来满足用户的计算需求，同时用户还可以通过创建自定义函数来满足不同的计算需求。UDF在使用上与普通的 :ref:`odps_sql_function` 类似。目前SQL UDF功能仍处于公测阶段，如果您想使用此功能，可通过阿里云官网获取邀请码。
+
+
+在ODPS中，用户可以扩展的UDF有两种：
+
+ +-----------------------------------------+---------------------------------------------+
+ | UDF 分类                                | 描述                                        |
+ +=========================================+=============================================+
+ | User Defined Scalar Function            | 用户自定义标量值函数(User Defined Scalar    |
+ | 通常也称之为UDF                         | Function)通常也称之为UDF。其输入与输出是一对|
+ |                                         | 一的关系，即读入一行数据，写出一条输出值。  |
+ +-----------------------------------------+---------------------------------------------+
+ | UDTF(User Defined Table Valued Function)| 自定义表值函数，是用来解决一次函数调用输出多|
+ |                                         | 行数据场景的，也是唯一能返回多个字段的自定义|
+ |                                         | 函数。而UDF只能一次计算输出一条返回值。     |
+ +-----------------------------------------+---------------------------------------------+
+
+.. note:: UDF广义的说法代表了标量值函数及表值函数两种类型的自定义函数的集合。狭义来说，仅代表用户标量值函数。文档会经常使用这一名词，请读者根据文档上下文判断具体含义。
+
+.. _odps_sql_udf_quickstart:
+
+快速开始(UDF的创建和使用)
+---------------------------
+UDF目前仅支持Java语言接口，用户如果想编写UDF程序，可以通过 :ref:`odps_common_add_resource_cmd` 的方式将UDF代码上传到项目空间中，使用 :ref:`odps_common_create_func` 语句创建UDF。在使用UDF时，其使用方式与普通的SQL内建函数一致。
+
+下面我们将给出一个完整的开发UDF流程示例，例如实现一个字符小写转换功能的UDF，需要经过如下几个步骤：
+
+* 代码编写：按照ODPS UDF框架的规定，实现函数功能，并进行编译。下面给出一个简单的代码实现：
+
+.. code-block:: java
+
+ package org.alidata.odps.udf.examples;
+ import com.aliyun.odps.udf.UDF;
+
+ public final class Lower extends UDF {
+   public String evaluate(String s) {
+     if (s == null) { return null; }
+     return s.toLowerCase();
+   }
+ }
+
+将这个jar包命名为"my_lower.jar"。关于UDF编程框架的介绍请参考 :ref:`odps_udf_udf` 。
+
+.. note:: 
+
+ * ODPS为用户提供了便捷的Eclipse开发插件，方便用户快速开发UDF程序，并提供了本地调试UDF的功能。详细介绍请参考 :ref:`odps_tool_eclipse_udf` 。
+ * 用户在打包时只需要将UDF程序自身的代码打包即可，不需要将依赖包(包括ODPS SDK及引用的第三方库)一起打入Jar包>。在添加资源时，需要将依赖的包统一以资源形式加入ODPS。创建UDF时指定这些依赖的Jar资源。
+
+
+* 添加资源：在运行UDF之前，用户需要将jar包以资源的形式上传到ODPS中。只有这样，UDF框架才能自动加载jar资源，运行用户的UDF程序。:ref:`odps_open_mr` 也用到了资源这一ODPS特有概念。
+
+
+执行命令：
+
+.. code-block:: sql
+
+    create resource jar my_lower.jar;
+        -- 如果存在同名的资源请将这个jar包重命名，
+        -- 并注意修改下面示例命令中相关jar包的名字；
+        -- 又或者直接使用-f选项覆盖原有的jar资源
+
+
+* 注册UDF函数：用户的jar包被上传后，使得ODPS有条件自动获取用户代码并运行。但此时仍然无法使用这个UDF，因为ODPS中并没有关于这个UDF的任何信息。因此需要用户在ODPS中注册一个唯一的函数名，并指定这个函数名与哪个jar资源的哪个函数对应。关于如何注册UDF，请参考 :ref:`odps_common_create_func` 。运行命令：
+
+.. code-block:: sql
+
+  create function test_lower org.alidata.odps.udf.examples.Lower my_lower.jar
+
+* 运行SQL：在SQL中使用该UDF即可，使用方式与SQL内建函数类似：
+
+.. code-block:: sql
+
+  select test_lower(shop_name) from sale_detail;
+
+UDF API
+------------
+
+参数与返回值类型
+~~~~~~~~~~~~~~~~~~~~
+
+UDF支持ODPS SQL的数据类型有：bigint, string, double和boolean。目前不支持datetime类型。ODPS数据类型与Java类型的对应关系如下：
+
+  +---------------+--------+--------+--------+---------+
+  | ODPS SQL Type | Bigint | String | Double | Boolean |
+  +---------------+--------+--------+--------+---------+
+  | Java Type     | Long   | String | Double | Boolean |
+  +---------------+--------+--------+--------+---------+
+
+
+.. note:: SQL中的NULL值通过Java中的NULL引用表示，因此Java primitive type是不允许使用的，因为无法表示SQL中的NULL值。
+
+.. _odps_udf_udf:
+
+UDF接口说明
+~~~~~~~~~~~~~
+
+实现UDF需要继承com.aliyun.odps.udf.UDF类，并实现evaluate方法。evaluate方法必须是非static的public方法。Evaluate方法的参数和返回值类型将作为SQL中UDF的函数签名。这意味着用户可以在UDF中实现多个evaluate方法，在调用UDF时，框架会依据UDF调用的参数类型匹配正确的evaluate方法。
+
+下面是一个UDF的例子。
+
+.. code-block:: java
+
+ package org.alidata.odps.udf.examples;
+ import com.aliyun.odps.udf.UDF;
+
+ public final class Lower extends UDF {
+   public String evaluate(String s) {
+     if (s == null) { return null; }
+     return s.toLowerCase();
+   }
+ }
+
+UDF的使用方式于ODPS SQL中普通的内建函数相同，详情请参考 :ref:`odps_sql_function`
+
+
+UDTF接口说明
+~~~~~~~~~~~~~
+ 
+Java UDTF需要继承com.aliyun.odps.udf.UDTF类。这个类需要实现4个接口。
+
++---------------------------------------------+-------------------------------------------+
+| 接口定义                                    | 描述                                      |
++=============================================+===========================================+
+| public void setup(ExecutionContext ctx)     | 初始化方法，在UDTF处理输入数据前，调用用户|
+|     throws UDFException                     | 自定义的初始化行为。在每个Worker内setup会 |
+|                                             | 被先调用一次。                            |
++---------------------------------------------+-------------------------------------------+
+| public void process(Object[] args)          | 这个方法由框架调用，SQL中每一条记录都会对 |
+|     throws UDFException                     | 应调用一次process，process的参数为SQL语句 |
+|                                             | 中指定的UDTF输入参数。输入参数以Object[]的|
+|                                             | 形式传入，输出结果通过forward函数输出。用 |
+|                                             | 户需要在process函数内自行调用forward，以决|
+|                                             | 定输出数据。                              |
++---------------------------------------------+-------------------------------------------+
+| public void close() throws UDFException     | UDTF的结束方法，此方法由框架调用，并且只会|
+|                                             | 被调用一次，即在处理完最后一条记录之后。  |
++---------------------------------------------+-------------------------------------------+
+| public void forward(Object ...o)            | 用户调用forward方法输出数据，每次forward  |
+|      throws UDFException                    | 代表输出一条记录。对应SQL语句UDTF的as子句 |
+|                                             | 指定的列。                                |
++---------------------------------------------+-------------------------------------------+
+
+下面将给出一个UDTF程序示例：
+
+.. code-block:: java
+
+ package org.alidata.odps.udf.examples;
+
+ import com.aliyun.odps.udf.UDTF;
+ import com.aliyun.odps.udf.UDTFCollector;
+ import com.aliyun.odps.udf.annotation.Resolve;
+ import com.aliyun.odps.udf.UDFException;
+
+ // TODO define input and output types, e.g., "string,string->string,bigint".
+ @Resolve({"string,bigint->string,bigint"})
+ public class MyUDTF extends UDTF {
+ 
+   @Override
+   public void process(Object[] args) throws UDFException {
+     String a = (String) args[0];
+     Long b = (Long) args[1];
+ 
+     for (String t: a.split("\\s+")) {
+       forward(t, b);
+     }
+ 
+   }
+ }
+
+
+在SQL中可以这样使用这个UDTF，假设在ODPS上创建UDTF时注册函数名为user_udtf：
+
+.. code-block:: sql
+
+  select user_udtf(col0, col1) as (c0, c1) from my_table; 
+
+假设my_table的col0， col1的值为：
+
+::
+
+   +------+------+
+   | col0 | col1 |
+   +------+------+
+   | A B  | 1    |
+   | C D  | 2    |
+   +------+------+
+
+则select出的结果为：
+
+::
+
+   +----+----+
+   | c0 | c1 |
+   +----+----+
+   | A  | 1  |
+   | B  | 1  |
+   | C  | 2  |
+   | D  | 2  |
+   +----+----+
+
+.. _odps_udtf_usage:
+
+UDTF使用说明
+################
+
+UDTF在SQL中的常用方式如下：
+
+.. code-block:: sql
+
+  select user_udtf(col0, col1, col2) as (c0, c1) from my_table; 
+  
+  select user_udtf(col0, col1, col2) as (c0, c1) from 
+      (select * from my_table distribute by key sort by key) t;
+  
+  select reduce_udtf(col0, col1, col2) as (c0, c1) from 
+      (select col0, col1, col2 from 
+          (select map_udtf(a0, a1, a2, a3) as (col0, col1, col2) from my_table) t1 
+       distribute by col0 sort by col0, col1) t2;
+
+但使用UDTF有如下使用限制：
+
+* 同一个SELECT子句中不允许有其他表达式
+
+.. code-block:: sql
+
+ select value, user_udtf(key) as mycol ...  
+
+* UDTF不能嵌套使用
+
+.. code-block:: sql
+
+ select user_udtf1(user_udtf2(key)) as mycol... 
+
+* 不支持在同一个select子句中与 group by / distribute by / sort by 联用
+
+.. code-block:: sql
+
+  select user_udtf(key) as mycol ... group by mycol 
+
+其他UDTF示例
+################
+
+在UDTF中，用户可以读取ODPS的 :ref:`odps_common_resource` 。
+
+.. code-block:: java
+  :linenos:
+
+  package org.alidata.odps.mr.examples.udtf;
+  
+  import java.io.BufferedInputStream;
+  import java.io.BufferedReader;
+  import java.io.IOException;
+  import java.io.InputStreamReader;
+  import java.util.HashMap;
+  
+  import com.aliyun.odps.udf.ExecutionContext;
+  import com.aliyun.odps.udf.UDFException;
+  import com.aliyun.odps.udf.UDTF;
+  import com.aliyun.odps.udf.annotation.Resolve;
+  
+  @Resolve("string->string")
+  public class ExampleUDTF extends UDTF {
+  
+    ExecutionContext ctx;
+    HashMap<String, String> replaceMap;
+    
+    @Override
+    public void setup(ExecutionContext ctx) throws UDFException {
+      this.ctx = ctx;
+      replaceMap = new HashMap<String, String>();
+      try {
+        BufferedInputStream resource = ctx.readResourceFileAsStream("replace_map.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+        String st = null;
+        while ((st = reader.readLine()) != null) {
+          String[] replaceStr = st.split(",");
+          if (replaceStr.length != 2) {
+            throw new UDFException("resource format error.");
+          }
+          replaceMap.put(replaceStr[0], replaceStr[1]);
+        }
+      } catch (IOException e) {
+        throw new UDFException(e);
+      } 
+      
+    }
+  
+    @Override
+    public void process(Object[] args) throws UDFException {
+      String inputLine = (String) args[0];
+      if (replaceMap.containsKey(inputLine)) {
+        forward(replaceMap.get(inputLine));
+      } else {
+        forward(inputLine);
+      }
+    }
+  
+  }
+
+说明：
+
+ * 25行：通过readResourceFileAsStream获取BufferedInputStream；
+ * 28 ~ 34行：将资源内容保存到replaceMap中；
+
+.. note:: 目前，ODPS还不支持在UDF中读取资源。在 :ref:`odps_open_mr` 中，用户同样可以使用相同的方式获取资源，请参考 :ref:`odps_mr_resource_set` 。

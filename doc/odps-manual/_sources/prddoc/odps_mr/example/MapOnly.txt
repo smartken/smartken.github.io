@@ -1,0 +1,99 @@
+MapOnly代码示例
+----------------------------------------------------------------------------------------
+
+对于MapOnly的作业，Map直接将<Key, Value>信息输出到ODPS的表中。用户只需要指定输出表即可，不再需要指定Map输出的Key/Value元信息。
+
+代码示例，仅供参考：
+
+.. code-block:: java
+ :linenos:
+
+  package com.aliyun.odps.mapred.open.example;
+  
+  import java.io.IOException;
+  
+  import com.aliyun.odps.data.Record;
+  import com.aliyun.odps.mapred.JobClient;
+  import com.aliyun.odps.mapred.MapperBase;
+  import com.aliyun.odps.mapred.ReducerBase;
+  import com.aliyun.odps.mapred.TaskContext;
+  import com.aliyun.odps.mapred.conf.JobConf;
+  import com.aliyun.odps.mapred.example.utils.TableInputFormat;
+  import com.aliyun.odps.mapred.example.utils.TableOutputFormat;
+  import com.aliyun.odps.mapred.utils.SchemaUtils;
+  
+  public class MapOnly {
+  
+    public static class MapperClass extends MapperBase {
+      @Override
+      public void setup(TaskContext context) throws IOException {
+        boolean is = context.getJobConf().getBoolean("option.mapper.setup", false);
+        
+        if (is) {
+          Record result = context.createOutputRecord();
+          result.set(0, "setup");
+          result.set(1, 1L);
+          context.write(result);
+        }
+      }
+      
+      @Override
+      public void map(long key, Record record, TaskContext context) throws IOException {
+        boolean is = context.getJobConf().getBoolean("option.mapper.map", false);
+  
+        if (is) {
+          Record result = context.createOutputRecord();
+          result.set(0, record.get(0));
+          result.set(1, 1L);
+          context.write(result);
+        }
+      }
+  
+      @Override
+      public void cleanup(TaskContext context) throws IOException {
+        boolean is = context.getJobConf().getBoolean("option.mapper.cleanup", false);
+  
+        if (is) {
+          Record result = context.createOutputRecord();
+          result.set(0, "cleanup");
+          result.set(1, 1L);
+          context.write(result);
+        }
+      }
+    }
+  
+    public static void main(String[] args) throws Exception {
+      if (args.length != 2 && args.length != 3) {
+        System.err.println("Usage: OnlyMapper <in_table> <out_table> [setup|map|cleanup]");
+        System.exit(2);
+      }
+  
+      JobConf job = new JobConf();
+      job.setMapperClass(MapperClass.class);
+      job.setNumReduceTasks(0);
+  
+      job.setMapOutputKeySchema(SchemaUtils.fromString("word:string"));
+      job.setMapOutputValueSchema(SchemaUtils.fromString("count:bigint"));
+  
+      TableInputFormat.addInput(args[0], job);
+      TableOutputFormat.addOutput(args[1], job);
+  
+      if (args.length == 3) {
+        String options = new String(args[2]);
+        
+        if (options.contains("setup")) {
+          job.setBoolean("option.mapper.setup", true);
+        }
+        
+        if (options.contains("map")) {
+          job.setBoolean("option.mapper.map", true);
+        }
+        
+        if (options.contains("cleanup")) {
+          job.setBoolean("option.mapper.cleanup", true);
+        } 
+      }
+  
+      JobClient.runJob(job);
+    }
+  }

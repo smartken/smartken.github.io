@@ -1,0 +1,205 @@
+快速入门
+=================
+
+简介
+-----------------------------------
+
+如果你对ODPS安全体系了解不多，而希望能快速、正确使用ODPS安全管理功能，那么可以参照本节所列出的一些典型场景。
+
+典型场景
+-----------------------------------
+* 添加一个新的项目组成员，并对他授权
+* 添加多个具有相同角色的项目组成员，并授权他们访问存在的某张表
+* 添加多个具有相同角色的项目组成员，并授权他们访问所有的表（包括未来可能创建的）
+* 将资源打包分享给另一个项目空间
+* 项目空间的数据保护设置
+
+添加一个新的项目组成员，并对他授权
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+场景描述：Jack是项目空间prj1的管理员，一个新加入的项目组成员Alice(已拥有云账号: alice@aliyun.com)申请加入项目空间prj1，并申请如下权限：查看Table列表，提交作业，创建表。
+
+操作步骤：(由项目空间管理员来操作)
+
+.. code-block:: sql
+
+ use prj1 
+ security --进入安全命令空间
+ add user ALIYUN$alice@aliyun.com  --添加用户
+ grant List, CreateTable, CreateInstance on project prj1 to user ALIYUN$alice@aliyun.com --使用grant语句对用户授权
+
+.. note:: 
+
+ * "ALIYUN$alice@aliyun.com"中的"ALIYUN"表示阿里云账号；
+ * 关于security命令空间的介绍请参考客户端参考手册下的 :ref:`odps_cli_common` ；
+
+添加多个具有相同角色的项目组成员，并授权他们访问存在的某张表
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+场景描述：Jack是项目空间prj1的管理员，有三个新加入的项目组成员：Alice, Bob, Charlie，他们的角色是数据审查员。他们要申请如下权限：查看Table列表，提交作业，读取表userprofile。
+
+对于这个场景的授权，项目空间管理员可以使用基于对象的 :ref:`odps_security_acl` 机制来完成。
+
+操作方法：
+
+.. code-block:: sql
+
+ use prj1
+ security
+ add user ALIYUN$alice@aliyun.com --添加用户
+ add user ALIYUN$bob@aliyun.com
+ add user ALIYUN$charlie@aliyun.com
+ create role tableviewer --创建角色
+ grant List, CreateInstance on project prj1 to role tableviewer --对角色赋权
+ grant Describe, Select on table userprofile to role tableviewer
+ grant tableviewer to ALIYUN$alice@aliyun.com --对用户赋予角色tableviewer
+ grant tableviewer to ALIYUN$bob@aliyun.com
+ grant tableviewer to ALIYUN$charlie@aliyun.com
+
+添加多个具有相同角色的项目组成员，并授权他们访问所有的表(包括未来可能创建的)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+场景描述：Jack是项目空间prj1的管理员，有三个新加入的项目组成员：Alice, Bob, Charlie，他们的角色是数据审查员。他们要申请如下权限：查看Table列表，提交作业，读取所有Table(包括未来可能创建的)。
+
+对于这个场景的授权，项目空间管理员不能使用基于对象的ACL授权机制(该机制要求访问对象必须存在)，而需要使用 :ref:`odps_security_policy` 机制，因为Policy授权机制不要求访问对象必须存在，而且可以使用通配符来描述授权对象。
+
+操作方法：
+
+Step 1: 创建一个Policy文件 /tmp/policy1.txt，内容如下：
+
+.. code-block:: java 
+
+ {
+ "Version": "1", 
+ "Statement":
+  [{
+     "Effect":"Allow",
+     "Action":["odps:CreateInstance","odps:List"],
+     "Resource":"acs:odps:*:projects/prj1"
+ }
+ ,{
+     "Effect":"Allow",
+     "Action":["odps:Describe","odps:Select"],
+     "Resource":"acs:odps:*:projects/prj1/tables/*"
+ }]
+ } 
+
+
+Step 2: 添加用户，使用角色对用户授权
+
+.. code-block:: sql
+
+ use prj1
+ security
+ add user ALIYUN$alice@aliyun.com --添加用户
+ add user ALIYUN$bob@aliyun.com
+ add user ALIYUN$charlie@aliyun.com
+ create role tableviewer --创建角色
+ put policy /tmp/policy1.txt on role tableviewer --使用policy对角色赋权
+ grant tableviewer to ALIYUN$alice@aliyun.com --对用户赋予角色tableviewer
+ grant tableviewer to ALIYUN$bob@aliyun.com
+ grant tableviewer to ALIYUN$charlie@aliyun.com
+
+将资源打包分享给另一个项目空间
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+场景描述：Jack是项目空间prj1的管理员。John是项目空间prj2的管理员。由于业务需要，Jack希望将其项目空间prj1中的某些资源(比如datamining.jar及sampletable表)分享给John的项目空间prj2。如果项目空间prj2的用户Bob需要访问这些资源，那么prj2管理员可以通过ACL或Policy自主授权，无需Jack参与。
+
+操作方法：
+
+Step 1: 项目空间prj1的管理员Jack在项目空间prj1中创建资源包(package)。
+
+.. code-block:: sql
+
+ use prj1
+ security
+ create package datamining --创建一个package
+ add resource datamining.jar to package datamining --添加资源到package
+ add table sampletable to package datamining --添加table到package
+ allow project prj2 to install package datamining --将package分享给项目空间prj2
+
+Step 2: 项目空间prj2管理员Bob在项目空间prj2中安装package。
+
+.. code-block:: sql
+
+ use prj2
+ security
+ install package prj1.datamining --安装一个package
+ describe package prj1.datamining --查看package中的资源列表
+
+Step 3: Bob对package进行自主授权。
+
+.. code-block:: sql
+
+ use prj2
+ security
+ grant Read on package prj1.datamining to user ALIYUN$bob@aliyun.com --通过ACL授权Bob使用package
+
+
+.. note:: 关于跨项目空间资源分享的详细介绍请参考 :ref:`odps_sec_datasharing` 。
+
+项目空间的数据保护设置
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+场景描述：Jack是项目空间prj1的管理员。该项目空间有很多敏感数据，比如用户身份号码和购物记录。而且还有很多具有自主知识产权的数据挖掘算法。Jack希望能将项目空间中的这些敏感数据和算法保护好，项目中用户只能在项目空间中访问，数据只能在项目空间内流动，不允许流出到项目空间之外。
+
+操作方法：Jack需要如下操作：
+
+.. code-block:: sql
+
+ use prj1
+ security
+ set security.ProjectProtection=true --开启项目空间的数据保护机制
+
+一旦当项目空间开启 :ref:`odps_security_protected` 机制后，无法将项目空间中的数据转移到项目空间之外，所有的数据只能在项目空间内部流动。
+
+但是在某些情况下，可能由于业务需要，用户Alice需要将某些数据表导出到项目空间之外，并且也经过空间管理员的审核通过。针对这类情况，ODPS提供了两种机制来支持受保护项目空间的数据流出。
+
+方法1: 设置ExceptionPolicy。详情请参考 :ref:`odps_security_protected_exception` 。
+
+Step 1: 创建Policy文件。 比如创建一个/tmp/exception_policy.txt，它只允许Alice使用SQL任务将表t1从项目空间prj1导出。policy内容如下：
+
+.. code-block:: java
+
+ {
+ "Version": "1", 
+ "Statement":
+  [{
+    "Effect":"Allow",
+    "Principal":"ALIYUN$alice@aliyun.com",
+    "Action":["odps:Describe","odps:Select"],
+    "Resource":"acs:odps:*:projects/prj1/tables/t1",
+    "Condition":{
+        "StringEquals": {
+            "odps:TaskType":"SQL"
+        }
+    }
+  }]
+ } 
+
+
+Step 2: 设置exception policy 
+
+.. code-block:: sql
+
+ use prj1
+ security
+ --开启项目空间的数据保护机制，并设置数据导出的例外
+ set security.ProjectProtection=true with exception /tmp/exception_policy.txt 
+
+.. note::
+
+ * 设置exception policy时，应确保导出人(Principal)对数据资源(Resource)不具有更新(Update)或重建同名对象(Drop, CreateTable)权限，以防止TOC2TOU(time-of-check to time-of-use)数据泄露。
+
+方法2: 设置TrustedProject。将prj2设置为prj1的可信项目空间，设置后将允许prj1中的所有数据流出到prj2。详情请参考 :ref:`odps_security_protected_trust` 。
+
+.. code-block:: sql
+
+ use prj1
+ security
+ add trustedproject prj2
+
+.. note::
+
+ * 基于Package的资源打包分享机制和项目空间的数据保护机制是正交的两种安全机制。ODPS规定：资源分享拥有更高的优先级。这就是说，在一个受保护的项目空间中，如果一个对象是通过Package机制分享给其它项目空间，那么跨项目空间访问该对象时将不受ProjectProtection规则的限制。
+

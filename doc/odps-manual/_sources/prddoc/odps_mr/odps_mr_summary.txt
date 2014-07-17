@@ -1,0 +1,36 @@
+MapReduce简介
+================================
+ODPS提供了MapReduce编程接口。用户可以使用MapReduce提供的接口(Java API)编写MapReduce程序处理ODPS的中的数据。本章节只对MapReduce SDK的使用方法作简单的介绍，关于MapReduce SDK的详细说明请参考SDK Java Doc。
+
+
+MapReduce最早是由Google提出的分布式数据处理模型，随后受到了业内的广泛关注，并被大量应用到各种商业场景中。
+
+MapReduce处理数据过程主要分成2个阶段：Map阶段和Reduce阶段。首先执行Map阶段，再执行Reduce阶段。Map和Reduce的处理逻辑由用户自定义实现，但要符合MapReduce框架的约定。
+
+1. 在正式执行Map前，需要将输入数据进行"分片"。所谓分片，就是将输入数据切分为大小相等的数据块，每一块作为单个Map Worker的输入被处理，以便于多个Map Worker同时工作。 
+
+2. 分片完毕后，多个Map Worker就可以同时工作了。每个Map Worker在读入各自的数据后，进行计算处理，最终输出给Reduce。Map Worker在输出数据时，需要为每一条输出数据指定一个Key。这个Key值决定了这条数据将会被发送给哪一个Reduce Worker。Key值和Reduce Worker是多对一的关系，具有相同Key的数据会被发送给同一个Reduce Worker，单个Reduce Worker有可能会接收到多个Key值的数据。
+
+3. 在进入Reduce阶段之前，MapReduce框架会对数据按照Key值排序，使得具有相同Key的数据彼此相邻。如果用户指定了"合并操作"(Combiner)，框架会调用Combiner，将具有相同Key的数据进行聚合。Combiner的逻辑可以由用户自定义实现。与经典的MapReduce框架协议不同，在ODPS中，Combiner的输入、输出的参数必须与Reduce保持一致。这部分的处理通常也叫做"洗牌"(Shuffle)。
+
+4. 接下来进入Reduce阶段。相同的Key的数据会到达同一个Reduce Worker。同一个Reduce Worker会接收来自多个Map Worker的数据。每个Reduce Worker会对Key相同的多个数据进行Reduce操作。最后，一个Key的多条数据经过Reduce的作用后，将变成了一个值。
+
+.. note:: 上文仅是对MapReduce框架做简单介绍，更多相关信息请查阅其他资料。 
+
+下面将以WordCount为例，解释ODPS MapReduce各个阶段的概念。
+假设存在一个文本a.txt，文本内每行是一个数字，我们要统计每个数字出现的次数。文本内的数字称为Word，数字出现的次数称为Count。如果ODPS Mapreduce完成这一功能，需要经历下图描述的几个步骤：
+
+.. image:: image/openmr.jpg
+   :height: 360px
+   :width: 760px
+   :scale: 100%
+   :align: center
+
+
+1. 首先对文本进行分片，将每片内的数据作为单个Map Worker的输入；
+2. Map处理输入，每获取一个数字，将数字的Count设置为1，并将此<Word, Count>对输出，此时以Word作为输出数据的Key；
+3. 在Shuffle阶段前期，首先对每个Map Worker的输出，按照Key值，即Word值排序。排序后进行Combine操作，即将Key值(Word值)相同的Count累加，构成一个新的<Word, Count>对。此过程被称为合并排序；
+4. 在Shuffle阶段后期，数据被发送到Reduce端。Reduce Worker收到数据后依赖Key值再次对数据排序；
+5. 每个Reduce Worker对数据进行处理时，采用与Combiner相同的逻辑，将Key值(Word值)相同的Count累加，得到输出结果；
+
+.. note:: 由于ODPS的所有数据都被存放在表中，因此ODPS MapReduce的输入、输出只能是表，不允许用户自定义输出格式，不提供类似文件系统的接口。

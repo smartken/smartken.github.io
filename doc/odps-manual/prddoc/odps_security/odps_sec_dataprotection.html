@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>项目空间的数据保护 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="ODPS 安全参考手册" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_configuration.html" title="项目空间的安全配置"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="odps_sec_datasharing.html" title="跨项目空间的资源分享"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps-security-protected">
+<span id="id1"></span><h1>项目空间的数据保护<a class="headerlink" href="#odps-security-protected" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>背景与动机<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>在现实中，有一些公司(比如金融机构、军工企业)对数据安全非常敏感，比如不允许员工将工作带回家，而只允许在公司内部进行操作，而且公司的所有电脑上的USB存储接口也都是禁用的。这样做的目的是禁止员工将敏感数据泄漏出去。</p>
+<p>作为ODPS项目空间管理员，您是否也有类似的安全需求呢？ —— &#8220;不允许用户将数据转移到项目空间之外&#8221;。</p>
+<p>比如，当项目空间prj1的Owner遇到下图所示的这种情形时，是否会担心用户Alice将她能访问的数据转移到prj2中去呢？因为她可以访问prj2，而prj2又不受控制。</p>
+<div class="highlight-python"><pre>   +------+  +------+
+   |      |  |      |
+   | prj1 |  | prj2 |
+   |      |  |      |
+   +------+  +------+
+      /\        /\
+     /  \      /  \
+    /    \    /    \
+   /      \  /      \
+  /        \/        \
+Betty     Alice      Bob</pre>
+</div>
+<p>更具体地说，假设Alice已经被您授予了访问myprj.table1的Select权限，同时Alice也被prj2的管理员授予了CreateTable的权限。那么Alice将可以通过如下的任何一种方法将数据转移到prj2中去：</p>
+<ol class="arabic simple">
+<li>提交SQL: &#8220;create table prj2.table2 as select * from myprj.table1&#8221;；</li>
+<li>编写MapReduce将myprj.table1读出，并写入prj2.table2；</li>
+</ol>
+<p>如果您项目空间中的数据非常敏感，绝对不允许流出到其他项目空间中去，您希望ODPS能将上述导致数据流出的操作统统禁止，可以吗？没问题。</p>
+</div>
+<div class="section" id="projectprotection">
+<h2>数据保护机制(ProjectProtection)<a class="headerlink" href="#projectprotection" title="Permalink to this headline">¶</a></h2>
+<p>ODPS提供的项目空间保护机制正好可以满足上述需要。您只需要在您的项目空间中做如下设置：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">set</span> <span class="k">security</span><span class="p">.</span><span class="n">ProjectProtection</span><span class="o">=</span><span class="k">true</span>
+  <span class="c1">--设置ProjectProtection规则：数据只能流入，不能流出</span>
+</pre></div>
+</div>
+<p>设置ProjectProtection后，您的项目空间中的数据流向就会得到控制 —— &#8220;数据只能流入，不能流出&#8221;。设置后，上述的4种操作将失效，因为它们都触犯了ProjectProtection规则。</p>
+<p>默认时，ProjectProtection不会被设置，值为false。同时在多个项目空间中拥有访问权限的用户就可以自由地使用任意支持跨Project的数据访问操作来转移项目空间的数据。如果对项目空间中的数据高度敏感，则需要管理员自行设置ProjectProtection保护机制。</p>
+</div>
+<div class="section" id="id3">
+<h2>开启数据保护机制后的数据流出方法<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>在您的项目空间被设置了ProjectProtection之后，您可能很快就会遇到这样的需求：Alice向您提出申请，她的确需要将某张表的数据导出您的项目空间。而且经过您的审查之后，那张表也的确没有泄漏您关心的敏感数据。为了不影响Alice的正常业务需要，ODPS为您提供了在ProjectProtection被设置之后的两种数据导出途径。</p>
+<div class="section" id="exceptionpolicy">
+<span id="odps-security-protected-exception"></span><h3>设置ExceptionPolicy<a class="headerlink" href="#exceptionpolicy" title="Permalink to this headline">¶</a></h3>
+<p>ProjectOwner在设置ProjectProtection时可以附带一个exception策略，命令如下：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">SET</span> <span class="n">ProjectProtection</span><span class="o">=</span><span class="k">true</span> <span class="k">WITH</span> <span class="n">EXCEPTION</span> <span class="o">&lt;</span><span class="n">policyFile</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>这种policy不同于Policy授权(尽管它与Policy授权语法完全一样)，它只是对项目空间保护机制的例外情况的一种描述，即所有符合policy中所描述的访问情形都可以打破ProjectProtection规则。</p>
+<p>下面给出一个exception policy的例子：允许云账号Alice&#64;aliyun.com可以通过SQL任务对表alipay.table_test执行Select操作时将数据流出到alipay项目空间之外。</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="o">{</span>
+<span class="s">&quot;Version&quot;</span><span class="o">:</span> <span class="s">&quot;1&quot;</span><span class="o">,</span>
+<span class="s">&quot;Statement&quot;</span><span class="o">:</span>
+<span class="o">[{</span>
+    <span class="s">&quot;Effect&quot;</span><span class="o">:</span><span class="s">&quot;Allow&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Principal&quot;</span><span class="o">:</span><span class="s">&quot;ALIYUN$Alice@aliyun.com&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Action&quot;</span><span class="o">:[</span><span class="s">&quot;odps:Select&quot;</span><span class="o">],</span>
+    <span class="s">&quot;Resource&quot;</span><span class="o">:</span><span class="s">&quot;acs:odps:*:projects/alipay/tables/table_test&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Condition&quot;</span><span class="o">:{</span>
+        <span class="s">&quot;StringEquals&quot;</span><span class="o">:</span> <span class="o">{</span>
+            <span class="s">&quot;odps:TaskType&quot;</span><span class="o">:[</span><span class="s">&quot;DT&quot;</span><span class="o">,</span> <span class="s">&quot;SQL&quot;</span><span class="o">]</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>exception policy并不是一种普通的授权。如果云账号Alice并没有对表alipay.table_test的Select操作权限，即使设置了上述exception policy，Alice仍然是无法导出数据。ProjectProtection是一种数据流向的控制，而不是访问控制。只有在用户能访问数据的前提下，控制数据流向才是有意义的。</li>
+<li>TOC2TOU(time-of-check to time-of-use)数据泄露问题(又称Race Condition问题)。问题描述：(1) [TOC阶段] 用户A向ProjectOwner申请将t1导出，ProjectOwner对t1的数据敏感程度进行评估，PASS后通过exception policy授权A可以导出t1。(2) 恶意用户修改了t1的内容，将敏感数据写入到t1。(3) [TOU阶段] 用户A将t1的内容导出。我们注意到此时导出的t1已经不是ProjectOwner审查的那个t1了。</li>
+<li>防止TOC2TOU问题的建议：对于用户申请导出的表，ProjectOwner需要确保没有任何其他用户（含admin）能对该表进行更新(Update)操作或重建同名表操作(Drop + CreateTable)。那么对于TOC2TOU问题描述中的场景，建议ProjectOwner在第(1)步中以ProjectOwner身份创建t1的一个snapshot，设置exception policy时使用这个snapshot；并且不要授予admin角色给任何用户。</li>
+</ul>
+</div>
+</div>
+<div class="section" id="trustedproject">
+<span id="odps-security-protected-trust"></span><h3>设置TrustedProject<a class="headerlink" href="#trustedproject" title="Permalink to this headline">¶</a></h3>
+<p>若当前项目空间处于受保护状态，如果将数据流出的目标空间设置为当前空间的TrustedProject，那么向目标项目空间的数据流向将不会被视为触犯ProjectProtection规则。如果多个项目空间之间两两互相设置为TrustedProject，那么这些项目空间就形成了一个TrustedProject Group，数据可以在这个Project Group内流动，但禁止流出到Project Group之外。</p>
+<p>管理TrustedProject的命令如下：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">list</span> <span class="n">trustedprojects</span>
+  <span class="c1">--查看当前project中的所有TrustedProjects</span>
+<span class="k">add</span> <span class="n">trustedproject</span> <span class="o">&lt;</span><span class="n">projectname</span><span class="o">&gt;</span>
+  <span class="c1">--在当前project中添加一个TrustedProject</span>
+<span class="n">remove</span> <span class="n">trustedproject</span> <span class="o">&lt;</span><span class="n">projectname</span><span class="o">&gt;</span>
+  <span class="c1">--在当前project中移除一个TrustedProject</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>资源分享与数据保护<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>在ODPS中，基于package的资源分享机制与ProjectProtection数据保护机制是正交的，但在功能上却是相互制约的。</p>
+<p>ODPS规定：资源分享优先于数据保护。换句话说，如果一个数据对象是通过资源分享方式授予其他项目空间用户访问，那么该数据对象将不受ProjectProtection规则的限制。</p>
+<p>关于最佳实践：</p>
+<div class="highlight-python"><pre>如果要防止数据从项目空间的流出，在设置ProjectProtection=true之后，还需检查如下配置：
+
+1. 确保没有添加trustedproject。如果有设置，则需要评估可能的风险；
+2. 确保没有设置exception policy。如果有设置，则需要评估可能的风险，尤其要考虑TOC2TOU数据泄露风险；
+3. 确保没有使用package数据分享。如果有设置，则需要确保package中没有敏感数据。</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">项目空间的数据保护</a><ul>
+<li><a class="reference internal" href="#id2">背景与动机</a></li>
+<li><a class="reference internal" href="#projectprotection">数据保护机制(ProjectProtection)</a></li>
+<li><a class="reference internal" href="#id3">开启数据保护机制后的数据流出方法</a><ul>
+<li><a class="reference internal" href="#exceptionpolicy">设置ExceptionPolicy</a></li>
+<li><a class="reference internal" href="#trustedproject">设置TrustedProject</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">资源分享与数据保护</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_configuration.html" title="项目空间的安全配置"
+             >next</a></li>
+        <li class="right" >
+          <a href="odps_sec_datasharing.html" title="跨项目空间的资源分享"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

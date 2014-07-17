@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>项目空间的用户与授权管理 &mdash; ODPS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="ODPS 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="ODPS 安全参考手册" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_authorization_mac.html" title="项目空间的用户与授权管理【高级篇：基于标签的安全控制】"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="odps_sec_authentication.html" title="ODPS 用户认证"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="odps-sec-authorization-dac">
+<span id="id1"></span><h1>项目空间的用户与授权管理<a class="headerlink" href="#odps-sec-authorization-dac" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>简介<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>本节主要介绍项目空间的用户、角色及授权管理。它主要适用于如下场景：假设用户Alice是项目空间test_project的Owner，如果有其他人需要申请访问项目空间test_project的资源，并且这个申请人是属于Alice的项目团队。那么可以采用本节介绍的方法来进行用户和授权管理。如果申请人不属于Alice的项目团队，那么建议使用跨项目空间的资源分享功能，详情请参考 <a class="reference internal" href="odps_sec_datasharing.html#odps-sec-datasharing"><em>跨项目空间的资源分享</em></a> 。</p>
+</div>
+<div class="section" id="id3">
+<h2>项目空间<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>项目空间(Project)是ODPS实现多租户体系的基础，是用户管理数据和计算的基本单位，也是计量和计费的主体。当用户申请创建一个项目空间之后，该用户就是这个空间的所有者(Owner)。也就是说，这个项目空间内的所有对象(eg, 表, 实例, 资源，UDF等)都属于该用户。这就是说，除了Owner之外，任何人都无权访问此项目空间内的对象，除非有Owner的授权许可。</p>
+</div>
+<div class="section" id="id4">
+<h2>项目空间的用户管理<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>当项目空间的Owner Alice决定对另一个用户授权时，Alice需要先将该用户添加到自己的项目空间中来。只有添加到项目空间中的用户才能够被授权。</p>
+<p>添加用户的命令如下：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">add</span> <span class="k">user</span> <span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span> <span class="c1">--在项目空间中添加用户</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">云账号的&lt;username&gt;是在www.aliyun.com上注册过的有效邮箱地址</p>
+</div>
+<p>当一个用户离开此项目团队时，Alice需要将该用户从项目空间中移除。用户一旦从项目空间中被移除，该用户将不再拥有任何访问项目空间资源的权限。移除用户的命令如下：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="n">remove</span> <span class="k">user</span> <span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span> <span class="c1">--在项目空间中移除用户</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>当一个用户被移除后，该用户不再拥有访问该项目空间资源的任何权限。</li>
+<li>移除一个用户之前，如果该用户已被赋予某些角色，则需要先撤销该用户的所有角色。关于角色的介绍请参考 <a class="reference internal" href="#odps-security-role"><em>项目空间的角色管理</em></a> 。</li>
+<li>当一个用户被移除后，与该用户有关的 <a class="reference internal" href="#odps-security-acl"><em>ACL授权</em></a> 和 <a class="reference internal" href="#odps-security-policy"><em>Policy授权</em></a> 仍然会被保留。一旦该用户以后被再添加到该项目空间时，该用户的历史的ACL和Policy访问权限将被重新激活。</li>
+<li>ODPS目前不支持在项目空间中彻底移除一个用户及其所有权限数据。</li>
+</ul>
+</div>
+</div>
+<div class="section" id="odps-security-role">
+<span id="id5"></span><h2>项目空间的角色管理<a class="headerlink" href="#odps-security-role" title="Permalink to this headline">¶</a></h2>
+<p>角色(Role)是一组访问权限的集合。当需要对一组用户赋予相同的权限时，可以使用角色来授权。基于角色的授权可以大大简化授权流程，降低授权管理成本。当需要对用户授权时，应当优先考虑是否应该使用角色来完成。</p>
+<p>每一个项目空间在创建时，会自动创建一个admin的角色，并且为该角色授予了确定的权限：能访问项目空间内的所有对象，能进行用户与角色管理，能对用户或角色进行授权。与项目空间Owner相比，admin角色不能将admin权限指派给用户，不能设定项目空间的安全配置，不能修改项目空间的鉴权模型。Admin角色所对应的权限不能被修改。</p>
+<p>角色管理相关命令如下：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">create</span> <span class="k">role</span> <span class="o">&lt;</span><span class="n">rolename</span><span class="o">&gt;</span> <span class="c1">--创建角色</span>
+<span class="k">drop</span> <span class="k">role</span> <span class="o">&lt;</span><span class="n">rolename</span><span class="o">&gt;</span> <span class="c1">--删除角色</span>
+<span class="k">grant</span> <span class="o">&lt;</span><span class="n">rolename</span><span class="o">&gt;</span> <span class="k">to</span> <span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span> <span class="c1">--给用户指派某种角色</span>
+<span class="k">revoke</span> <span class="o">&lt;</span><span class="n">rolename</span><span class="o">&gt;</span> <span class="k">from</span> <span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span> <span class="c1">--撤销角色指派</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">删除一个角色时，ODPS会检查该角色内是否还存在其他用户。若存在，则删除该角色失败。只有在该角色的所有用户都被撤销时，删除角色才会成功。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>对用户或角色进行授权<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>授权操作一般涉及到三个要素：主体(Subject)，客体(Object)和操作(Action)。在ODPS中，主体是指用户，客体是指项目空间中的各种类型对象，操作则与特定对象类型有关，不同类型的对象支持的操作也不尽相同。</p>
+<p>ODPS项目空间支持如下的对象类型及操作：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="19%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">对象类型</th>
+<th class="head">支持的操作</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Project</td>
+<td><ul class="first last simple">
+<li>Read</li>
+<li>Write</li>
+<li>List</li>
+<li>CreateTable</li>
+<li>CreateInstance</li>
+<li>CreateFunction</li>
+<li>CreateResource</li>
+<li>All</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>查看项目空间自身(不包括项目空间的任何对象)的信息，如CreateTime等</li>
+<li>更新项目空间自身(不包括项目空间的任何对象)的信息，如Comments</li>
+<li>查看项目空间所有类型的对象列表</li>
+<li>在项目空间中创建Table</li>
+<li>在项目空间中创建Instance</li>
+<li>在项目空间中创建Function</li>
+<li>在项目空间中创建Resource</li>
+<li>具备上述所有权限</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>Table</td>
+<td><ul class="first last simple">
+<li>Describe</li>
+<li>Select</li>
+<li>Alter</li>
+<li>Update</li>
+<li>Drop</li>
+<li>All</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>读取Table的元信息</li>
+<li>读取Table的数据</li>
+<li>修改Table的元信息</li>
+<li>覆盖或添加Table的数据</li>
+<li>删除Table</li>
+<li>具备上述所有权限</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>Function</td>
+<td><ul class="first last simple">
+<li>Read</li>
+<li>Write</li>
+<li>Execute</li>
+<li>Delete</li>
+<li>All</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>读取</li>
+<li>更新</li>
+<li>执行</li>
+<li>删除</li>
+<li>具备上述所有权限</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>Resource
+Instance</td>
+<td><ul class="first last simple">
+<li>Read</li>
+<li>Write</li>
+<li>Delete</li>
+<li>All</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li>读取</li>
+<li>更新</li>
+<li>删除</li>
+<li>具备上述所有权限</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">上述权限描述中Project类型对象的CreateTable操作，Table类型的Select、Alter、Update、Drop操作需要与Project对象的CreateInstance操作权限配合使用。单独使用上述几种权限而没有指派CreateInstance权限是无法完成对应操作的。这与ODPS的内部实现相关。类似的，Table的Select权限也要与CreateInstance权限配合使用。使用时请注意。</p>
+</div>
+<p>在添加用户或创建角色之后，需要对用户或角色进行授权。ODPS支持两种授权机制来完成对用户或角色的授权：<a class="reference internal" href="#odps-security-acl"><em>ACL授权</em></a> 和 <a class="reference internal" href="#odps-security-policy"><em>Policy授权</em></a> 。</p>
+<p>ACL授权是一种基于对象的授权。通过ACL授权的权限数据(即访问控制列表, Access Control List)被看做是该对象的一种子资源。只有当对象已经存在时，才能进行ACL授权操作；当对象被删除时，通过ACL授权的权限数据会被自动删除。ACL授权支持类似于SQL92定义的GRANT/REVOKE语法，它通过简单的授权语句来完成对已存在的项目空间对象的授权或撤销授权。</p>
+<p>Policy授权则是一种基于策略的授权。通过Policy授权的权限数据(即访问策略)被看做是授权主体的一种子资源。只有当主体(用户或角色)存在时，才能进行Policy授权操作；当主体被删除时，通过Policy授权的权限数据会被自动删除。Policy授权使用ODPS自定义的一种访问策略语言来进行授权，允许或禁止主体对项目空间对象的访问权限。</p>
+<p>下面分别介绍这两种授权机制。</p>
+<div class="section" id="acl">
+<span id="odps-security-acl"></span><h3>ACL授权<a class="headerlink" href="#acl" title="Permalink to this headline">¶</a></h3>
+<p>这是一种比较经典的授权模型，授权简单、容易使用。ODPS支持的ACL授权方法是采用类似SQL92定义的GRANT/REVOKE语法来进行授权。ACL授权语法如下：</p>
+<div class="code sql highlight-python"><pre>grant privileges on project_object to project_subject
+
+revoke privileges on project_object from project_subject
+
+privileges ::= action_item1, action_item2, ...
+
+project_object ::= project project_name | table schema_name |
+                   instance inst_name | function func_name |
+                   resource res_name
+
+project_subject ::= user full_username | role role_name</pre>
+</div>
+<p>熟悉SQL92定义的GRANT/REVOKE语法或者熟悉Oracle数据库安全管理的用户容易发现，ODPS的ACL授权语法并不支持 [WITH GRANT OPTION] 授权参数。也就是说，当用户A授权用户B访问某个对象时，用户B无法将权限进一步授权给用户C。那么，所有的授权操作都必须由具有以下三种身份之一的用户来完成：</p>
+<blockquote>
+<div><ul class="simple">
+<li>项目空间Owner</li>
+<li>项目空间中拥有admin角色的用户</li>
+<li>项目空间中对象创建者</li>
+</ul>
+</div></blockquote>
+<p>下面给出一个简单的使用ACL授权的应用实例：</p>
+<p>场景说明：云账号用户alice&#64;aliyun.com和bob&#64;aliyun.com是新加入到项目空间test_project的成员。在test_project中，他们需要提交作业、创建数据表、查看项目空间已存在的对象。</p>
+<p>管理员执行的授权操作如下：</p>
+<div class="highlight-sql"><pre>use test_project --打开项目空间
+security
+add user ALIYUN$alice@aliyun.com --添加用户
+add user ALIYUN$bob@aliyun.com --添加用户
+create role worker --创建角色
+grant worker TO ALIYUN$alice@aliyun.com --角色指派
+grant worker TO ALIYUN$bob@aliyun.com --角色指派
+grant CreateInstance, CreateResource, CreateFunction, CreateTable, List ON PROJECT test_project TO ROLE worker --对角色授权</pre>
+</div>
+</div>
+<div class="section" id="policy">
+<span id="odps-security-policy"></span><h3>Policy授权<a class="headerlink" href="#policy" title="Permalink to this headline">¶</a></h3>
+<p>Policy授权是一种新的授权机制，它主要解决ACL授权机制无法解决的一些复杂授权场景，比如：</p>
+<blockquote>
+<div><ul class="simple">
+<li>一次操作对一组对象进行授权，如所有的函数、所有以&#8221;taobao&#8221;开头的表。</li>
+<li>带限制条件的授权，如授权只会在指定的时段内才会生效、当请求者从指定的IP地址发起请求时授权才会生效、或者只允许用户使用SQL（而不允许其它类型的Task）来访问某张表。</li>
+</ul>
+</div></blockquote>
+<p>Policy授权机制使用访问策略语言(Access Policy)来描述授权，关于访问策略语言的详细描述，请参考如下章节：<a class="reference internal" href="odps_sec_accesspolicy.html#odps-sec-accesspolicy"><em>访问策略语言</em></a> 。</p>
+<p>Policy授权语句格式如下：</p>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">get</span> <span class="n">policy</span> <span class="c1">--读取项目空间的Policy</span>
+<span class="n">put</span> <span class="n">policy</span> <span class="o">&lt;</span><span class="n">policyFile</span><span class="o">&gt;</span> <span class="c1">--设置（覆盖）项目空间的Policy</span>
+<span class="k">get</span> <span class="n">policy</span> <span class="k">on</span> <span class="k">role</span> <span class="o">&lt;</span><span class="n">roleName</span><span class="o">&gt;</span> <span class="c1">--读取项目空间中某个角色的Policy</span>
+<span class="n">put</span> <span class="n">policy</span> <span class="o">&lt;</span><span class="n">policyFile</span><span class="o">&gt;</span> <span class="k">on</span> <span class="k">role</span> <span class="o">&lt;</span><span class="n">roleName</span><span class="o">&gt;</span> <span class="c1">--设置（覆盖）项目空间中某个角色的Policy</span>
+</pre></div>
+</div>
+<p>ODPS目前支持的Policy类型有Project Policy和Role Policy。Project Policy对Project中的所有用户有效，而Role Policy只对已赋予角色的用户有效。在Policy格式上，Project Policy必须指定Principal(用户)，而Role Policy则不能指定Principal(因为用户与角色的指派关系已经存在)。</p>
+<p>下面给出一个简单的使用Project Policy授权的应用实例：</p>
+<p>场景说明：授权用户alice&#64;aliyun.com只能在&#8221;2013-11-11 23:59:59&#8221;这个时间点之前、只能从&#8221;10.32.180.0~23&#8221;这个IP段提交请求，只允许在项目空间test_project中执行CreateInstance, CreateTable和 List操作，禁止删除test_project下的任何表。</p>
+<p>编写Policy如下：</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="o">{</span>
+<span class="s">&quot;Version&quot;</span><span class="o">:</span> <span class="s">&quot;1&quot;</span><span class="o">,</span>
+<span class="s">&quot;Statement&quot;</span><span class="o">:</span>
+ <span class="o">[{</span>
+    <span class="s">&quot;Effect&quot;</span><span class="o">:</span><span class="s">&quot;Allow&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Principal&quot;</span><span class="o">:</span><span class="s">&quot;ALIYUN$alice@aliyun.com&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Action&quot;</span><span class="o">:[</span><span class="s">&quot;odps:CreateTable&quot;</span><span class="o">,</span><span class="s">&quot;odps:CreateInstance&quot;</span><span class="o">,</span><span class="s">&quot;odps:List&quot;</span><span class="o">],</span>
+    <span class="s">&quot;Resource&quot;</span><span class="o">:</span><span class="s">&quot;acs:odps:*:projects/test_project&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Condition&quot;</span><span class="o">:{</span>
+        <span class="s">&quot;DateLessThan&quot;</span><span class="o">:</span> <span class="o">{</span>
+            <span class="s">&quot;acs:CurrentTime&quot;</span><span class="o">:</span><span class="s">&quot;2013-11-11T23:59:59Z&quot;</span>
+        <span class="o">},</span>
+        <span class="s">&quot;IpAddress&quot;</span><span class="o">:</span> <span class="o">{</span>
+            <span class="s">&quot;acs:SourceIp&quot;</span><span class="o">:</span><span class="s">&quot;10.32.180.0/23&quot;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">},</span>
+<span class="o">{</span>
+    <span class="s">&quot;Effect&quot;</span><span class="o">:</span><span class="s">&quot;Deny&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Principal&quot;</span><span class="o">:</span><span class="s">&quot;ALIYUN$alice@aliyun.com&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Action&quot;</span><span class="o">:</span><span class="s">&quot;odps:Drop&quot;</span><span class="o">,</span>
+    <span class="s">&quot;Resource&quot;</span><span class="o">:</span><span class="s">&quot;acs:odps:*:projects/test_project/tables/*&quot;</span>
+<span class="o">}]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>目前仅支持Role Policy和Project Policy，暂不支持User Policy。</li>
+<li>每种Policy只支持一个Policy文件。</li>
+<li>请注意Put Policy操作会覆盖已有的Policy。</li>
+<li>Policy语法请参考 <a class="reference internal" href="odps_sec_accesspolicy.html#odps-sec-accesspolicy"><em>访问策略语言</em></a>。</li>
+</ul>
+</div>
+</div>
+<div class="section" id="acl-v-s-policy">
+<h3>ACL授权 V.S Policy授权<a class="headerlink" href="#acl-v-s-policy" title="Permalink to this headline">¶</a></h3>
+<p>ACL授权的特点：</p>
+<ol class="arabic simple">
+<li>授权或撤销授权时，要求Grantee(如User或Role)和Object(如Table)必须已经存在。这点与Oracle授权特性相似，可以避免&#8221;删除并重建同名对象&#8221;所带来的安全风险。</li>
+<li>删除一个对象时，自动撤销与该对象关联的所有授权。</li>
+<li>仅支持Allow(白名单)授权，不支持Deny(黑名单)授权。</li>
+<li>使用经典的Grant/Revoke授权语法进行授权。语法简单，使用时不易出错。</li>
+<li>不支持带限制条件的授权。</li>
+<li>适合于简单的授权需求：授权不带限制条件，不需要Deny，并只需要对已存在对象进行授权。</li>
+</ol>
+<p>Policy授权的特点：</p>
+<ol class="arabic simple">
+<li>授权或撤销授权时，不关心Grantee或Object存在与否。授权对象可以支持以通配符“*”来表达，比如，&#8221;projects/tbproj/tables/taobao*&#8221;，它表示项目空间tbproj中所有以&#8221;taobao&#8221;开头的表。这点与Mysql授权特性相似，它允许对不存在的对象授权，授权者应考虑到“删除并重建同名对象”所带来的安全风险。</li>
+<li>删除一个对象时，与该对象关联的Policy授权不会被删除。</li>
+<li>同时支持Allow(白名单)和Deny(黑名单)授权。当Allow和Deny授权同时存在时，遵循Deny优先原则。</li>
+<li>支持带限制条件的授权。授权者可以对Allow或Deny授权施加条件限制(目前支持20种条件操作)。比如，允许请求者的IP为指定的IP地址范围，同时访问时间必须在2012-11-11 23:59:59之前。</li>
+<li>适合于相对复杂的授权需求：带授权限制条件，有Deny授权需求，希望支持对&#8221;未来的对象&#8221;授权。</li>
+</ol>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>查看权限<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>ODPS支持从多种维度查看权限，具体包括查看指定用户的权限、查看指定角色的权限、以及查看指定对象的授权列表。</p>
+<dl class="docutils">
+<dt>在展现用户权限或角色权限时，ODPS使用了如下的标记字符：A、C、D、G，它们的含义如下：</dt>
+<dd><ul class="first last simple">
+<li>A: 表示Allow，即允许访问。</li>
+<li>D: 表示Deny，即拒绝访问。</li>
+<li>C: 表示with Condition，即为带条件的授权，只出现在policy授权体系中，详细信息请参考 <a class="reference internal" href="odps_sec_accesspolicy.html#odps-sec-accesspolicy-condition"><em>条件块结构</em></a> 。</li>
+<li>G: 表示with Grant option，即可以对object进行授权。</li>
+</ul>
+</dd>
+</dl>
+<p>一个简单的展现权限的样例如下：</p>
+<div class="highlight-sql"><pre>odps@test_project&gt; show grants for ALIYUN$odpstest1@aliyun.com</pre>
+</div>
+<div class="highlight-python"><pre>[roles]
+dev
+
+Authorization Type: ACL
+[role/dev]
+A       projects/test_project/tables/t1: Select
+[user/odpstest1@aliyun.com]
+A       projects/test_project: CreateTable | CreateInstance | CreateFunction | List
+A       projects/test_project/tables/t1: Describe | Select
+
+Authorization Type: Policy
+[role/dev]
+AC      projects/test_project/tables/test_*: Describe
+DC      projects/test_project/tables/alifinance_*: Select
+[user/odpstest1@aliyun.com]
+A       projects/test_project: Create* | List
+AC      projects/test_project/tables/alipay_*: Describe | Select
+
+Authorization Type: ObjectCreator
+AG      projects/test_project/tables/t6: All
+AG      projects/test_project/tables/t7: All</pre>
+</div>
+<div class="section" id="id8">
+<h3>查看指定用户的权限<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">show</span> <span class="n">grants</span> <span class="c1">--查看当前用户自己的访问权限</span>
+<span class="k">show</span> <span class="n">grants</span> <span class="k">for</span> <span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span> <span class="c1">--查看指定用户的访问权限，仅由ProjectOwner和Admin才能有执行权限。</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3>查看指定角色的权限<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">describe</span> <span class="k">role</span> <span class="o">&lt;</span><span class="n">rolename</span><span class="o">&gt;</span> <span class="c1">--查看指定角色的访问权限角色指派</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>查看指定对象的授权列表<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-sql"><div class="highlight"><pre><span class="k">show</span> <span class="n">acl</span> <span class="k">for</span> <span class="o">&lt;</span><span class="n">objectName</span><span class="o">&gt;</span> <span class="p">[</span><span class="k">on</span> <span class="k">type</span> <span class="o">&lt;</span><span class="n">objectType</span><span class="o">&gt;</span><span class="p">]</span> <span class="c1">--查看指定对象上的用户和角色授权列表</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>当省略[on type &lt;objectType&gt;]时，默认的type为Table。</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">项目空间的用户与授权管理</a><ul>
+<li><a class="reference internal" href="#id2">简介</a></li>
+<li><a class="reference internal" href="#id3">项目空间</a></li>
+<li><a class="reference internal" href="#id4">项目空间的用户管理</a></li>
+<li><a class="reference internal" href="#odps-security-role">项目空间的角色管理</a></li>
+<li><a class="reference internal" href="#id6">对用户或角色进行授权</a><ul>
+<li><a class="reference internal" href="#acl">ACL授权</a></li>
+<li><a class="reference internal" href="#policy">Policy授权</a></li>
+<li><a class="reference internal" href="#acl-v-s-policy">ACL授权 V.S Policy授权</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">查看权限</a><ul>
+<li><a class="reference internal" href="#id8">查看指定用户的权限</a></li>
+<li><a class="reference internal" href="#id9">查看指定角色的权限</a></li>
+<li><a class="reference internal" href="#id10">查看指定对象的授权列表</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="odps_sec_authorization_mac.html" title="项目空间的用户与授权管理【高级篇：基于标签的安全控制】"
+             >next</a></li>
+        <li class="right" >
+          <a href="odps_sec_authentication.html" title="ODPS 用户认证"
+             >previous</a> |</li>
+        <li><a href="../../index.html">ODPS 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >ODPS 安全参考手册</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright Alibaba 2014-07-01.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.2b1.
+    </div>
+  <!-- 请把脚本放到 body 元素内 -->
+  </body>
+</html>

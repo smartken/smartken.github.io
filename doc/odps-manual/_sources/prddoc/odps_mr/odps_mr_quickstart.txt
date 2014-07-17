@@ -1,0 +1,121 @@
+.. _odps_openmr_quickstart:
+
+快速入门
+=================
+
+本文章节的目的是介绍在安装好ODPS客户端后，如何快速运行MapReduce WordCount示例程序。
+
+.. note:: 
+
+ * 编译、运行MapReduce需要安装JDK1.6版本；
+ * ODPS客户端的快速部署请参阅 :ref:`odps_pre_case_tunnel` 。更多关于ODPS客户端的使用，请参考 :ref:`odps_console` ； 
+
+.. _odps_openmr_quickstart_wc:
+
+运行示例程序：WordCount
+-----------------------------------
+
+1. 创建输入输出表并上传数据，创建表的语句请参阅 :ref:`odps_sql_create_table` 。kv.txt文件中的数据如下：
+
+.. code-block:: sql
+ 
+ CREATE TABLE wc_in (key STRING, value STRING);
+ CREATE TABLE wc_out (key STRING, cnt BIGINT);
+   -- 创建输入、输出表
+
+
+使用 :ref:`odps_dship` 上传数据：
+
+::
+
+ ./dship u kv.txt wc_in
+   -- 上传示例数据
+
+kv.txt文件中的数据如下：
+
+::
+
+ 238,val_238
+ 186,val_86
+ 186,val_86
+
+2. 编写MapReduce程序
+
+代码示例请参考 :ref:`odps_openmr_example_wordcount` ，更多MapReduce SDK的介绍请参考 :ref:`odps_sdk` 。将程序编译打包，并命名为"odps-mapred-examples.jar"。如果您没有还没有配备MapReduce的编程环境，可以跳过这一步骤，直接进入第4步。
+
+.. note:: 
+
+ * ODPS为用户提供了便捷的Eclipse开发插件，方便用户快速开发MapReduce程序，并提供了本地调试MapReduce的功能。详细介绍请参考 :ref:`odps_tool_eclipse_mr` 。
+ * 用户在打包时只需要将MapReduce程序自身的代码打包即可，不需要将依赖包(包括ODPS SDK及引用的第三方库)一起打入Jar包。在第3步添加资源时，需要将依赖的包统一以资源形式加入ODPS。并在运行时"-resources"参数后指定这些依赖的Jar资源。
+
+3. 添加jar资源
+
+.. code-block:: sql
+ 
+ create resource jar odps-mapred-examples.jar
+   --如果已经存在同名资源，请更换文件名或者使用-f选项
+   -- create resource jar odps-mapred-examples.jar -f
+
+
+4. 运行 WordCount
+
+如果用户没有Java编译环境，可以使用ODPS客户端自带的代码示例：
+
+.. code-block:: sql
+ 
+ jar com.aliyun.odps.mapred.example.WordCount wc_in wc_out
+
+如果用户使用自己编译出的Jar包，则需要运行如下命令：
+
+::
+ 
+ jar -resources odps-mapred-examples.jar -classpath odps-mapred-examples.jar org.alidata.odps.mr.examples.WordCount wc_in wc_out
+
+Jar命令是ODPS中专门用于运行MapReduce作业的，相关命令、参数的详细介绍请参考 :ref:`odps_openmr_jar` 。MapReduce作业执行时命令行会打印作业实例ID，结果统计摘要(Summary)。
+
+输出示例：
+
+.. code-block:: sql
+
+ ID = 20140306130431455g5jz4i6m2 
+ Summary:
+ inputs:
+         my_project.wc_in: 1 (269 bytes)
+ outputs:
+         my_project.wc_out: 2 (253 bytes)
+ M1_Stg1:
+         worker count: 1
+         input records:
+                 input: 1  (min: 1, max: 1, avg: 1)
+         output records:
+                 R2_1_Stg1: 2  (min: 2, max: 2, avg: 2)
+ R2_1_Stg1:
+         worker count: 1
+         input records:
+                 input: 2  (min: 2, max: 2, avg: 2)
+         output records:
+                 R2_1_Stg1FS_6415: 2  (min: 2, max: 2, avg: 2)
+ 
+ OK
+
+5. 获取结果
+
+查看wc_out表的结果：
+
+.. code-block:: sql
+
+  select * from wc_out;
+
+输出结果：
+
+ +------------+------------+
+ | key        | value      |
+ +============+============+
+ | 238        | 1          |
+ +------------+------------+
+ | val_238    | 1          |
+ +------------+------------+
+ | 186        | 2          |
+ +------------+------------+
+ | val_186    | 2          |
+ +------------+------------+
