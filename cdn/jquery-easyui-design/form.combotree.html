@@ -1,0 +1,56 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+
+
+    <script type="text/javascript" src="design.common.js"></script>
+    <script type="text/javascript">
+		importAll();
+        var _method="combotree";
+
+
+
+    </script>
+
+</head>
+<body class="easyui-layout">
+<!--
+     <div data-options="region:'north',tools:[{iconCls:'icon-add',handler:gen_onclick}]" title="配置" style="height: 300px;" >
+
+  </div>
+-->
+<div data-options="region:'center'" >
+    <div class="easyui-panel" data-options="href:'include/form.toolbar.html'"></div>
+    <form id="form-ui">
+        <fieldset>
+            <legend>combotree</legend>
+            <tr>
+                <th><span class="easyui-tooltip" title="boolean	Defines if user can type text directly into the field.	false">editable</span></th>
+                <td><input name="editable" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+                <th><span class="easyui-tooltip" title=""></span></th>
+                <td></td>
+                <th><span class="easyui-tooltip" title=""></span></th>
+                <td></td>
+                <th><span class="easyui-tooltip" title=""></span></th>
+                <td></td>
+            </tr>
+        </fieldset>
+
+        <fieldset>
+            <legend>combo</legend>
+            <div class="easyui-panel" data-options="href:'include/table.base.combo.html'"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend>tree</legend>
+            <div class="easyui-panel" data-options="href:'include/table.base.tree.html'"></div>
+        </fieldset>
+
+    </form>
+
+</div>
+
+</body>
+</html>

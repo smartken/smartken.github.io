@@ -1,0 +1,95 @@
+<table style="width: 80%">
+    <tr>
+        <th><span class="easyui-tooltip" title="string	a URL to retrieve remote data.	null">url</span></th>
+        <td colspan="5"><input   name="url" class="easyui-validatebox" style="width: 90%"
+                                data-options=" validType:'url'" /></td>
+        <th><span class="easyui-tooltip" title="string	The http method to retrieve data.	post">method</span></th>
+        <td><input  name="method" class="easyui-combobox" style=""
+                    data-options=" data:[{text:'',value:''},{text:'post',value:'post'},{text:'get',value:'get'}],editable:false" /></td>
+    </tr>
+
+
+    <tr>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show animation effect when node expand or collapse.	false">animate</span></th>
+        <td ><input name="animate" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show the checkbox before every node.	false">checkbox</span></th>
+        <td ><input name="checkbox" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to cascade check.	true">cascadeCheck</span></th>
+        <td ><input name="cascadeCheck"  value="" type="checkbox" onclick="this.value=this.checked" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show the checkbox only before leaf node.	false">onlyLeafCheck</span></th>
+        <td ><input name="onlyLeafCheck" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+    </tr>
+
+
+    <tr>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show tree lines.	false">lines</span></th>
+        <td ><input name="lines" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to enable drag and drop.	false">dnd</span></th>
+        <td ><input name="dnd" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+        <th colspan="3"><span class="easyui-tooltip" title="array	 The node data to be loaded.
+$('#tt').tree({
+data: [{
+text: 'Item1',
+state: 'closed',
+children: [{
+text: 'Item11'
+},{
+text: 'Item12'
+}]
+},{
+text: 'Item2'
+}]
+});
+null">data</span></th>
+        <td colspan="3"><textarea cols="3" name="data" class="obj"></textarea></td>
+
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(param,success,error)	 Defines how to load data from remote server. Return false can abort this action. This function takes the following parameters:
+param: the parameter object to pass to remote server.
+success(data): the callback function that will be called when retrieve data successfully.
+error(): the callback function that will be called when failed to retrieve data.	json loader">loader</span></th>
+        <td  colspan="3"><textarea cols="3" name="loader" class="obj"></textarea></td>
+        <th><span class="easyui-tooltip" title="function(data,parent)	 Return the filtered data to display. The returned data is in standard tree format. This function takes the following parameters:
+data: the original data to be loaded.
+parent: DOM object, indicate the parent node.">loadFilter</span></th>
+        <td colspan="3"><textarea cols="3" name="loadFilter" class="obj"></textarea></td>
+
+    </tr>
+
+</table>
+
+
+<!--
+
+method	string	The http method to retrieve data.	post
+animate	boolean	Defines if to show animation effect when node expand or collapse.	false
+checkbox	boolean	Defines if to show the checkbox before every node.	false
+cascadeCheck	boolean	Defines if to cascade check.	true
+onlyLeafCheck	boolean	Defines if to show the checkbox only before leaf node.	false
+lines	boolean	Defines if to show tree lines.	false
+dnd	boolean	Defines if to enable drag and drop.	false
+data	array	 The node data to be loaded.
+$('#tt').tree({
+data: [{
+text: 'Item1',
+state: 'closed',
+children: [{
+text: 'Item11'
+},{
+text: 'Item12'
+}]
+},{
+text: 'Item2'
+}]
+});
+null
+loader	function(param,success,error)	 Defines how to load data from remote server. Return false can abort this action. This function takes the following parameters:
+param: the parameter object to pass to remote server.
+success(data): the callback function that will be called when retrieve data successfully.
+error(): the callback function that will be called when failed to retrieve data.	json loader
+loadFilter	function(data,parent)	 Return the filtered data to display. The returned data is in standard tree format. This function takes the following parameters:
+data: the original data to be loaded.
+parent: DOM object, indicate the parent node.
+-->

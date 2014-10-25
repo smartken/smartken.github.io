@@ -1,0 +1,99 @@
+<table>
+
+<tr>
+    <th><span class="easyui-tooltip" title="boolean	True to render the tab strip without a background container image.	false">plain</span></th>
+    <td ><input name="plain" value="" type="checkbox" onclick="this.value=this.checked" /></td>
+    <th><span class="easyui-tooltip" title="string	 The toolbar position. Possible values: 'left','right'. This property is available since version 1.3.2.	right">toolPosition</span></th>
+    <td ><input  name="toolPosition" class="easyui-combobox" style=""
+                 data-options=" data:[{text:'',value:''},{text:'left',value:'left'},{text:'right',value:'right'}],editable:false" /></td>
+    <th><span class="easyui-tooltip" title="string	 The tab position. Possible values: 'top','bottom','left','right'. This property is available since version 1.3.2.	top">tabPosition</span></th>
+    <td ><input  name="tabPosition" class="easyui-combobox" style=""
+                 data-options=" data:[{text:'',value:''},{text:'left',value:'left'},{text:'right',value:'right'},{text:'top',value:'top'},{text:'bottom',value:'bottom'}],editable:false" /></td>
+    <th><span class="easyui-tooltip" title="number	 The tab header width, it is valid only when tabPosition is set to 'left' or 'right'. This property is available since version 1.3.2.	150">headerWidth</span></th>
+    <td ><input  name="headerWidth" class="easyui-numberspinner" style=""
+                 data-options=" min:1,precision:0" /></td>
+</tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="number	The number of pixels to scroll each time a tab scroll button is pressed.	100">scrollIncrement</span></th>
+        <td><input  name="scrollIncrement" class="easyui-numberspinner" style=""
+                    data-options=" min:1,precision:0" /></td>
+        <th><span class="easyui-tooltip" title="number	The number of milliseconds that each scroll animation should last.	400">scrollDuration</span></th>
+        <td><input  name="scrollDuration" class="easyui-numberspinner" style=""
+                    data-options=" min:1,precision:0" /></td>
+
+    </tr>
+        </table>
+<!--
+width	number	The width of tabs container.	auto
+height	number	The height of tabs container.	auto
+plain	boolean	True to render the tab strip without a background container image.	false
+fit	boolean	True to set the size of tabs container to fit it's parent container.	false
+border	boolean	True to show tabs container border.	true
+scrollIncrement	number	The number of pixels to scroll each time a tab scroll button is pressed.	100
+scrollDuration	number	The number of milliseconds that each scroll animation should last.	400
+tools	array,selector	 The toolbar placed on left or right side of header. Possible values:
+1. An array indicate the tools, each tool options is same as linkbutton.
+2. A selector point to the <div/> that contains the tools.
+
+Code example:
+Define tools with an array.
+
+$('#tt').tabs({
+	tools:[{
+		iconCls:'icon-add',
+		handler:function(){
+			alert('add')
+		}
+	},{
+		iconCls:'icon-save',
+		handler:function(){
+			alert('save')
+		}
+	}]
+});
+Define tools with a exist DOM container.
+
+$('#tt').tabs({
+	tools:'#tab-tools'
+});
+<div id="tab-tools">
+	<a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-add"></a>
+	<a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-save"></a>
+</div>
+null
+toolPosition	string	 The toolbar position. Possible values: 'left','right'. This property is available since version 1.3.2.	right
+tabPosition	string	 The tab position. Possible values: 'top','bottom','left','right'. This property is available since version 1.3.2.	top
+headerWidth	number	 The tab header width, it is valid only when tabPosition is set to 'left' or 'right'. This property is available since version 1.3.2.	150
+Events
+
+Name	Parameters	Description
+onLoad	panel	Fires when an ajax tab panel finish loading remote data.
+onSelect	title,index	Fires when user select a tab panel.
+onBeforeClose	title,index	 Fires before the tab panel is closed, return false to cancel this close action. The example below shows how to show confirm dialog before closing tab panel.
+$('#tt').tabs({
+  onBeforeClose: function(title){
+	return confirm('Are you sure you want to close ' + title);
+  }
+});
+// using the async confirm dialog
+$('#tt').tabs({
+  onBeforeClose: function(title,index){
+	var target = this;
+	$.messager.confirm('Confirm','Are you sure you want to close '+title,function(r){
+		if (r){
+			var opts = $(target).tabs('options');
+			var bc = opts.onBeforeClose;
+			opts.onBeforeClose = function(){};  // allowed to close now
+			$(target).tabs('close',index);
+			opts.onBeforeClose = bc;  // restore the event function
+		}
+	});
+	return false;	// prevent from closing
+  }
+});
+onClose	title,index	Fires when user close a tab panel.
+onAdd	title,index	Fires when a new tab panel is added.
+onUpdate	title,index	Fires when a tab panel is updated.
+onContextMenu	e, title,index	Fires when a tab panel is right clicked.
+-->

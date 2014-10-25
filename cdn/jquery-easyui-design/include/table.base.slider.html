@@ -1,0 +1,81 @@
+
+
+ <table border="0">
+
+     <tbody>
+
+     <tr>
+         <th><span class="easyui-tooltip" title="number	The width of slider.	auto">width</span></th>
+         <td><input name="width" class="easyui-numberspinner" data-options="required:false,min:1,precision:0,editable:true" /></td>
+         <th><span class="easyui-tooltip" title="number	The height of slider.	auto">height</span></th>
+         <td><input name="height" class="easyui-numberspinner" data-options="required:false,min:1,precision:0,editable:true" /></td>
+         <th><span class="easyui-tooltip" title="number	The minimum allowed value.	0">min</span></th>
+         <td><input name="min" class="easyui-numberspinner" data-options="required:false,min:1,precision:0,editable:true" /></td>
+         <th><span class="easyui-tooltip" title="number	The maximum allowed value.	100">max</span></th>
+         <td><input name="max" class="easyui-numberspinner" data-options="required:false,min:1,precision:0,editable:true" /></td>
+     </tr>
+
+     <tr>
+     <tr>
+         <th><span class="easyui-tooltip" title="string	Indicate what type of slider. Possible values: 'h'(horizontal),'v'(vertical).	h">mode</span></th>
+         <td><input name="mode" class="easyui-combobox" data-options=" required:false,multiple:false,editable:false,disabled:false,hasDownArrow:true,data:[{value:'',text:''},{value:'h',text:'h'},{value:'v',text:'v'}]" /></td>
+         <th><span class="easyui-tooltip" title="number	The default value.	0">value</span></th>
+         <td><input name="value" class="easyui-numberbox" data-options=" required:false,editable:true" /></td>
+         <th><span class="easyui-tooltip" title="number	The value to increase or descrease.	1">step</span></th>
+         <td><input name="step" class="easyui-numberbox" data-options=" required:false,editable:true" /></td>
+         <th><span class="easyui-tooltip" title=""></span></th>
+         <td><input name="" /></td>
+     </tr>
+
+     <tr>
+         <th><span class="easyui-tooltip" title="boolean	 Set to true the minimum value and maximum value will switch their positions. This property is available since version 1.3.2.	false
+">reversed</span></th>
+         <td><input name="reversed" type="checkbox" value="false"  onclick="this.value=this.checked" /></td>
+         <th><span class="easyui-tooltip" title="boolean	Defines if to display value information tip.	false">showTip</span></th>
+         <td><input name="showTip" value="false" type="checkbox"   onclick="this.value=this.checked" /></td>
+         <th><span class="easyui-tooltip" title="boolean	Defines if to disable slider.	false">disabled</span></th>
+         <td><input name="disabled" value="false" type="checkbox"   onclick="this.value=this.checked" /></td>
+         <th><span class="easyui-tooltip" title=""></span></th>
+         <td></td>
+     </tr>
+
+     <tr>
+         <th><span class="easyui-tooltip" title="array	Display labels beside slider, '|' — show just line.	[]">rule</span></th>
+         <td colspan="3"><textarea rows="3" name="rule" class="obj" ></textarea></td>
+         <th><span class="easyui-tooltip" title="function	A function to format slider value. Return string value that will display as tip.">tipFormatter</span></th>
+         <td colspan="3"><textarea rows="3" name="tipFormatter" class="obj" ></textarea></td>
+     </tr>
+
+     <tr>
+         <th><span class="easyui-tooltip" title="function(newValue, oldValue){ }	Fires when the field value is changed.">onChange</span></th>
+         <td colspan="7"><textarea rows="3" name="onChange" class="obj" ></textarea></td>
+     </tr>
+
+     <tr>
+         <th><span class="easyui-tooltip" title="function(value){}	Fires when begin to drag slider.">onSlideStart</span></th>
+         <td colspan="3"><textarea rows="3" name="onSlideStart" class="obj" ></textarea></td>
+         <th><span class="easyui-tooltip" title="function(value){}	Fires when end to drag slider.">onSlideEnd</span></th>
+         <td colspan="3"><textarea rows="3" name="onSlideEnd" class="obj" ></textarea></td>
+     </tr>
+
+     </tbody>
+ </table>
+
+ <!--
+width	number	The width of slider.	auto
+height	number	The height of slider.	auto
+mode	string	Indicate what type of slider. Possible values: 'h'(horizontal),'v'(vertical).	h
+reversed	boolean	 Set to true the minimum value and maximum value will switch their positions. This property is available since version 1.3.2.	false
+showTip	boolean	Defines if to display value information tip.	false
+disabled	boolean	Defines if to disable slider.	false
+value	number	The default value.	0
+min	number	The minimum allowed value.	0
+max	number	The maximum allowed value.	100
+step	number	The value to increase or descrease.	1
+rule	array	Display labels beside slider, '|' — show just line.	[]
+tipFormatter	function	A function to format slider value. Return string value that will display as tip.
+
+onChange	newValue, oldValue	Fires when the field value is changed.
+onSlideStart	value	Fires when begin to drag slider.
+onSlideEnd	value	Fires when end to drag slider.
+-->

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+
+<script type="text/javascript" src="design.common.js"></script>
+<script type="text/javascript">
+     		importAll();
+     var _method="numberspinner";
+     
+     
+
+</script>
+
+</head>
+<body class="easyui-layout">
+   <!-- 
+        <div data-options="region:'north',tools:[{iconCls:'icon-add',handler:gen_onclick}]" title="配置" style="height: 300px;" >
+       
+     </div>
+   -->
+    <div data-options="region:'center'" >
+           <div class="easyui-panel" data-options="href:'include/form.toolbar.html'"></div>
+     <form id="form-ui">
+     <fieldset>
+       <legend>validatebox</legend>
+       <div class="easyui-panel" data-options="href:'include/table.base.validatebox.html'"></div>
+     </fieldset>
+     <fieldset>
+       <legend>numberbox</legend>
+       <div class="easyui-panel" data-options="href:'include/table.base.numberbox.html'"></div>
+     </fieldset>
+         <fieldset>
+             <legend>spinner</legend>
+             <div class="easyui-panel" data-options="href:'include/table.base.spinner.html'"></div>
+         </fieldset>
+
+     
+     </form>
+    
+    </div>
+   
+</body>
+</html>

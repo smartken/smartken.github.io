@@ -1,0 +1,261 @@
+<table>
+    <tbody>
+    <tr>
+        <th><span class="easyui-tooltip" title="string	The id attribute of this panel.	null">id</span></th>
+        <td><input name="id" /></td>
+        <th><span class="easyui-tooltip" title="string	The title text to display in panel header.	null">title</span></th>
+        <td><input name="title" /></td>
+        <th><span class="easyui-tooltip" title="string	A CSS class to display a 16x16 icon in panel.	null">iconCls</span></th>
+        <td><input name="iconCls" class="easyui-combobox" data-options=" required:false,multiple:false,editable:false,disabled:false,hasDownArrow:true,data:design['iconClss'],formatter:iconComboFormatter" /></td>
+
+        <th><span class="easyui-tooltip" title="boolean	True to cache the panel content that loaded from href.	true">cache</span></th>
+        <td><input name="cache" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="string	 A URL to load remote data and then display in the panel.">href</span></th>
+        <td colspan="7"><input style="width: 100%"  name="href" class="easyui-validatebox" data-options=" validType:'url'" /></td>
+
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="number	Set the panel width.	auto">width</span></th>
+        <td><input name="width" class="easyui-numberspinner" data-options=" required:false,min:1,precision:0,editable:true" /></td>
+        <th><span class="easyui-tooltip" title="number	Set the panel height.	auto">height</span></th>
+        <td><input name="height" class="easyui-numberspinner" data-options=" required:false,min:1,precision:0,editable:true" /></td>
+        <th><span class="easyui-tooltip" title="number	Set the panel left position.	null">left</span></th>
+        <td><input name="left" class="easyui-numberspinner" data-options=" required:false,precision:0,editable:true" /></td>
+        <th><span class="easyui-tooltip" title="number	Set the panel top position.	null">top</span></th>
+        <td><input name="top" class="easyui-numberspinner" data-options=" required:false,precision:0,editable:true" /></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="string	Add a CSS class to the panel.	null">cls</span></th>
+        <td><input name="cls" /></td>
+        <th><span class="easyui-tooltip" title="string	Add a CSS class to the panel header.	null">headerCls</span></th>
+        <td><input name="headerCls" /></td>
+        <th><span class="easyui-tooltip" title="string	Add a CSS class to the panel body.	null">bodyCls</span></th>
+        <td><input name="bodyCls" /></td>
+        <th><span class="easyui-tooltip" title="string	When loading remote data show a message in the panel.	Loading…">loadingMessage</span></th>
+        <td><input name="loadingMessage" /></td>
+    </tr>
+
+
+
+    <tr>
+        <th><span class="easyui-tooltip" title="object	 Add a custom specification style to the panel.">style</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="style" ></textarea></td>
+        <th><span class="easyui-tooltip" title="string	The panel body content.	null">content</span></th>
+        <td colspan="3"><textarea rows="2"  name="content" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="boolean	 When true to set the panel size fit it's parent container.">fit</span></th>
+        <td><input name="fit" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show panel border.	true">border</span></th>
+        <td><input name="border" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+        <th><span class="easyui-tooltip" title="boolean	If set to true,the panel will be resize and do layout when created.	true">doSize</span></th>
+        <td><input name="doSize" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+        <th><span class="easyui-tooltip" title="boolean	If set to true, the panel header will not be created.	false">noheader</span></th>
+        <td><input name="noheader" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show collapsible button.	false">collapsible</span></th>
+        <td><input name="collapsible" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show minimizable button.	false">minimizable</span></th>
+        <td><input name="minimizable" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show maximizable button.	false">maximizable</span></th>
+        <td><input name="maximizable" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+        <th><span class="easyui-tooltip" title="boolean	Defines if to show closable button.	false">closable</span></th>
+        <td><input name="closable" type="checkbox" onclick="this.value=this.checked" value="" /></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="array,selector	 Custom tools, possible values:">tools</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="tools" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(html)	 Defines how to extract the content from ajax response, return extracted data.">extractor</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="extractor" ></textarea></td>
+    </tr>
+
+
+
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires when remote data is loaded.">onLoad</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onLoad" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires before panel is opened, return false to stop the open.">onBeforeOpen</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onBeforeOpen" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires after panel is opened.">onOpen</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onOpen" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){} 	 Fires before panel is closed, return false to cancel the close. The panel declared below cannot be closed.">onBeforeClose</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onBeforeClose" ></textarea></td>
+    </tr>
+
+
+
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires after panel is closed.">onClose</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onClose" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires before panel is destroyed, return false to cancel the destroy.">onBeforeDestroy</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onBeforeDestroy" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires after panel is destroyed.">onDestroy</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onDestroy" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires before panel is collapsed, return false to stop the collapse.">onBeforeCollapse</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onBeforeCollapse" ></textarea></td>
+    </tr>
+
+
+
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires after panel is collpased.">onCollapse</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onCollapse" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires before panel is expanded, return false to stop the expand.">onBeforeExpand</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onBeforeExpand" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires after panel is expanded.">onExpand</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onExpand" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(width, height){}	Fires after panel is resized.">onResize</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onResize" ></textarea></td>
+    </tr>
+
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(onMove	left,top){} 	Fires after panel is moved.">onResize</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onResize" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires after the window has been maximized.">onMaximize</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onMaximize" ></textarea></td>
+    </tr>
+
+    <tr>
+        <th><span class="easyui-tooltip" title="function(){} 	Fires after the window has been restored to its original size.">onRestore</span></th>
+        <td colspan="3"><textarea rows="2" class="obj" name="onRestore" ></textarea></td>
+        <th><span class="easyui-tooltip" title="function(){}	 Fires after the window has been minimized.">onMinimize</span></th>
+        <td colspan="3"><textarea rows="2" class="obj"  name="onMinimize" ></textarea></td>
+    </tr>
+
+    </tbody>
+
+</table>
+<!--
+Properties
+
+Name	Type	Description	Default
+id	string	The id attribute of this panel.	null
+title	string	The title text to display in panel header.	null
+iconCls	string	A CSS class to display a 16x16 icon in panel.	null
+width	number	Set the panel width.	auto
+height	number	Set the panel height.	auto
+left	number	Set the panel left position.	null
+top	number	Set the panel top position.	null
+cls	string	Add a CSS class to the panel.	null
+headerCls	string	Add a CSS class to the panel header.	null
+bodyCls	string	Add a CSS class to the panel body.	null
+style	object	 Add a custom specification style to the panel.
+Code example to change the panel border width:
+
+<div class="easyui-panel" style="width:200px;height:100px"
+		data-options="style:{borderWidth:2}">
+</div>
+{}
+fit	boolean	 When true to set the panel size fit it's parent container. The example below shows a panel which can be auto resized to max inner dimensions of its parent container
+<div style="width:200px;height:100px;padding:5px">
+	<div class="easyui-panel" style="width:200px;height:100px"
+			data-options="fit:true,border:false">
+		Embedded Panel
+	</div>
+</div>
+false
+border	boolean	Defines if to show panel border.	true
+doSize	boolean	If set to true,the panel will be resize and do layout when created.	true
+noheader	boolean	If set to true, the panel header will not be created.	false
+content	string	The panel body content.	null
+collapsible	boolean	Defines if to show collapsible button.	false
+minimizable	boolean	Defines if to show minimizable button.	false
+maximizable	boolean	Defines if to show maximizable button.	false
+closable	boolean	Defines if to show closable button.	false
+tools	array,selector	 Custom tools, possible values:
+1) an array, each element contains iconCls and handler properties.
+2) a selector that indicating the tools
+The panel tools can be declared with exists <div> tag:
+
+<div class="easyui-panel" style="width:300px;height:200px"
+		title="My Panel" data-options="iconCls:'icon-ok',tools:'#tt'">
+</div>
+<div id="tt">
+	<a href="#" class="icon-add" onclick="javascript:alert('add')"></a>
+	<a href="#" class="icon-edit" onclick="javascript:alert('edit')"></a>
+</div>
+The panel tools can also be defined via array:
+
+<div class="easyui-panel" style="width:300px;height:200px"
+		title="My Panel" data-options="iconCls:'icon-ok',tools:[
+				{
+					iconCls:'icon-add',
+					handler:function(){alert('add')}
+				},{
+					iconCls:'icon-edit',
+					handler:function(){alert('edit')}
+				}]">
+</div>
+[]
+collapsed	boolean	Defines if the panel is collapsed at initialization.	false
+minimized	boolean	Defines if the panel is minimized at initialization.	false
+maximized	boolean	Defines if the panel is maximized at initialization.	false
+closed	boolean	Defines if the panel is closed at initialization.	false
+href	string	 A URL to load remote data and then display in the panel. Notice that the content will not be loaded until the panel is open and expand. This is useful to create a lazy loading panel:
+<div id="pp" class="easyui-panel" style="width:300px;height:200px"
+		data-options="href='get_content.php',closed:true">
+</div>
+<a href="#" onclick="javascript:$('#pp').panel('open')">Open</a>
+null
+cache	boolean	True to cache the panel content that loaded from href.	true
+loadingMessage	string	When loading remote data show a message in the panel.	Loading…
+extractor	function	 Defines how to extract the content from ajax response, return extracted data.
+extractor: function(data){
+	var pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im;
+	var matches = pattern.exec(data);
+	if (matches){
+		return matches[1];	// only extract body content
+	} else {
+		return data;
+	}
+}
+Events
+
+Name	Parameters	Description
+onLoad	none	Fires when remote data is loaded.
+onBeforeOpen	none	Fires before panel is opened, return false to stop the open.
+onOpen	none	Fires after panel is opened.
+onBeforeClose	none	 Fires before panel is closed, return false to cancel the close. The panel declared below cannot be closed.
+<div class="easyui-panel" style="width:300px;height:200px;"
+		title="My Panel" data-options="onBeforeClose:function(){return false}">
+	The panel cannot be closed.
+</div>
+onClose	none	Fires after panel is closed.
+onBeforeDestroy	none	Fires before panel is destroyed, return false to cancel the destroy.
+onDestroy	none	Fires after panel is destroyed.
+onBeforeCollapse	none	Fires before panel is collapsed, return false to stop the collapse.
+onCollapse	none	Fires after panel is collpased.
+onBeforeExpand	none	Fires before panel is expanded, return false to stop the expand.
+onExpand	none	Fires after panel is expanded.
+onResize	width, height	Fires after panel is resized.
+width: the new outer width
+height: the new outer height
+onMove	left,top	Fires after panel is moved.
+left: the new left postion
+top: the new top position
+onMaximize	none	Fires after the window has been maximized.
+onRestore	none	Fires after the window has been restored to its original size.
+onMinimize	none	Fires after the window has been minimized.
+-->

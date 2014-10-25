@@ -1,0 +1,76 @@
+<table border="0">
+    <tbody>
+       <tr>
+           <th><span class="easyui-tooltip" title="The width of the component. default:'auto'">width</span></th>
+           <td><input name="width" class="easyui-numberspinner" data-options="required:false,min:0,precision:0,editable:true,increment:1" /></td>
+           <th><span class="easyui-tooltip" title="The height of the component. default:'22'">height</span></th>
+           <td><input name="height" class="easyui-numberspinner" data-options="required:false,min:0,precision:0,editable:true,increment:1" /></td>
+           <th><span class="easyui-tooltip" title="The drop down panel width. default:null">panelWidth</span></th>
+           <td><input name="pannelWidth" class="easyui-numberspinner" data-options="required:false,min:0,precision:0,editable:true,increment:1" /></td>
+           <th><span class="easyui-tooltip" title="The drop down panel height. default:200">panelHeight</span></th>
+           <td><input name="pannelWidth" class="easyui-numberspinner" data-options="required:false,min:0,precision:0,editable:true,increment:1" /></td>
+       </tr>
+
+       <tr>
+           <th><span class="easyui-tooltip" title="boolean	Defines if support multiple selection.	false">multiple</span></th>
+           <td><input name="multiple" type="checkbox" value=""  onclick="this.value=this.checked" /></td>
+           <th><span class="easyui-tooltip" title="boolean	Defines if user can type text directly into the field.	true">editable</span></th>
+           <td><input name="editable" type="checkbox" value=""  onclick="this.value=this.checked" /></td>
+           <th><span class="easyui-tooltip" title="boolean	Defines if to disable the field.	false">disabled</span></th>
+           <td><input name="disabled" type="checkbox" value=""  onclick="this.value=this.checked" /></td>
+           <th><span class="easyui-tooltip" title="boolean	Defines if to display the down arrow button.	true">hasDownArrow</span></th>
+           <td><input name="hasDownArrow" type="checkbox" value=""   onclick="this.value=this.checked" checked /></td>
+       </tr>
+
+       <tr>
+           <th><span class="easyui-tooltip" title="string	The separator char for text when multiple selection.">separator</span></th>
+           <td colspan="3"><input name="separator" /></td>
+           <th><span class="easyui-tooltip" title="object	 A function called when user press key. The default keyHandler is defined as:
+       keyHandler: {
+       up: function(){},
+       down: function(){},
+       enter: function(){},
+       query: function(q){}
+       }">keyHandler</span></th>
+           <td colspan="3"><textarea name="keyHandler" class="obj" rows="3" style="width: 100%"></textarea></td>
+       </tr>
+       <tr>
+           <th><span class="easyui-tooltip" title="function(newValue, oldValue){ }	Fires when the field value is changed.">onChange</span></th>
+           <td colspan="7"><textarea rows="3" name="onChange" class="obj" ></textarea></td>
+       </tr>
+
+       <tr>
+           <th><span class="easyui-tooltip" title="function(){}	Fires when drop down panel show.">onShowPanel</span></th>
+           <td colspan="3"><textarea rows="3" name="onShowPanel" class="obj" ></textarea></td>
+           <th><span class="easyui-tooltip" title="function(){} Fires when drop down panel hide.">onHidePanel</span></th>
+           <td colspan="3"><textarea rows="3" name="onHidePanel" class="obj" ></textarea></td>
+       </tr>
+    </tbody>
+
+
+</table>
+
+ <!--
+  width	number	The width of the component.	auto
+height	number	The height of the component. This property is available since version 1.3.2.	22
+panelWidth	number	The drop down panel width.	null
+panelHeight	number	The drop down panel height.	200
+multiple	boolean	Defines if support multiple selection.	false
+separator	string	The separator char for text when multiple selection.	,
+editable	boolean	Defines if user can type text directly into the field.	true
+disabled	boolean	Defines if to disable the field.	false
+hasDownArrow	boolean	Defines if to display the down arrow button.	true
+value	string	The default value.
+delay	number	Delay to do searching from the last key input event.	200
+keyHandler	object	 A function called when user press key. The default keyHandler is defined as:
+keyHandler: {
+	up: function(){},
+	down: function(){},
+	enter: function(){},
+	query: function(q){}
+}
+onShowPanel	none	Fires when drop down panel show.
+onHidePanel	none	Fires when drop down panel hide.
+onChange	newValue, oldValue	Fires when the field value is changed.
+
+ -->
