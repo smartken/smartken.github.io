@@ -19,12 +19,15 @@
 <link rel="apple-touch-startup-image" href="img/apple-touch-startup-image-640x1096.png" media="(device-height: 568px)">
 <link rel="stylesheet" href="dist/main.min.css" />
 <script type="text/javascript" src="cdn/bootcdn.js" ></script>
-
+<script type="text/javascript">
+	Bootcdn.importJquery("1.11.1-rc2");
+        Bootcdn.importJsurl();
+	
+</script>
 <script src="dist/main.min.js"></script>
 <script>
 
-Bootcdn.importJquery("1.11.1-rc2");
-Bootcdn.importJsurl();
+
 
 var owner=url("?owner")||"smartken";
 var repo=url("?repo")||"asskicker";
