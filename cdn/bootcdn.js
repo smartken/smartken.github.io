@@ -28,6 +28,11 @@
          writeScript(base+"/jqueryui/"+version+"/jquery-ui.min.js");
          writeStyle(base+"/jqueryui/"+version+"/jquery-ui.min.css")
     }
+    //yui/yui/yui-min.js
+    bootcdn["importYui"]=function(version){
+         version=version||"3.18.0/";
+         writeScript(base+"/yui/"+version+"/yui/yui-min.js");
+    }
     
     bootcdn["importBootstrap"]=function(version){
          version=version||"3.3.0";
@@ -45,10 +50,22 @@
          writeScript(base+"/d3/"+version+"/d3.min.js");
     }
     
-    bootcdn["importThree"]=function(version){  
+    bootcdn["importThreejs"]=function(version){  
          version=version||"r69";
          writeScript(base+"/three.js/"+version+"/three.min.js");
     }
+    
+    bootcdn["importDatejs"]=function(version){  
+         version=version||"1.0";
+         writeScript(base+"/datejs/"+version+"/date.min.js");
+    }
+    
+    bootcdn["importJsurl"]=function(version){  
+         version=version||"1.8.4";
+         writeScript(base+"/js-url/"+version+"/url.min.js");
+    }
+    
+    
     
     win['Bootcdn']=bootcdn;
   
