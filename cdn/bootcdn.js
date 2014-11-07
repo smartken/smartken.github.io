@@ -18,13 +18,16 @@
          doc.write("<link rel=\"stylesheet\" type=\"text/css\"  href=\""+href+"\" />");
     };
     
-    bootcdn["importScript"]=function(src){
+    var importScript=function(src){
          writeScript(base+src);
     };
     
-    bootcdn["importStyle"]=function(href){
+    var importStyle=function(href){
          writeStyle(base+href);
     };
+    
+    bootcdn["importScript"]=importScript;
+    bootcdn["importStyle"]=importStyle;
     
     bootcdn["importJquery"]=function(version){
          version=version||"2.1.1";
