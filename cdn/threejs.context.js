@@ -39,7 +39,7 @@
 
 		context.onRender(gl,gl_renderer,gl_scene,gl_camera);
                 //gl_scene.add(gl_camera);
-                context.render(gl_scene, gl_camera);
+                context.render(gl_renderer,gl_scene, gl_camera);
             }
             
  
