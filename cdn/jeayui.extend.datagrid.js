@@ -6,6 +6,284 @@
  $.fn.datagrid.defaults.pageSize=50;
  $.fn.datagrid.defaults.groupFormatter=function(value,rows){return value + ' - 共' + rows.length + ' 条';};
  
+ $.extend($.fn.datagrid.methods, { 
+	
+	getAllColumnFields:function(jq,opt){
+		var fields=jq.datagrid("getColumnFields",true);
+		var fields_s=jq.datagrid("getColumnFields",false);
+		//for(var i=0;i<fields.length;i++){
+		//	var f=_datagrid.datagrid("getColumnOption",fields[i]);
+		
+		//var fields=opts["columns"][0];
+		for(var i=0;i<fields_s.length;i++){
+			fields.push(fields_s[i]);
+		}
+		return fields;
+	}
+	,
+	getAllColumnOptions:function(jq,opt){
+		var copts=[];
+		var fields=jq.datagrid("getAllColumnFields");
+		
+		for(var i=0;i<fields.length;i++){
+			var copt=jq.datagrid("getColumnOption",fields[i]);
+			copts.push(copt);
+		}
+		return copts;
+	}
+	,
+	
+	initEditForm: function(jq, opt){
+    	var el=jq;
+    	var _datagrid=typeof el =="string"?$(el):el;
+    	var surl=opt["surl"];
+    	var rurl=opt["rurl"];
+    	var opts=_datagrid.datagrid("options");
+    	//var formID="form-"+el.attr("id");
+    	var form=$("<form method='post' ></form>");
+    	//form.attr("id",formID);
+    	var table=$("<table></table>");
+    	
+		
+    	return jq.each(function(){  
+    		var _this=$(this);
+    		_this.append(form);
+    		form.append(table);
+    		 
+    		/*var fields=_datagrid.datagrid("getColumnFields",true);
+    		var fields_s=_datagrid.datagrid("getColumnFields",false);
+    		//for(var i=0;i<fields.length;i++){
+    		//	var f=_datagrid.datagrid("getColumnOption",fields[i]);
+    		
+    		//var fields=opts["columns"][0];
+    		for(var i=0;i<fields_s.length;i++){
+    			fields.push(fields_s[i]);
+    		}*/
+    		var fields=_datagrid.datagrid("getAllColumnOptions",true);
+    		for(var i=0;i<fields.length;i++){
+    			//var field=_datagrid.datagrid("getColumnOption",fields[i]);
+    			var field=fields[i];
+    			if(!field["editor"])continue;
+    			
+    			var tr=$("<tr></tr>");
+    			var th=$("<th></th>");
+    			var td=$("<td></td>");
+    			//td.css("width","280px");
+    			var input=$("<input />");
+    			input.attr("name",field["field"])
+    			.attr("autocomplete","off");
+    			
+    			th.append(field["title"]);
+    			td.append(input);
+    			tr.append(th).append(td);
+    			table.append(tr);
+    			
+    			var editor=field["editor"];
+    			if(typeof editor == "string"){
+    				input.validatebox(); 
+    			}else if(typeof editor == "object"){
+    				var etype=editor["type"];
+    				var eoptions=editor["options"];
+    				switch (etype) {
+
+                    case "validatebox": { input.validatebox(eoptions); break; }
+
+                    case "numberbox": { input.numberbox(eoptions); break; }
+                    case "numberspinner": { input.numberspinner(eoptions); break; }
+                    case "combobox": { input.combobox(eoptions); break; }
+                    case "datebox": { input.datebox(eoptions); break; }
+                    case "datetimebox": { input.datetimebox(eoptions); break; }
+                    case "combotree": { input.combotree(eoptions); break; }
+                    case "combogrid": { input.combogrid(eoptions); break; }
+                    default: input.validatebox(eoptions); break;
+                   }
+    			}
+    		}
+    		$.getJSON(rurl,{},function(json){
+    			form.form("load",json);
+    		});
+    		
+    		var btn_submit={text:"保存",iconCls:"icon-add",handler:function(){
+    			form.form('submit',{
+    				url:surl
+    				,success:function(str){$.messager.progress("close");
+    				_datagrid.datagrid("reload");
+    				_datagrid.treegrid("reload");
+    				                      
+    				  }
+    			});
+    		}};
+    		
+    		var btn_cancel={text:"取消",iconCls:"icon-cancel",handler:function(){
+    			_this.dialog("close");
+    		}};
+    		
+    		var btn_reset={text:"重置",iconCls:"icon-reload",handler:function(){
+    			if(!rurl){
+    				form.form("clear");
+    			}else{
+    			  $.getJSON(rurl,{},function(json){
+        			form.form("load",json);
+        		});
+    		   }
+    		}};
+    		
+    		var btn_copy={text:"复制",iconCls:"icon-cut",handler:function(){
+    			var data=form.serializeArray();
+    			var json={};
+    			for(var i=0;i<data.length;i++){
+    				var name=data[i]["name"];
+    				var value=data[i]["value"];
+    				json[name]=value;
+    			}
+    			var str=Kull.stringify(json);
+    			var textarea=$("<textarea id='textarea-paste' cols='100' rows='12' readonly></textarea>");
+    			textarea.val(str);
+    			$("<div></div>").append(textarea).dialog({title:"复制板",modal:true});
+    		}};
+    		
+            var btn_paste={text:"粘帖",iconCls:"icon-pencil",handler:function(){
+    			var div_ps=$("<div></div>");
+            	var textarea=$("<textarea id='textarea-paste' cols='100' rows='12'></textarea>");
+    			div_ps.append(textarea);
+            	var btn_ps={text:"粘帖",iconCls:"icon-ok",handler:function(){
+    				var val=textarea.val();
+    				var data=eval('('+val+')');
+    				form.form("load",data);
+    				div_ps.dialog("close");
+    			}};
+            	var btn_cl={text:"清空",iconCls:"icon-remove",handler:function(){
+    				textarea.val("");
+    				
+    			}};
+    			div_ps.dialog({title:"粘帖板",modal:true,buttons:[btn_ps,btn_cl]});
+    		}};
+    		_this.dialog({buttons:[btn_submit,btn_reset,btn_cancel],toolbar:[btn_copy,btn_paste]});
+    		form.find("input:eq(0)").focus();
+        });  
+    }
+    ,initSearchForm:function(jq,opt){
+    	var el=jq;
+    	var _datagrid=typeof el =="string"?$(el):el;
+    	var surl=opt["surl"];
+    	var rurl=opt["rurl"];
+    	var opts=_datagrid.datagrid("options");
+    	//var formID="form-"+el.attr("id");
+    	var form=$("<form method='post' ></form>");
+    	//form.attr("id",formID);
+    	var table=$("<table></table>");
+    	
+		
+    	return jq.each(function(){  
+    		var _this=$(this);
+    		_this.append(form);
+    		form.append(table);
+    		var fields=_datagrid.datagrid("getAllColumnOptions");
+    		for(var i=0;i<fields.length;i++){
+    			var field=fields[i];
+    			if(!field["editor"])continue;
+    			
+    			var tr=$("<tr></tr>");
+    			var th=$("<th></th>");
+    			var td=$("<td></td>");
+    			//td.css("width","280px");
+    			var input=$("<input />");
+    			input.attr("name",field["field"]);
+    			
+    			
+    			th.append(field["title"]);
+    			td.append(input);
+    			tr.append(th).append(td);
+    			table.append(tr);
+    			
+    			var editor=field["editor"];
+    			if(typeof editor == "string"){
+    				input.validatebox(); 
+    			}else if(typeof editor == "object"){
+    				var etype=editor["type"];
+    				var eoptions=editor["options"];
+    				switch (etype) {
+
+                    case "validatebox": { input.validatebox(eoptions); break; }
+
+                    case "numberbox": { input.numberbox(eoptions); break; }
+                    case "numberspinner": { input.numberspinner(eoptions); break; }
+                    case "combobox": { input.combobox(eoptions); break; }
+                    case "combotree": { input.combotree(eoptions); break; }
+                    case "combogrid": { input.combogrid(eoptions); break; }
+                    default: input.validatebox(eoptions); break;
+                   }
+    			}
+    		}
+    		$.getJSON(rurl,{},function(json){
+    			form.form("load",json);
+    		});
+    		
+    		var btn_submit={text:"查找",iconCls:"icon-add",handler:function(){
+    			var data=form.serializeArray();
+    			var param={};
+    			for(var i=0;i<data.length;i++){
+    				param[data[i]["name"]]=data[i]["value"];
+    			}
+    			_datagrid.datagrid({queryParams:param});
+    			_datagrid.datagrid("reload");
+    		}};
+    		
+    		var btn_cancel={text:"取消",iconCls:"icon-cancel",handler:function(){
+    			_this.dialog("close");
+    		}};
+    		
+    		var btn_reset={text:"重置",iconCls:"icon-reload",handler:function(){
+    			if(!rurl){
+    				form.form("clear");
+    			}else{
+    			  $.getJSON(rurl,{},function(json){
+        			form.form("load",json);
+        		});
+    		   }
+    		}};
+    		
+    		
+    		_this.dialog({buttons:[btn_submit,btn_reset,btn_cancel]});
+        });  
+    }
+	
+	,
+	stringify:function(obj) {
+          switch (typeof (obj)) {
+        case 'object':
+            var ret = [];
+            if (obj instanceof Array) {
+                for (var i = 0, len = obj.length; i < len; i++) {
+                    ret.push($.datagrid("stringify",(obj[i])));
+                }
+                return '[' + ret.join(',') + ']';
+            }
+            else if (obj instanceof RegExp) {
+                return obj.toString();
+            }
+            else {
+                for (var a in obj) {
+                    ret.push(a + ':' + $.datagrid("stringify",(obj[a])));
+                }
+                return '{' + ret.join(',') + '}';
+            }
+        case 'function':
+            return 'function() {}';
+        case 'number':
+            return obj.toString();
+        case 'string':
+            return "\"" + obj.replace(/(\\|\")/g, "\\$1").replace(/\n|\r|\t/g, function(a) { return ("\n" == a) ? "\\n" : ("\r" == a) ? "\\r" : ("\t" == a) ? "\\t" : ""; }) + "\"";
+        case 'boolean':
+            return obj.toString();
+        default:
+            return obj.toString();
+
+      };
+	
+});
+ 
+ 
  $.fn.datagrid.defaults.onHeaderContextMenu=function(e, field){
 	e.preventDefault();
 	var _datagrid=$(this);
@@ -168,19 +446,19 @@ $.fn.datagrid.defaults.onRowContextMenu	=function(e, rowIndex, rowData){
     item_reload =divMenu.menu('findItem', "刷新");
 	var item_copy_thisrow={parent:item_copy.target,text:"本行",handler:function(){
 		var textarea=$("<textarea id='textarea-paste' cols='100' rows='12' readonly></textarea>");
-		textarea.val(Kull.stringify(rowData));
+		textarea.val($.datagrid("stringify",(rowData)));
 		$("<div></div>").append(textarea).dialog({title:"复制板",modal:true});
 	}};
 	var item_copy_selectrow={parent:item_copy.target,text:"选择行",handler:function(){
 		var textarea=$("<textarea id='textarea-paste' cols='100' rows='12' readonly></textarea>");
 		var ds=_datagrid.datagrid("getSelections");
-		textarea.val(Kull.stringify(ds["rows"]));
+		textarea.val($.datagrid("stringify",(ds["rows"])));
 		$("<div></div>").append(textarea).dialog({title:"复制板",modal:true});
 	}};
 	var item_copy_allrow={parent:item_copy.target,text:"全部行",handler:function(){
 		var textarea=$("<textarea id='textarea-paste' cols='100' rows='12' readonly></textarea>");
 		var ds=_datagrid.datagrid("getData");
-		textarea.val(Kull.stringify(ds["rows"]));
+		textarea.val($.datagrid("stringify",(ds["rows"])));
 		$("<div></div>").append(textarea).dialog({title:"复制板",modal:true});
 	}};
 	
