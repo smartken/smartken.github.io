@@ -1,6 +1,6 @@
 (function(win){
 
-	var context={};
+	var context={},_gl_renderer,_gl_scene,_gl_camera;
 
 
 	context["createRenderer"]=function(gl){
@@ -22,27 +22,27 @@
 
 	};
 
-	context["onRender"]=function onInit(gl,gl_renderer,gl_scene,gl_camera){};
+	context["onPreRender"]=function onInit(gl,gl_renderer,gl_scene,gl_camera){};
+
+        context["onRender"]=function (gl_renderer,gl_scene,gl_camera){};
 
         context['render']=function() {
-			    
-                context["renderer"].render(context["scene"], context["camera"]);
+        	context.onRender(_gl_renderer,_gl_scene,_gl_camera);
+                _gl_renderer.render(_gl_scene, _gl_camera);
         };   
 
 	context['renderElementById']=function(el_id) {
 			    var gl=document.getElementById(el_id);
-                var gl_renderer = context.createRenderer(gl);
-                var gl_scene =context.createScene(gl,gl_renderer);
+                _gl_renderer = context.createRenderer(gl);
+                _gl_scene =context.createScene(gl,_gl_renderer);
 
 
-		var gl_camera=context.createCamera(gl,gl_renderer,gl_scene);
+		_gl_camera=context.createCamera(gl,_gl_renderer,_gl_scene);
 
-		context.onRender(gl,gl_renderer,gl_scene,gl_camera);
+		context.onPreRender(gl,_gl_renderer,_gl_scene,_gl_camera);
                 //gl_scene.add(gl_camera);
-                context["renderer"]=gl_renderer;
-                context["scene"]=gl_scene;
-                context["camera"]=camera;
-                context.render();
+               
+                context.render(_gl_renderer,_gl_scene,_gl_camera);
             }
             
  
@@ -54,8 +54,9 @@
 	console.log(mtprefix+'.createRenderer=function(%s){};',"gl");
 	console.log(mtprefix+'.createScene=function(%s,%s){};',"gl","gl_renderer");
 	console.log(mtprefix+'.createCamera=function(%s,%s,%s){};',"gl","gl_renderer","gl_scene");
-	console.log(mtprefix+'.onRender=function(%s,%s,%s,%s){};',"gl","gl_renderer","gl_scene","gl_camera");
-        console.log(mtprefix+'.render=function(%s,%s,%s){};',"gl_renderer","gl_scene","gl_camera");
-    console.log("enter method: ");
+	console.log(mtprefix+'.onPreRender=function(%s,%s,%s,%s){};',"gl","gl_renderer","gl_scene","gl_camera");
+	console.log(mtprefix+'.onRender=function(%s,%s,%s){};',"gl_renderer","gl_scene","gl_camera");
+    console.log("public methods: ");
      console.log(mtprefix+'.renderElementById(%s);',"elid");
+     console.log(mtprefix+'.render();');
 })(window);
