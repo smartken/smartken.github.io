@@ -24,28 +24,35 @@
 
 	context["onRender"]=function onInit(gl,gl_renderer,gl_scene,gl_camera){};
 
+        context['render']=function(gl_renderer,gl_scene, gl_camera) {
+			    
+                gl_renderer.render(gl_scene, gl_camera);
+        };   
+
 	context['renderElementById']=function(el_id) {
 			    var gl=document.getElementById(el_id);
                 var gl_renderer = context.createRenderer(gl);
                 var gl_scene =context.createScene(gl,gl_renderer);
 
 
-				var gl_camera=context.createCamera(gl,gl_renderer,gl_scene);
+		var gl_camera=context.createCamera(gl,gl_renderer,gl_scene);
 
-				context.onRender(gl,gl_renderer,gl_scene,gl_camera);
+		context.onRender(gl,gl_renderer,gl_scene,gl_camera);
                 //gl_scene.add(gl_camera);
-                gl_renderer.render(gl_scene, gl_camera);
+                context.render(gl_scene, gl_camera);
             }
+            
+ 
 
    THREE.Context=context;
 
 	console.log("overwrite methods:");
     var mtprefix="THREE.Context";
-	console.log(mtprefix+'.createRenderer(%s);',"gl");
-	console.log(mtprefix+'.createScene(%s,%s);',"gl","gl_renderer");
-	console.log(mtprefix+'.createCamera(%s,%s,%s);',"gl","gl_renderer","gl_scene");
-	console.log(mtprefix+'.onRender(%s,%s,%s,%s);',"gl","gl_renderer","gl_scene","gl_camera");
-
+	console.log(mtprefix+'.createRenderer=function(%s){};',"gl");
+	console.log(mtprefix+'.createScene=function(%s,%s){};',"gl","gl_renderer");
+	console.log(mtprefix+'.createCamera=function(%s,%s,%s){};',"gl","gl_renderer","gl_scene");
+	console.log(mtprefix+'.onRender=function(%s,%s,%s,%s){};',"gl","gl_renderer","gl_scene","gl_camera");
+        console.log(mtprefix+'.render=function(%s,%s,%s){};',"gl_renderer","gl_scene","gl_camera");
     console.log("enter method: ");
      console.log(mtprefix+'.renderElementById(%s);',"elid");
 })(window);
