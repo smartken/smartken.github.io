@@ -84,22 +84,22 @@
          importScript("/linq.js/"+version+"/jquery.linq.min.js");
     };
   
-    bootcdn["importRequirejs"]=fucntion(version){
+    bootcdn["importRequirejs"]=function(version){
         version=version||"2.1.15";
          importScript("/require.js/"+version+"/require.min.js");
-    }
+    };
     
  
-    bootcdn["importStatsjs"]=fucntion(version){
+    bootcdn["importStatsjs"]=function(version){
         version=version||"r11";
          importScript("/stats.js/"+version+"/Stats.js");
-    }
+    };
     
     
-    bootcdn["importDatgui"]=fucntion(version){
+    bootcdn["importDatgui"]=function(version){
         version=version||"0.5";
          importScript("/dat-gui/"+version+"/dat.gui.js");
-    }
+    };
     
     win['Bootcdn']=bootcdn;
   
