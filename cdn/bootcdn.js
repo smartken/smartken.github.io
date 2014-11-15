@@ -36,8 +36,9 @@
     
     bootcdn["importJqueryui"]=function(version){
          version=version||"1.11.2";
+         importStyle("/jqueryui/"+version+"/jquery-ui.min.css");
          importScript("/jqueryui/"+version+"/jquery-ui.min.js");
-         importStyle("/jqueryui/"+version+"/jquery-ui.min.css")
+         
     };
     //yui/yui/yui-min.js
     bootcdn["importYui"]=function(version){
@@ -47,8 +48,9 @@
     
     bootcdn["importBootstrap"]=function(version){
          version=version||"3.3.0";
+         importStyle("/bootstrap/"+version+"/css/bootstrap.min.css");
          importScript("/bootstrap/"+version+"/js/bootstrap.min.js");
-         importStyle("/bootstrap/"+version+"/css/bootstrap.min.css")
+         
     };
     
      bootcdn["importKnockout"]=function(version){  
@@ -81,6 +83,11 @@
          version=version||"2.2.0.2";
          importScript("/linq.js/"+version+"/jquery.linq.min.js");
     };
+  
+    bootcdn["importRequirejs"]=fucntion(version){
+        version=version||"2.1.15";
+         importScript("/require.js/"+version+"/require.min.js");
+    }
     
     win['Bootcdn']=bootcdn;
   
