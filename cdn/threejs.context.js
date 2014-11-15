@@ -24,9 +24,9 @@
 
 	context["onRender"]=function onInit(gl,gl_renderer,gl_scene,gl_camera){};
 
-        context['render']=function(gl_renderer,gl_scene, gl_camera) {
+        context['render']=function() {
 			    
-                gl_renderer.render(gl_scene, gl_camera);
+                context["renderer"].render(context["scene"], context["camera"]);
         };   
 
 	context['renderElementById']=function(el_id) {
@@ -39,7 +39,10 @@
 
 		context.onRender(gl,gl_renderer,gl_scene,gl_camera);
                 //gl_scene.add(gl_camera);
-                context.render(gl_renderer,gl_scene, gl_camera);
+                context["renderer"]=gl_renderer;
+                context["scene"]=gl_scene;
+                context["camera"]=camera;
+                context.render();
             }
             
  
