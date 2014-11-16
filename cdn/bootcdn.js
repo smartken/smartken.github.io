@@ -34,6 +34,12 @@
          importScript("/jquery/"+version+"/jquery.min.js");
     };
     
+    
+    bootcdn["importJquery_mousewheel"]=function(version){
+         version=version||"3.1.12";
+         importScript("/jquery-mousewheel/"+version+"/jquery.mousewheel.min.js");
+    };
+    
     bootcdn["importJqueryui"]=function(version){
          version=version||"1.11.2";
          importStyle("/jqueryui/"+version+"/jquery-ui.min.css");
