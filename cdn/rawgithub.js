@@ -30,8 +30,8 @@
     cdn["importStyle"]=importStyle;
 
     cdn["importMetroUI"]=function(version){
-         writeStyle("/olton/Metro-UI-CSS/master/min/metro-bootstrap.min.css");
-          writeStyle("/olton/Metro-UI-CSS/master/min/iconFont.min.css");
+         importStyle("/olton/Metro-UI-CSS/master/min/metro-bootstrap.min.css");
+          importStyle("/olton/Metro-UI-CSS/master/min/iconFont.min.css");
     };
     
    
