@@ -107,6 +107,13 @@
          importScript("/dat-gui/"+version+"/dat.gui.js");
     };
     
+    
+     bootcdn["importUnderscore"]=function(version){
+        version=version||"1.7.0";
+         importScript("/underscore.js/"+version+"/underscore-min.js");
+    };
+    
+    
     win['Bootcdn']=bootcdn;
   
 })(window);
