@@ -113,6 +113,17 @@
          importScript("/underscore.js/"+version+"/underscore-min.js");
     };
     
+     bootcdn["importNormalize"]=function(version){
+        version=version||"3.0.1";
+         importStyle("/normalize/"+version+"/normalize.min.js");
+    };
+    
+     bootcdn["importModernizr"]=function(version){
+        version=version||"2010.07.06dev";
+         importScript("/modernizr/"+version+"/modernizr.min.js");
+    };
+    
+
     
     win['Bootcdn']=bootcdn;
   
