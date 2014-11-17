@@ -35,8 +35,11 @@
     };
     
    
-    
-    //jquery-ui-bootstrap/jquery-ui-bootstrap
+    cdn["importJqueryui_bootstrap"]=function(version){
+       version=version||"1.10.3.theme";
+       importStyle("jquery-ui-bootstrap/jquery-ui-bootstrap/masterbs3/css/custom-theme/jquery-ui-"+version+".css");
+    }
+   
     
    
     win["Rawgithub"]=cdn;
