@@ -45,7 +45,8 @@
        //version=version||"1.10.3.theme";
        var prefix="persistence";
        importScript("/coresmart/persistencejs/master/lib/"+prefix+".js");
-       for(var plugin in plugins){
+       for(var i=0; i<plugins.length;i++){
+        var plugin=plugins[i];
         importScript("/coresmart/persistencejs/master/lib/"+prefix+"."+plugin+".js");
        }
     }
