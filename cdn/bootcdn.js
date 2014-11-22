@@ -123,7 +123,10 @@
          importScript("/modernizr/"+version+"/modernizr.min.js");
     };
     
-
+    bootcdn["importChromajs"]=function(version){
+        version=version||"0.6.1";
+         importScript("/chroma-js/"+version+"/chroma.min.js");
+    };
     
     win['Bootcdn']=bootcdn;
   
