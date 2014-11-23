@@ -130,7 +130,7 @@
     
     bootcdn["importMathjax"]=function(version){
         version=version||"2.4.0";
-         importScript("/mathjax/"+version+"/MathJax.min.js");
+         importScript("/mathjax/"+version+"/MathJax.js");
     };
     
     win['Bootcdn']=bootcdn;
