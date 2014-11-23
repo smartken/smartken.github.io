@@ -128,6 +128,11 @@
          importScript("/chroma-js/"+version+"/chroma.min.js");
     };
     
+    bootcdn["importMathjax"]=function(version){
+        version=version||"2.4.0";
+         importScript("/mathjax/"+version+"/MathJax.min.js");
+    };
+    
     win['Bootcdn']=bootcdn;
   
 })(window);
