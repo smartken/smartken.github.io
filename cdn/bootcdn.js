@@ -128,9 +128,10 @@
          importScript("/chroma-js/"+version+"/chroma.min.js");
     };
     
-    bootcdn["importMathjax"]=function(version){
+    bootcdn["importMathjax"]=function(config,version){
         version=version||"2.4.0";
-         importScript("/mathjax/"+version+"/MathJax.js");
+        config=config||"TeX-AMS_HTML-full";
+         importScript("/mathjax/"+version+"/MathJax.js?config="+config);
     };
     
     win['Bootcdn']=bootcdn;
