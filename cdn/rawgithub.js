@@ -51,6 +51,11 @@
        }
     }
     
+    
+    cdn["importGithubapi"]=function(version){
+         importScript("/fitzgen/github-api/master/github.js");
+          
+    };
    
     win["Rawgithub"]=cdn;
     
