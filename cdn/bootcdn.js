@@ -115,7 +115,7 @@
     
      bootcdn["importNormalize"]=function(version){
         version=version||"3.0.1";
-         importStyle("/normalize/"+version+"/normalize.min.js");
+         importStyle("/normalize/"+version+"/normalize.min.css");
     };
     
      bootcdn["importModernizr"]=function(version){
@@ -138,7 +138,7 @@
     //font-awesome/4.2.0/css/font-awesome.min.css"
     bootcdn["importFontawesome"]=function(version){
         version=version||"4.2.0";
-         importStyle("/font-awesome/"+version+"/css/font-awesome.min.js");
+         importStyle("/font-awesome/"+version+"/css/font-awesome.min.css");
     };
     
     
