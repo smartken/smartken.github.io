@@ -135,12 +135,17 @@
     };
     
     
-    //font-awesome/4.2.0/css/font-awesome.min.css"
+   
     bootcdn["importFontawesome"]=function(version){
         version=version||"4.2.0";
          importStyle("/font-awesome/"+version+"/css/font-awesome.min.css");
     };
+   
     
+    bootcdn["importMarked"]=function(version){
+        version=version||"0.3.2";
+         importScript("/marked/"+version+"/marked.min.js");
+    };
     
     win['Bootcdn']=bootcdn;
   
