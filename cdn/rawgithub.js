@@ -59,7 +59,7 @@
     
     cdn["importFlatui"]=function(branch){
          branch=branch||"master";
-         importStyle("/designmodo/Flat-UI/"+branch+"/dist/css/flat-ui.min.css.js");
+         importStyle("/designmodo/Flat-UI/"+branch+"/dist/css/flat-ui.min.css");
           
     };
     
