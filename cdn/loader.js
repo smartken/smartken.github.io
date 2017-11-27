@@ -2,7 +2,7 @@
 
     var doc=_window.document;
 
-    var base="http://smartken.github.io/cdn";
+    var base="http://uhealin.github.io/cdn";
     
     var loader={};
     
